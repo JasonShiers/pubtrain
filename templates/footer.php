@@ -15,7 +15,7 @@
 			}
 		</script>
 		<?php if (!empty($_SESSION["timestamp"]) && 
-			!in_array($_SERVER["PHP_SELF"], ["/confdb/login.php", "/confdb/logout.php", "/confdb/register.php"])): ?>
+			!in_array($_SERVER["PHP_SELF"], ["/pubtrain/login.php", "/pubtrain/logout.php"])): ?>
 			<script type="text/javascript">
 				$.sessionTimeout({
 					message: 'Your session will be locked in one minute.',
