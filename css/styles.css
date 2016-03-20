@@ -1,0 +1,349 @@
+@font-face {
+	font-family: jaapokki;
+	src: url(../fonts/jaapokki-regular.woff);
+}
+
+@font-face {
+	font-family: anson;
+	src: url(../fonts/anson-regular.woff);
+}
+
+body
+{
+	background-image: url("../img/wallpaper.jpg");
+	background-attachment: fixed;
+	background-color: #000000;
+	background-position: top;
+	background-repeat: no-repeat;
+	background-size: 150%;
+/*	background-blend-mode: multiply;*/
+}
+
+.currency
+{
+	text-align: right;
+}
+ 
+body .container
+{
+	/* center contents */
+	background-color: white;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding: 0.5em;
+	border-radius: 8px;
+	text-align: center;
+}
+
+.conflist table, .requestlist table
+{
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	font-size: 1.1em;
+}
+
+.conflist th, .requestlist th
+{
+	padding: 8px;
+	text-align: center;
+	color: dimgray;
+	background: #B9C9FE url("../img/tablegradhead.png") repeat-x;
+	background-size: auto 100%;
+}
+
+.conflist th.left, .requestlist th.left
+{
+	border-top-left-radius: 8px;
+}
+
+.conflist th.right, .requestlist th.right
+{
+	border-top-right-radius: 8px;
+}
+
+.confinfo th
+{
+	border-radius: 3px;
+	font-family: jaapokki;
+	padding: 1em;
+	width: 12em;
+	text-align: right;
+	background-color: #AACCFF;
+}
+
+.conflist tbody tr, .requestflist tbody tr
+{
+	background: #E8EDFF url("../img/tablegradbody.png") repeat-x;
+	background-size: auto 100%;
+}
+
+.conflist tbody .highlight:hover
+{
+	background: #FFFFCC;
+	color: blue;
+}
+
+.conflist td
+{
+	text-align: center;
+	height: 3em;
+	border-bottom: 1px solid lightgray;
+}
+
+.confinfo td
+{
+	text-align: left;
+	height: 3em;
+	border: 1px solid lightgray;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.requestlist td
+{
+	text-align: center;
+	height: 2em;
+	border-bottom: 2px solid darkgray;
+}
+
+.confinfonav td
+{
+	text-align: center;
+	width: 33%;
+}
+
+.userupdate td, .userupdate th
+{
+	text-align: left;
+	padding: 1em;
+}
+
+.formfieldgroup, .formfieldgroup legend, .infogroup
+{
+	border-radius: 8px;
+	background-color: lightblue;
+}
+
+.formfieldgroup
+{
+	background-image: url("../img/formbg-blnd.jpg");
+/*	background-blend-mode: soft-light;*/
+}
+
+.formfieldgroup legend
+{
+	padding: 0.2em 0.5em;
+	margin-bottom: 0.2em;
+	width: auto;
+	border: none;
+	text-align: left;
+	font-size: 1em;
+}
+
+.infogroup
+{
+	background-image: url("../img/infobg-blnd.jpg");
+	background-position: center;
+/*	background-blend-mode: soft-light;*/
+}
+
+.infogroup .row
+{
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+.help-block
+{
+	background-color: azure;
+	border-radius: 8px;
+	padding: 0.2em;
+}
+
+.form-group label .required:after, .form-group .label-static.required:after {
+  content:" *";
+  color:red;
+}
+
+.form-control-static
+{
+	background: white;
+	padding: 0.5em;
+	margin: 0 1em 0 1em;
+}
+
+.ellipses {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.control-label
+{
+	font-weight: bold;
+}
+
+.label-static
+{
+	font-weight: bold;
+	margin: 0 1em 0 1em;
+}
+
+.menu.row
+{
+	font-weight: bold;
+}
+
+.menucell
+{
+	height: 75px;
+	position: relative;
+}
+
+.menucell a, .menucell p, .menucell div
+{
+	position: absolute;
+	top: 75%;
+	left: 50%;
+	white-space: nowrap;
+	transform: translate(-50%, -50%);
+}
+
+.page-number
+{
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 1.1em;
+	padding: 0.2em;
+}
+
+.page-number:hover
+{
+	color: blue;
+	text-decoration: underline;
+}
+
+.page-number.active
+{
+	color: lightgray;
+}
+
+.page-number.active:hover
+{
+	color: lightgray;
+}
+
+#top
+{
+	background-color: lightgray;
+	background-size: 100%;
+	border-bottom: solid gray 5px;
+	border-radius: 25px;
+	margin-bottom: 20px;
+}
+
+#top h1
+{
+	padding-top: 0.2em;
+	font-family: jaapokki;
+	font-size: 3em;
+	font-weight: bold;
+	color: white;
+}
+
+#top div
+{
+	color: teal;
+}
+
+#top a
+{
+	font-size: 1.25em;
+	text-transform: uppercase;
+}
+
+#top a:hover
+{
+	text-decoration: none;
+	color: #EEFF66;
+}
+#bottom
+{
+	/* shrink bottom's font size */
+	font-size: smaller;
+
+	/* surround with whitespace */
+	margin: 20px;
+}
+
+.imglink:hover {
+	text-decoration: none;
+}
+
+.imgdiv {
+	display: inline-block;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+}
+
+.imgdiv.left {
+	float: left;
+}
+
+#dashbutton, #profilebutton, #logoutbutton {
+	height: 37px;
+	width: 37px;
+}
+
+#dashbutton:hover, #profilebutton:hover, #logoutbutton:hover {
+	background-position: -37px;
+}
+
+.continuebutton, .selectattbutton, .selectattnoreqbutton, .viewonlybutton {
+	height: 43px;
+	width: 43px;
+}
+
+.continuebutton:hover, .selectattbutton:hover, .selectattnoreqbutton:hover, .viewonlybutton:hover {
+	background-position: -43px;
+}
+
+
+#dashbutton {
+	background-image: url('../img/home2-spr.png');
+}
+ 
+#profilebutton {
+	background-image: url('../img/profile-spr.png');
+}
+
+#logoutbutton {
+	background-image: url('../img/logout-spr.png');
+}
+
+.continuebutton {
+	background-image: url('../img/continue-spr.png');
+}
+
+.selectattbutton {
+	background-image: url('../img/selectattendees-spr.png');
+}
+
+.selectattnoreqbutton {
+	background-image: url('../img/selectattendees-noreq-spr.png');
+}
+
+.viewonlybutton {
+	background-image: url('../img/viewonly-spr.png');
+}
+
+input[type=radio] {
+    float: left;
+    margin-left: 0.5em;
+}
+
+label {
+    font-weight: normal;
+    display: block;
+}
