@@ -53,15 +53,22 @@
 								{
 									print("<td>N/A</td>");
 								}
-								print("	<td>
-											<button type=\"button\" class=\"btn btn-info btn-xs\">
-												<span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span> Edit
-											</button>
-											&nbsp;
-											<button type=\"button\" class=\"btn btn-danger btn-xs\">
-												<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span> Delete
-											</button>
-										</td>");
+								if ($h["editable"]==1)
+								{
+									print("	<td>
+												<button type=\"button\" class=\"btn btn-info btn-xs\">
+													<span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span> Edit
+												</button>
+												&nbsp;
+												<button type=\"button\" class=\"btn btn-danger btn-xs\">
+													<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span> Delete
+												</button>
+											</td>");
+								}
+								else
+								{
+									print("<td>From ConferenceTracker</td>");
+								}
 								print("</tr>");
 							}
 						?>
@@ -221,7 +228,7 @@
         <h4 class="modal-title" id="myModalLabel">Add New Conference Attended</h4>
 		<p>To add an entry to your conference history please enter the following details:</p>
 	</div>
-	<form id="addConf" action="addconf.php" method="post">
+	<form id="addConf" action="insertrecord.php?type=newConf" method="post">
 		<div class="modal-body">
 			<fieldset class="formfieldgroup">
 				<legend>Conference Information</legend>
@@ -238,6 +245,21 @@
 							<input class="form-control autocomplete" name="title" id="newConfName" required="required" 
 								placeholder="Paste here, or type keyword for autocomplete" type="text" maxlength="90"
 								onfocus="setAutocompleteType('newConfName')" />
+						</label>
+					</div>
+				</div>
+				<div class="form-group clearfix">
+					<div class="col-md-7 text-left">
+						<label>
+							<b>Location</b>
+							<input class="form-control autocomplete" name="location" id="newConfLocation type="text" maxlength="60" 
+								placeholder="e.g. Cambridge, UK" onfocus="setAutocompleteType('newConfLocation')" />
+						</label>
+					</div>
+					<div class="col-md-2 text-left">
+						<label>
+							<b>Duration (days)</b>
+							<input class="form-control" name="days" type="number" min="0.5" max="10" step="0.5"/>
 						</label>
 					</div>
 				</div>
