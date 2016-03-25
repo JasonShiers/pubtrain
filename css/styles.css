@@ -131,12 +131,6 @@ body .container
 	background-color: lightblue;
 }
 
-.formfieldgroup
-{
-	background-image: url("../img/formbg-blnd.jpg");
-/*	background-blend-mode: soft-light;*/
-}
-
 .formfieldgroup legend
 {
 	padding: 0.2em 0.5em;

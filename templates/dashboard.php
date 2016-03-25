@@ -76,7 +76,7 @@
 					<tfoot>
 						<tr>
 							<th colspan=6>
-								<button type="button" class="btn btn-primary btn-xs" onclick="show_modalNewConf()">
+								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewConf')">
 									<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
 								</button>
 								 conference not requested through ConfTracker.
@@ -276,17 +276,21 @@
 </div>
 
 <script>
-	function show_modalNewConf(){
-		$( "#modalNewConf" ).modal( "toggle" );
+	// function to show modal with specified id, triggered by button in HTML
+	function show_modal(id){
+		$( "#"+id ).modal( "toggle" );
 	}
 	
+	// reset form with specified id, used when cancel button is pressed
 	function resetForm(id){
 		$("#"+id).trigger("reset");
 	}
 
+	// keep track of which input box has focus and return appropriate autocomplete results
 	function setAutocompleteType(type){
 		var autocompleteType = type;
-	
+
+		// set up autocomplete using appropriate type
 		$( "input.autocomplete" ).autocomplete({
 			source: "getautocomplete.php?type=" + autocompleteType,
 			minLength: 2
@@ -295,11 +299,14 @@
 
 	$(document).ready(function(){
 
+		// Initialise each paginated table
 		$('table.paginated').each(function() {
 			var currentPage = 0;
 			var numPerPage = 5;
+			// Current table
 			var $table = $(this);
 
+			// Add table member function to repaginate table
 			$table.bind('repaginate', function() {
 				// Show all rows
 				$table.find('tbody tr').show();
@@ -309,11 +316,11 @@
 				$table.find('tbody tr:gt(' + ((currentPage + 1) * numPerPage - 1) + ')').hide();
 			});
 
+			// Prepare page navigation HTML to inject under table
 			var numRows = $table.find('tbody tr').length;
 			var numPages = Math.ceil(numRows / numPerPage);
-
+			// Create div
 			var $pager = $('<div class="pager"></div>');
-
 
 			// Append pager title
 			$('<span class="pager-title"> Page: </span>').appendTo($pager);
