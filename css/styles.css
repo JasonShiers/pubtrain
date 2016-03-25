@@ -57,6 +57,12 @@ body .container
 	border-top-left-radius: 8px;
 }
 
+.conflist tfoot th
+{
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+}
+
 .conflist th.right, .requestlist th.right
 {
 	border-top-right-radius: 8px;
@@ -234,6 +240,16 @@ body .container
 	color: lightgray;
 }
 
+.panel-title .glyphicon-chevron-down, .panel-title .collapsed .glyphicon-chevron-up
+{
+	display: none;
+}
+
+.panel-title .collapsed .glyphicon-chevron-down, .panel-title .glyphicon-chevron-up
+{
+	display: inline-block;
+}
+
 #top
 {
 	background-color: lightgray;
@@ -346,4 +362,9 @@ input[type=radio] {
 label {
     font-weight: normal;
     display: block;
+}
+
+/* Make sure autocomplete isn't hidden behind modal */
+ul.ui-autocomplete {
+    z-index: 1100;
 }

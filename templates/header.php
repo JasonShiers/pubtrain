@@ -8,6 +8,7 @@
 		<link href="css/bootstrap-theme.min.css" rel="stylesheet"/>
 		<link href="css/chosen.min.css" rel="stylesheet"/>
 		<link href="css/styles.css" rel="stylesheet"/>
+		<link href="css/jquery-ui.css" rel="stylesheet"/>
 
 		<?php if (isset($title)): ?>
 			<title>PubTrain: <?= htmlspecialchars($title) ?></title>
@@ -16,6 +17,7 @@
 		<?php endif ?>
 
 		<script src="js/jquery-1.11.1.min.js"></script>
+		<script src="js/jquery-ui-1.11.4.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		<script src="js/scripts.js"></script>
 		<script src="js/chosen.jquery.min.js"></script>
