@@ -26,9 +26,6 @@
 							<th style="width: 3em;">
 								Days
 							</th>
-							<th>
-								Feedback
-							</th>
 							<th class="right">
 								Options
 							</th>
@@ -38,36 +35,58 @@
 						<?php
 							foreach ($confhistory as $h)
 							{
-								print("<tr>");
+								print("<tr ");
+								if ($h["confirmed"] === "0")
+								{
+									print("style=\"color: darkgray\";");
+								}
+								print(">");
 								print("<td>" . htmlspecialchars($h["confdate"]) . "</td>");
 								print("<td>" . htmlspecialchars($h["title"]) . "</td>");
 								print("<td>" . htmlspecialchars($h["location"]) . "</td>");
 								print("<td>" . htmlspecialchars($h["days"]) . "</td>");
 								if ($h["attended"]==1)
 								{
-									print("<td ><a style=\"font-weight: bold; color: forestgreen;\" href=\"feedbackreview.php?id=" 
-										. htmlspecialchars($h["req_id"]) . "&userid=" . htmlspecialchars($_SESSION["userid"]) 
-										. "\">Review</a></td>");
-								}
-								else
-								{
-									print("<td>N/A</td>");
+									print("	<td >
+												<div class=\"imgdiv\"><span class=\"glyphicon glyphicon-thumbs-up\" title=\"Confirmed by ConferenceTracker\" 
+													style=\"color: darkblue;\" aria-hidden=\"true\"></span></div>
+												&nbsp;
+												<a type=\"button\" class=\"btn btn-info btn-xs\" 
+												href=\"//intranet/confdb/feedbackreview.php?id=" . htmlspecialchars($h["req_id"]) 
+												. "&userid=" . htmlspecialchars($_SESSION["userid"]) . "\" target=\"_blank\">
+													&nbsp;<span class=\"glyphicon glyphicon-list-alt\" title=\"Review Feedback\" 
+													aria-hidden=\"true\"></span>&nbsp;</a>
+											</td>");
 								}
 								if ($h["editable"]==1)
 								{
-									print("	<td>
-												<button type=\"button\" class=\"btn btn-info btn-xs\">
-													<span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span> Edit
-												</button>
-												&nbsp;
+									if($h["confirmed"] !== "0")
+									{
+										print("	<td>
+													<div class=\"imgdiv\">
+														<span class=\"glyphicon glyphicon-thumbs-up\" ");
+										if ($h["confirmed"] === "1")
+										{
+											print("			title=\"Confirmed by you\" ");
+										}
+										else
+										{
+											print("			title=\"Entered by you\" ");
+										}
+										print("				style=\"color: forestgreen;\" aria-hidden=\"true\"></span>
+													</div>");
+									}
+									else
+									{
+										print("	<td><button type=\"button\" class=\"btn btn-info btn-xs\">
+													&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm I Attended\" 
+													aria-hidden=\"true\"></span>&nbsp;</button>");
+									}
+									print("		&nbsp;
 												<button type=\"button\" class=\"btn btn-danger btn-xs\">
-													<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span> Delete
-												</button>
-											</td>");
-								}
-								else
-								{
-									print("<td>From ConferenceTracker</td>");
+													&nbsp;<span class=\"glyphicon glyphicon-trash\" title=\"Delete\" aria-hidden=\"true\">
+													</span>&nbsp;
+												</button></td>");
 								}
 								print("</tr>");
 							}
@@ -263,6 +282,24 @@
 						</label>
 					</div>
 				</div>
+				<div class="form-group clearfix">
+					<label>
+						<b>Other attendees on this conference:</b>
+						<select name="otherusers[]" id="otheruserlist" data-placeholder="Other attendees..." 
+							class="chosen-select" multiple style="width: 75%;">
+							<?php
+								foreach ($users as $user)
+								{
+									if($user["userid"] !== $_SESSION["userid"])
+									{
+										print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\">");
+										print(htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
+									}
+								}
+							?>
+						</select>
+					</label>
+				</div>
 			</fieldset>
 		</div>
 		<div class="modal-footer">
@@ -279,6 +316,7 @@
 	// function to show modal with specified id, triggered by button in HTML
 	function show_modal(id){
 		$( "#"+id ).modal( "toggle" );
+		$(".chosen-container").width("75%");
 	}
 	
 	// reset form with specified id, used when cancel button is pressed
@@ -299,6 +337,9 @@
 
 	$(document).ready(function(){
 
+		// Initiate Multi-select box
+		$('.chosen-select').chosen();
+		
 		// Initialise each paginated table
 		$('table.paginated').each(function() {
 			var currentPage = 0;

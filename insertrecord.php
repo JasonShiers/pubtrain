@@ -10,7 +10,7 @@
 		{
 			if (isset($_POST["confdate"]) && isset($_POST["title"]))
 			{
-				$query = "INSERT INTO suppconfrecords (userid, date, title, location, days) VALUES (?, ?, ?, ?, ?)";
+				$query = "INSERT INTO suppconfrecords (userid, date, title, location, days, confirmed) VALUES (?, ?, ?, ?, ?, 1)";
 				$success = query($query, $_SESSION["userid"], date("Y-m-d", strtotime($_POST["confdate"])), $_POST["title"],
 					$_POST["location"], $_POST["days"]);
 
@@ -20,6 +20,21 @@
 				}
 				else
 				{
+					if (isset($_POST["otherusers"]) && count($_POST["otherusers"]) > 0)
+					{
+						foreach ($_POST["otherusers"] as $otheruser)
+						{
+							$query = "	INSERT INTO suppconfrecords (userid, date, title, location, days, confirmed) 
+										VALUES (?, ?, ?, ?, ?, 0) ON DUPLICATE KEY UPDATE id=id";
+							$success = query($query, $otheruser, date("Y-m-d", strtotime($_POST["confdate"])), 
+								$_POST["title"], $_POST["location"], $_POST["days"]);
+
+							if ($success === false)
+							{
+								apologize("Added your record. Can't add for one or more of the other attendees.");
+							}
+						}
+					}
 					redirect("index.php");
 				}
 			}

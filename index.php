@@ -5,14 +5,19 @@
 
 	// get user's conference history
 	$query = "	(SELECT c.id, c.confdate AS date, DATE_FORMAT(c.confdate, '%b %Y') AS confdate, c.title, c.location, 
-				c.days, r.attended, r.id AS req_id, 0 AS editable 
+				c.days, r.attended, r.id AS req_id, 0 AS editable, 1 AS confirmed, 1 AS verified 
 				FROM conferences c, requests r WHERE r.userid=? AND r.conf_id=c.id AND c.confdate <= ?) 
 				UNION
 				(SELECT 0 AS id, date, DATE_FORMAT(date, '%b %Y') AS confdate, title, location, days, 0 AS attended, 
-				0 AS req_id, 1 AS editable 
+				0 AS req_id, 1 AS editable, confirmed, verified 
 				FROM suppconfrecords WHERE userid=?) 
 				ORDER BY date DESC";
 	$confhistory = query($query, $_SESSION["userid"], date("Y-m-d"), $_SESSION["userid"]);
+	
+	// get users list for multi select
+	$users = query("SELECT userid, firstname, lastname FROM users "
+		. "ORDER BY lastname ASC, firstname ASC");
+
 
 	// get user's training history
 	$query = "SELECT DATE_FORMAT(tr.date, '%b %Y') AS date, tl.type, tl.catmask, tr.description, "
@@ -22,5 +27,6 @@
 	$trainhistory = query($query, $_SESSION["userid"]);
 	
 	// render table
-	render("templates/dashboard.php", ["trainhistory" => $trainhistory, "confhistory" => $confhistory, "title" => "Dashboard"]);
+	render("templates/dashboard.php", ["users" => $users, "trainhistory" => $trainhistory, "confhistory" => $confhistory, 
+		"title" => "Dashboard"]);
 ?>

@@ -97,6 +97,12 @@ body .container
 	border-bottom: 1px solid lightgray;
 }
 
+.conflist .glyphicon
+{
+	font-size: 1.25em;
+	top: 3px;
+}
+
 .confinfo td
 {
 	text-align: left;
