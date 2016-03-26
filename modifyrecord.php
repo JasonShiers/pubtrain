@@ -35,7 +35,12 @@
 							}
 						}
 					}
-					redirect("index.php");
+					$url = "index.php";
+					if (isset($_GET["page"]) && $_GET["page"] > 1)
+					{
+						$url .= "?page=" . $_GET["page"];
+					}
+					redirect($url);
 				}
 			}
 		}
@@ -49,7 +54,63 @@
 			{
 				apologize("Unable to delete this record.");
 			}
-			redirect("index.php");
+			$url = "index.php";
+			if (isset($_GET["page"]) && $_GET["page"] > 1)
+			{
+				$url .= "?page=" . $_GET["page"];
+			}
+			redirect($url);
+		}
+		else if ($_GET["type"] == "delTrain")
+		{
+			if (isset($_GET["id"]))
+			{
+				$success = query("DELETE FROM trainingrecords WHERE recordid=? AND userid=?", $_GET["id"], $_SESSION["userid"]);
+			}
+			if ($success === false)
+			{
+				apologize("Unable to delete this record.");
+			}
+			$url = "index.php";
+			if (isset($_GET["page"]) && $_GET["page"] > 1)
+			{
+				$url .= "?page=" . $_GET["page"];
+			}
+			redirect($url . "#collapseTrainingHistory");
+		}
+		else if ($_GET["type"] == "confirmConf")
+		{
+			if (isset($_GET["id"]))
+			{
+				$success = query("UPDATE suppconfrecords SET confirmed=1 WHERE id=? AND userid=?", $_GET["id"], $_SESSION["userid"]);
+			}
+			if ($success === false)
+			{
+				apologize("Unable to confirm this record.");
+			}
+			$url = "index.php";
+			if (isset($_GET["page"]) && $_GET["page"] > 1)
+			{
+				$url .= "?page=" . $_GET["page"];
+			}
+			redirect($url);
+		}
+		else if ($_GET["type"] == "confirmTrain")
+		{
+			if (isset($_GET["id"]))
+			{
+				$success = query("UPDATE trainingrecords SET confirmed=1 WHERE recordid=? AND userid=?", $_GET["id"], $_SESSION["userid"]);
+			}
+			if ($success === false)
+			{
+				apologize("Unable to confirm this record.");
+			}
+			$url = "index.php";
+			if (isset($_GET["page"]) && $_GET["page"] > 1)
+			{
+				$url .= "?page=" . $_GET["page"];
+			}
+			redirect($url . "#collapseTrainingHistory");
 		}
 	}
 ?>

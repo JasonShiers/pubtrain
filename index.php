@@ -20,8 +20,8 @@
 
 
 	// get user's training history
-	$query = "SELECT DATE_FORMAT(tr.date, '%b %Y') AS date, tl.type, tl.catmask, tr.description, "
-		. "tr.internal_location, tr.internal_trainer, tr.total_days "
+	$query = "SELECT tr.recordid AS id, DATE_FORMAT(tr.date, '%b %Y') AS date, tl.type, tl.catmask, tr.description, "
+		. "tr.internal_location, tr.internal_trainer, tr.total_days, tr.confirmed, tr.verified "
 		. "FROM trainingrecords tr, traininglibrary tl WHERE tr.userid = ? AND tr.trainingid = tl.trainingid "
 		. "ORDER BY tr.date DESC";
 	$trainhistory = query($query, $_SESSION["userid"]);

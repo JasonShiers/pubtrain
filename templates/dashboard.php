@@ -1,3 +1,7 @@
+<?php 
+$ROWSPERPAGE = 5;
+?>
+
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 	<div class="panel panel-default">
 		<div class="panel-heading" role="tab" id="ConferenceHistory">
@@ -9,7 +13,7 @@
 				</a>
 			</h4>
 		</div>
-		<div id="collapseConferenceHistory" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="ConferenceHistory">
+		<div id="collapseConferenceHistory" class="panel-collapse collapse" role="tabpanel" aria-labelledby="ConferenceHistory">
 			<div class="panel-body">
 				<table class="conflist paginated" style="width: 100%">
 					<thead>
@@ -33,9 +37,11 @@
 					</thead>
 					<tbody>
 						<?php
+							$rownumber = -1;
 							foreach ($confhistory as $h)
 							{
 								print("<tr ");
+								$rownumber++;
 								if ($h["confirmed"] === "0")
 								{
 									print("style=\"color: darkgray\";");
@@ -78,13 +84,17 @@
 									}
 									else
 									{
-										print("	<td><button type=\"button\" class=\"btn btn-info btn-xs\">
+										print("	<td><a type=\"button\" class=\"btn btn-info btn-xs\" 
+													href=\"modifyrecord.php?type=confirmConf&id=" . $h["id"] 
+													. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
 													&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm I Attended\" 
-													aria-hidden=\"true\"></span>&nbsp;</button>");
+													aria-hidden=\"true\"></span>&nbsp;</a>");
 									}
 									print("		&nbsp;
-												<button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"bindModalButton('modalDelConf', " 
-													. "'delConf' , " . $h["id"] . ")\">&nbsp;<span class=\"glyphicon glyphicon-trash\" 
+												<button type=\"button\" class=\"btn btn-danger btn-xs\" 
+												onclick=\"bindModalButton('modalDelConf', " 
+													. "'delConf' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) . ")\">
+													&nbsp;<span class=\"glyphicon glyphicon-trash\" 
 													title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
 												</button></td>");
 								}
@@ -136,13 +146,23 @@
 							<th style="width: 3em;">
 								Days
 							</th>
+							<th>
+								Options
+							</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
+							$rownumber = -1;
 							foreach ($trainhistory as $h)
 							{
-								print("<tr>");
+								print("<tr ");
+								$rownumber++;
+								if ($h["confirmed"] === "0")
+								{
+									print("style=\"color: darkgray\";");
+								}
+								print(">");
 								print("<td>" . htmlspecialchars($h["date"]) . "</td>");
 								print("<td>" . htmlspecialchars($h["type"]));
 								if ($h["description"] !== ""){
@@ -170,10 +190,49 @@
 									print("<td>N/A</td>");
 								}
 								print("<td>" . htmlspecialchars($h["total_days"]) . "</td>");
+								if($h["confirmed"] !== "0")
+								{
+									print("	<td>
+												<div class=\"imgdiv\">
+													<span class=\"glyphicon glyphicon-thumbs-up\" ");
+									if ($h["confirmed"] === "1")
+									{
+										print("			title=\"Confirmed by you\" ");
+									}
+									else
+									{
+										print("			title=\"Entered by you\" ");
+									}
+									print("				style=\"color: forestgreen;\" aria-hidden=\"true\"></span>
+												</div>");
+								}
+								else
+								{
+									print("	<td><a type=\"button\" class=\"btn btn-info btn-xs\" 
+												href=\"modifyrecord.php?type=confirmTrain&id=" . $h["id"] 
+													. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
+												&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm I Attended\" 
+												aria-hidden=\"true\"></span>&nbsp;</a>");
+								}
+								print("		&nbsp;
+											<button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"bindModalButton('modalDelTrain', " 
+												. "'delTrain' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) . ")\">
+												&nbsp;<span class=\"glyphicon glyphicon-trash\" 
+												title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
+											</button></td>");
 								print("</tr>");
 							}
 						?>
 					</tbody>
+					<tfoot>
+						<tr>
+							<th colspan=6>
+								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewTrain', 0)">
+									<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+								</button>
+							</th>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
@@ -362,20 +421,31 @@
 	}
 	
 	// Bind Continue button to appropriate action
-	function bindModalButton(modal_id, form_id, record_id){
-		$( "#" + form_id ).attr("action", "modifyrecord.php?type=delConf&id=" + record_id);
+	function bindModalButton(modal_id, form_id, record_id, return_page){
+		$( "#" + form_id ).attr("action", "modifyrecord.php?type=delConf&page=" 
+			+ return_page + "&id=" + record_id);
 		show_modal(modal_id);
 	}
 
 	$(document).ready(function(){
 
+		// Open accordion based on URL 
+		var url = document.location.toString();
+		if ( url.match('#') ) {
+			$('#'+url.split('#')[1]).addClass("in");
+		}
+		else
+		{
+			$("#collapseConferenceHistory").addClass("in");
+		}
+		
 		// Initiate Multi-select box
 		$('.chosen-select').chosen();
 		
 		// Initialise each paginated table
 		$('table.paginated').each(function() {
 			var currentPage = 0;
-			var numPerPage = 5;
+			var numPerPage = <?= $ROWSPERPAGE ?>;
 			// Current table
 			var $table = $(this);
 
@@ -420,6 +490,22 @@
 
 			// Run initial pagination
 			$table.trigger('repaginate');
+			
+
+			// Go to specified page
+			<?php if (isset($_GET["page"])): ?>
+				// Check this is the correct table by finding it in the expanded accordion
+				if ($(".in").find($table).attr("class") !== undefined)
+				{
+					// Set page according to URL and repaginate table
+					currentPage = <?= $_GET["page"] - 1 ?>;
+					$table.trigger('repaginate');
+					
+					// Set appropriate page as active in pager
+					$activepage = $(this).parent().find(".page-number:contains(" + (currentPage+1) + ")")[0];
+					$($activepage).addClass('active').siblings().removeClass('active');
+				}
+			<?php endif ?>
 		});
 	});
 </script>
