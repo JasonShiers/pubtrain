@@ -83,9 +83,9 @@
 													aria-hidden=\"true\"></span>&nbsp;</button>");
 									}
 									print("		&nbsp;
-												<button type=\"button\" class=\"btn btn-danger btn-xs\">
-													&nbsp;<span class=\"glyphicon glyphicon-trash\" title=\"Delete\" aria-hidden=\"true\">
-													</span>&nbsp;
+												<button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"bindModalButton('modalDelConf', " 
+													. "'delConf' , " . $h["id"] . ")\">&nbsp;<span class=\"glyphicon glyphicon-trash\" 
+													title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
 												</button></td>");
 								}
 								print("</tr>");
@@ -95,7 +95,7 @@
 					<tfoot>
 						<tr>
 							<th colspan=6>
-								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewConf')">
+								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewConf', 0)">
 									<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
 								</button>
 								 conference not requested through ConfTracker.
@@ -241,75 +241,101 @@
 
 <!-- Modal for adding new conference -->
 <div class="modal fade" id="modalNewConf" tabindex="-1" role="dialog" aria-labelledby="modalNewConf">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Add New Conference Attended</h4>
-		<p>To add an entry to your conference history please enter the following details:</p>
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalDelConfLabel">Add New Conference Attended</h4>
+				<p>To add an entry to your conference history please enter the following details:</p>
+			</div>
+			<form id="addConf" action="modifyrecord.php?type=newConf" method="post">
+				<div class="modal-body">
+					<fieldset class="formfieldgroup">
+						<legend>Conference Information</legend>
+						<div class="form-group clearfix">
+							<div class="col-md-3 text-left">
+								<label>
+									<b class="required">Start Date (Month+Year)</b>
+									<input class="form-control" name="confdate" type="month" required="required" />
+								</label>
+							</div>
+							<div class="col-md-9 text-left">
+								<label>
+									<b class="required">Conference Name</b>
+									<input class="form-control autocomplete" name="title" id="newConfName" required="required" 
+										placeholder="Paste here, or type keyword for autocomplete" type="text" maxlength="90"
+										onfocus="setAutocompleteType('newConfName')" />
+								</label>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<div class="col-md-7 text-left">
+								<label>
+									<b>Location</b>
+									<input class="form-control autocomplete" name="location" id="newConfLocation type="text" maxlength="60" 
+										placeholder="e.g. Cambridge, UK" onfocus="setAutocompleteType('newConfLocation')" />
+								</label>
+							</div>
+							<div class="col-md-2 text-left">
+								<label>
+									<b>Duration (days)</b>
+									<input class="form-control" name="days" type="number" min="0.5" max="10" step="0.5"/>
+								</label>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label>
+								<b>Other attendees on this conference:</b>
+								<select name="otherusers[]" id="otheruserlist" data-placeholder="Other attendees..." 
+									class="chosen-select" multiple style="width: 75%;">
+									<?php
+										foreach ($users as $user)
+										{
+											if($user["userid"] !== $_SESSION["userid"])
+											{
+												print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\">");
+												print(htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
+											}
+										}
+									?>
+								</select>
+							</label>
+						</div>
+					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<fieldset>
+						<button class="btn btn-success" type="submit">Submit</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('addConf')">Cancel</button>
+					</fieldset>
+				</div>
+			</form>
+		  </div>
+		</div>
 	</div>
-	<form id="addConf" action="insertrecord.php?type=newConf" method="post">
-		<div class="modal-body">
-			<fieldset class="formfieldgroup">
-				<legend>Conference Information</legend>
-				<div class="form-group clearfix">
-					<div class="col-md-3 text-left">
-						<label>
-							<b class="required">Start Date (Month+Year)</b>
-							<input class="form-control" name="confdate" type="month" required="required" />
-						</label>
-					</div>
-					<div class="col-md-9 text-left">
-						<label>
-							<b class="required">Conference Name</b>
-							<input class="form-control autocomplete" name="title" id="newConfName" required="required" 
-								placeholder="Paste here, or type keyword for autocomplete" type="text" maxlength="90"
-								onfocus="setAutocompleteType('newConfName')" />
-						</label>
-					</div>
+</div>	
+		
+<!-- Modal for deleting conference -->
+<div class="modal fade" id="modalDelConf" tabindex="-1" role="dialog" aria-labelledby="modalDelConf">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalDelConfLabel">Delete Conference</h4>
+			</div>
+			<form id="delConf" method="post">
+				<!-- <input type="hidden" name="origin" value="dashboard" /> -->
+				<div class="modal-body">
+				<p>Are you sure you want to delete this conference record?</p>
 				</div>
-				<div class="form-group clearfix">
-					<div class="col-md-7 text-left">
-						<label>
-							<b>Location</b>
-							<input class="form-control autocomplete" name="location" id="newConfLocation type="text" maxlength="60" 
-								placeholder="e.g. Cambridge, UK" onfocus="setAutocompleteType('newConfLocation')" />
-						</label>
-					</div>
-					<div class="col-md-2 text-left">
-						<label>
-							<b>Duration (days)</b>
-							<input class="form-control" name="days" type="number" min="0.5" max="10" step="0.5"/>
-						</label>
-					</div>
+				<div class="modal-footer">
+					<fieldset>
+						<button class="btn btn-success" type="submit">Continue</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delConf')">Cancel</button>
+					</fieldset>
 				</div>
-				<div class="form-group clearfix">
-					<label>
-						<b>Other attendees on this conference:</b>
-						<select name="otherusers[]" id="otheruserlist" data-placeholder="Other attendees..." 
-							class="chosen-select" multiple style="width: 75%;">
-							<?php
-								foreach ($users as $user)
-								{
-									if($user["userid"] !== $_SESSION["userid"])
-									{
-										print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\">");
-										print(htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
-									}
-								}
-							?>
-						</select>
-					</label>
-				</div>
-			</fieldset>
+			</form>
+		  </div>
 		</div>
-		<div class="modal-footer">
-			<fieldset>
-				<button class="btn btn-success" type="submit">Submit</button>
-				<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('addConf')">Cancel</button>
-			</fieldset>
-		</div>
-	</form>
-  </div>
+	</div>
 </div>
 
 <script>
@@ -333,6 +359,12 @@
 			source: "getautocomplete.php?type=" + autocompleteType,
 			minLength: 2
 		});
+	}
+	
+	// Bind Continue button to appropriate action
+	function bindModalButton(modal_id, form_id, record_id){
+		$( "#" + form_id ).attr("action", "modifyrecord.php?type=delConf&id=" + record_id);
+		show_modal(modal_id);
 	}
 
 	$(document).ready(function(){

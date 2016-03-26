@@ -8,7 +8,7 @@
 				c.days, r.attended, r.id AS req_id, 0 AS editable, 1 AS confirmed, 1 AS verified 
 				FROM conferences c, requests r WHERE r.userid=? AND r.conf_id=c.id AND c.confdate <= ?) 
 				UNION
-				(SELECT 0 AS id, date, DATE_FORMAT(date, '%b %Y') AS confdate, title, location, days, 0 AS attended, 
+				(SELECT id AS id, date, DATE_FORMAT(date, '%b %Y') AS confdate, title, location, days, 0 AS attended, 
 				0 AS req_id, 1 AS editable, confirmed, verified 
 				FROM suppconfrecords WHERE userid=?) 
 				ORDER BY date DESC";

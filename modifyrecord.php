@@ -39,5 +39,17 @@
 				}
 			}
 		}
+		else if ($_GET["type"] == "delConf")
+		{
+			if (isset($_GET["id"]))
+			{
+				$success = query("DELETE FROM suppconfrecords WHERE id=? AND userid=?", $_GET["id"], $_SESSION["userid"]);
+			}
+			if ($success === false)
+			{
+				apologize("Unable to delete this record.");
+			}
+			redirect("index.php");
+		}
 	}
 ?>
