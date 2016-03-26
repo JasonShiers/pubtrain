@@ -26,7 +26,10 @@
 		. "ORDER BY tr.date DESC";
 	$trainhistory = query($query, $_SESSION["userid"]);
 	
+	// get training types for multi select
+	$traintypes = query("SELECT trainingid, type FROM traininglibrary");
+	
 	// render table
-	render("templates/dashboard.php", ["users" => $users, "trainhistory" => $trainhistory, "confhistory" => $confhistory, 
-		"title" => "Dashboard"]);
+	render("templates/dashboard.php", ["users" => $users, "trainhistory" => $trainhistory, "traintypes" => $traintypes, 
+		"confhistory" => $confhistory, "title" => "Dashboard"]);
 ?>

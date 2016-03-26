@@ -9,25 +9,34 @@
 		
 		if ($_GET["type"] == "newConfName")
 		{
-			$conferences = query("	SELECT title FROM conferences WHERE title LIKE ? 
+			$results = query("	SELECT title FROM conferences WHERE title LIKE ? 
 									UNION 
 									SELECT title FROM suppconfrecords WHERE title LIKE ? 
 									GROUP BY title", "%" . $_GET["term"] . "%", "%" . $_GET["term"] . "%");
 
 			// output conferences as JSON
 			header("Content-type: application/json");
-			print(json_encode(array_column($conferences, "title"), JSON_PRETTY_PRINT));
+			print(json_encode(array_column($results, "title"), JSON_PRETTY_PRINT));
 		}
 		else if ($_GET["type"] == "newConfLocation")
 		{
-			$conferences = query("	SELECT location FROM conferences WHERE location LIKE ?
-									UNION
-									SELECT location FROM suppconfrecords WHERE location LIKE ? 
-									GROUP BY location", "%" . $_GET["term"] . "%", "%" . $_GET["term"] . "%");
+			$results = query("	SELECT location FROM conferences WHERE location LIKE ?
+								UNION
+								SELECT location FROM suppconfrecords WHERE location LIKE ? 
+								GROUP BY location", "%" . $_GET["term"] . "%", "%" . $_GET["term"] . "%");
 
 			// output conferences as JSON
 			header("Content-type: application/json");
-			print(json_encode(array_column($conferences, "location"), JSON_PRETTY_PRINT));
+			print(json_encode(array_column($results, "location"), JSON_PRETTY_PRINT));
+		}
+		else if ($_GET["type"] == "newTrainDesc")
+		{
+			$results = query("SELECT description FROM trainingrecords WHERE description LIKE ? GROUP BY description", 
+				"%" . $_GET["term"] . "%");
+
+			// output conferences as JSON
+			header("Content-type: application/json");
+			print(json_encode(array_column($results, "description"), JSON_PRETTY_PRINT));
 		}
 
 	}

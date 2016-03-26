@@ -93,7 +93,7 @@ $ROWSPERPAGE = 5;
 									print("		&nbsp;
 												<button type=\"button\" class=\"btn btn-danger btn-xs\" 
 												onclick=\"bindModalButton('modalDelConf', " 
-													. "'delConf' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) . ")\">
+													. "'delConf' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) . ", '')\">
 													&nbsp;<span class=\"glyphicon glyphicon-trash\" 
 													title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
 												</button></td>");
@@ -108,7 +108,7 @@ $ROWSPERPAGE = 5;
 								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewConf', 0)">
 									<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
 								</button>
-								 conference not requested through ConfTracker.
+								 conference not requested through ConferenceTracker.
 							</th>
 						</tr>
 					</tfoot>
@@ -177,7 +177,7 @@ $ROWSPERPAGE = 5;
 								{
 									print("<td>Internal</td>");
 								}									
-								if ($h["internal_trainer"] === 0)
+								if ($h["internal_trainer"] === "0")
 								{
 									print("<td>External</td>");
 								}
@@ -216,7 +216,8 @@ $ROWSPERPAGE = 5;
 								}
 								print("		&nbsp;
 											<button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"bindModalButton('modalDelTrain', " 
-												. "'delTrain' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) . ")\">
+												. "'delTrain' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) 
+												. ", '#collapseTrainingHistory')\">
 												&nbsp;<span class=\"glyphicon glyphicon-trash\" 
 												title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
 											</button></td>");
@@ -303,7 +304,7 @@ $ROWSPERPAGE = 5;
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="modalDelConfLabel">Add New Conference Attended</h4>
+				<h4 class="modal-title" id="modalAddConfLabel">Add New Conference Attended</h4>
 				<p>To add an entry to your conference history please enter the following details:</p>
 			</div>
 			<form id="addConf" action="modifyrecord.php?type=newConf" method="post">
@@ -330,7 +331,7 @@ $ROWSPERPAGE = 5;
 							<div class="col-md-7 text-left">
 								<label>
 									<b>Location</b>
-									<input class="form-control autocomplete" name="location" id="newConfLocation type="text" maxlength="60" 
+									<input class="form-control autocomplete" name="location" id="newConfLocation" type="text" maxlength="60" 
 										placeholder="e.g. Cambridge, UK" onfocus="setAutocompleteType('newConfLocation')" />
 								</label>
 							</div>
@@ -372,7 +373,114 @@ $ROWSPERPAGE = 5;
 		</div>
 	</div>
 </div>	
-		
+
+<!-- Modal for adding new training record -->
+<div class="modal fade" id="modalNewTrain" tabindex="-1" role="dialog" aria-labelledby="modalNewTrain">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalAddTrainLabel">Add New Training Record</h4>
+				<p>To add an entry to your training history please enter the following details:</p>
+			</div>
+			<form id="addTrain" action="modifyrecord.php?type=newTrain" method="post">
+				<div class="modal-body">
+					<fieldset class="formfieldgroup">
+						<legend>Training Record Information</legend>
+						<div class="form-group clearfix">
+							<div class="col-md-3 text-left">
+								<label>
+									<b class="required">Start Date (Month+Year)</b>
+									<input class="form-control" name="traindate" type="month" required="required" />
+								</label>
+							</div>
+							<div class="col-md-5 text-left">
+								<label>
+									<b class="required">Training Type</b>
+									<select name="trainingid" data-placeholder="Select training type..." class="chosen-select" 
+										required="required">
+										<?php
+											print("<option disabled selected value>Select an option</option>");
+											foreach($traintypes as $traintype)
+											{
+												print("<option value=\"" . $traintype["trainingid"] . "\" ");
+												print(">" . htmlspecialchars($traintype["type"]) . "</option>\n");
+											}
+										?>							
+									</select>
+								</label>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<div class="col-md-7 text-left">
+								<label>
+									<b>Description (Optional)</b>
+									<input class="form-control autocomplete" name="description" id="newTrainDesc" type="text" maxlength="60" 
+										placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc')" />
+								</label>
+							</div>
+							<div class="col-md-3 text-left">
+								<label>
+									<b class="required">Total Duration (days)</b>
+									<input class="form-control" name="days" type="number" min="0" max="10" step="0.1" required="required" />
+								</label>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<div class="col-md-3 col-md-offset-1 text-left">
+								<label>
+									<b class="required">Location</b>
+									<select name="internal_location" required="required">
+										<option disabled selected value>Select option</option>
+										<option value="1">Internal</option>
+										<option value="0">External</option>
+									</select>
+								</label>
+							</div>
+							<div class="col-md-3 text-left">
+								<label>
+									<b class="required">Trainer</b>
+									<select name="internal_trainer" required="required">
+										<option disabled selected value>Select option</option>
+										<option value="1">Internal</option>
+										<option value="0">External</option>
+										<option value="2">No Trainer</option>
+									</select>
+								</label>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label>
+								<b>Other attendees on this training:</b>
+								<select name="otherusers[]" id="otheruserlist" data-placeholder="Other attendees..." 
+									class="chosen-select" multiple style="width: 75%;">
+									<?php
+										foreach ($users as $user)
+										{
+											if($user["userid"] !== $_SESSION["userid"])
+											{
+												print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\">");
+												print(htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
+											}
+										}
+									?>
+								</select>
+							</label>
+						</div>
+					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<fieldset>
+						<button class="btn btn-success" type="submit">Submit</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('addTrain')">Cancel</button>
+					</fieldset>
+				</div>
+			</form>
+		  </div>
+		</div>
+	</div>
+</div>
+
+
 <!-- Modal for deleting conference -->
 <div class="modal fade" id="modalDelConf" tabindex="-1" role="dialog" aria-labelledby="modalDelConf">
 	<div class="modal-dialog modal-sm" role="document">
@@ -381,7 +489,6 @@ $ROWSPERPAGE = 5;
 				<h4 class="modal-title" id="modalDelConfLabel">Delete Conference</h4>
 			</div>
 			<form id="delConf" method="post">
-				<!-- <input type="hidden" name="origin" value="dashboard" /> -->
 				<div class="modal-body">
 				<p>Are you sure you want to delete this conference record?</p>
 				</div>
@@ -389,6 +496,29 @@ $ROWSPERPAGE = 5;
 					<fieldset>
 						<button class="btn btn-success" type="submit">Continue</button>
 						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delConf')">Cancel</button>
+					</fieldset>
+				</div>
+			</form>
+		  </div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal for deleting training record -->
+<div class="modal fade" id="modalDelTrain" tabindex="-1" role="dialog" aria-labelledby="modalDelTrain">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalDelTrainLabel">Delete Training Record</h4>
+			</div>
+			<form id="delTrain" method="post">
+				<div class="modal-body">
+				<p>Are you sure you want to delete this training record?</p>
+				</div>
+				<div class="modal-footer">
+					<fieldset>
+						<button class="btn btn-success" type="submit">Continue</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delTrain')">Cancel</button>
 					</fieldset>
 				</div>
 			</form>
@@ -421,9 +551,9 @@ $ROWSPERPAGE = 5;
 	}
 	
 	// Bind Continue button to appropriate action
-	function bindModalButton(modal_id, form_id, record_id, return_page){
-		$( "#" + form_id ).attr("action", "modifyrecord.php?type=delConf&page=" 
-			+ return_page + "&id=" + record_id);
+	function bindModalButton(modal_id, form_id, record_id, return_page, return_modal){
+		$( "#" + form_id ).attr("action", "modifyrecord.php?type=" + form_id + "&page=" 
+			+ return_page + "&id=" + record_id + return_modal);
 		show_modal(modal_id);
 	}
 
