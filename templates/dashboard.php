@@ -253,46 +253,100 @@ $ROWSPERPAGE = 5;
 				<table class="conflist paginated" style="width: 100%">
 					<thead>
 						<tr>
-							<th style="width: 6em;">
-								Start Date
+							<th class="left" style="width: 4em;">
+								Year
 							</th>
 							<th>
-								Title
+								Publication reference
 							</th>
 							<th>
-								Location
+								Source
 							</th>
-							<th style="width: 3em;">
-								Days
-							</th>
-							<th>
-								Feedback
+							<th class="right">
+								Options
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
-							foreach ($confhistory as $h)
+							$rownumber = -1;
+							foreach ($pubhistory as $h)
 							{
-								print("<tr>");
-								print("<td>" . htmlspecialchars($h["confdate"]) . "</td>");
-								print("<td>" . htmlspecialchars($h["title"]) . "</td>");
-								print("<td>" . htmlspecialchars($h["location"]) . "</td>");
-								print("<td>" . htmlspecialchars($h["days"]) . "</td>");
-								if ($h["attended"]==1)
+								print("<tr ");
+								$rownumber++;
+								if ($h["confirmed"] === "0")
 								{
-									print("<td ><a style=\"font-weight: bold; color: forestgreen;\" href=\"feedbackreview.php?id="
-										. htmlspecialchars($h["req_id"]) . "&userid=" . htmlspecialchars($_SESSION["userid"]) 
-										. "\">Review</a></td>");
+									print("style=\"color: darkgray\";");
+								}
+								print(">");
+								print("<td>" . htmlspecialchars($h["year"]) . "</td>");
+								if ($h["journal"] == 1)
+								{
+									print("<td><i>" . htmlspecialchars($h["title"]) . "</i>");
+									if($h["volume"] !== "0")
+									{
+										print(", <b>" . htmlspecialchars($h["volume"]) . "</b>");
+									}
+									if($h["issue"] !== "0")
+									{
+										print("(" . htmlspecialchars($h["issue"]) . ")");
+									}
+									print(", " . htmlspecialchars($h["startpage"]));
+									if($h["endpage"] !== "0")
+									{
+										print("-" . htmlspecialchars($h["endpage"]));
+									}
 								}
 								else
 								{
-									print("<td>N/A</td>");
+									print("<td>" . htmlspecialchars($h["title"]));								
 								}
+								print("</td>");
+								print("<td>" . htmlspecialchars($h["source"]) . "</td>");
+								if($h["confirmed"] !== "0")
+								{
+									print("	<td>
+												<div class=\"imgdiv\">
+													<span class=\"glyphicon glyphicon-thumbs-up\" ");
+									if ($h["confirmed"] === "1")
+									{
+										print("			title=\"Confirmed by you\" ");
+									}
+									else
+									{
+										print("			title=\"Entered by you\" ");
+									}
+									print("				style=\"color: forestgreen;\" aria-hidden=\"true\"></span>
+												</div>");
+								}
+								else
+								{
+									print("	<td><a type=\"button\" class=\"btn btn-info btn-xs\" 
+												href=\"modifyrecord.php?type=confirmPub&id=" . $h["id"] 
+												. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
+												&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm\" 
+												aria-hidden=\"true\"></span>&nbsp;</a>");
+								}
+								print("		&nbsp;
+											<button type=\"button\" class=\"btn btn-danger btn-xs\" 
+												onclick=\"bindModalButton('modalDelPub', " 
+												. "'delPub' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) . ", '')\">
+												&nbsp;<span class=\"glyphicon glyphicon-trash\" 
+												title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
+											</button></td>");
 								print("</tr>");
 							}
 						?>
 					</tbody>
+					<tfoot>
+						<tr>
+							<th colspan=6>
+								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewPub', 0)">
+									<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+								</button>
+							</th>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
@@ -480,6 +534,121 @@ $ROWSPERPAGE = 5;
 	</div>
 </div>
 
+<!-- Modal for adding new publication record -->
+<div class="modal fade" id="modalNewPub" tabindex="-1" role="dialog" aria-labelledby="modalNewPub">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalAddPubLabel">Add New Publication Record</h4>
+				<p>To add an entry to your publication history please enter the following details:</p>
+			</div>
+			<form id="addPub" action="modifyrecord.php?type=newPub" method="post">
+				<div class="modal-body">
+					<fieldset class="formfieldgroup">
+						<legend>Publication Record Information</legend>
+						<div class="form-group clearfix">
+							<div class="col-md-3 text-left">
+								<label>
+									<b class="required">Year</b>
+									<input class="form-control" name="year" type="number" required="required" min="1900" max="2100" />
+								</label>
+							</div>
+							<div class="col-md-5 text-left">
+								<label>
+									<b class="required">Reference Title</b>
+									<input class="form-control autocomplete" name="title" id="newPubDesc" type="text" maxlength="60" 
+										minlength="8" required="required" onfocus="setAutocompleteType('newPubDesc')" />
+								</label>
+								<p class="text-muted">Patent Reference (e.g. WO/2005/123456) or 
+									<a href="https://images.webofknowledge.com/WOK46/help/WOS/J_abrvjt.html" target="_blank">
+									ISI abbreviated</a> Journal Title (e.g. J. Am. Chem. Soc.)
+								</p>
+							</div>
+							<div class="col-md-4 text-left">
+								<label>
+									<b class="required">Source of work</b>
+									<input class="form-control autocomplete" name="source" id="newPubSource" type="text" maxlength="32" 
+										minlength="3" required="required" onfocus="setAutocompleteType('newPubSource')" />
+								</label>
+								<p class="text-muted">
+									Enter name of client for project work, "Internal" for Sygnature internal research and "External" for 
+									non-Sygnature work.
+								</p>
+							</div>
+						</div>
+						<div class="form-group clearfix text-center">
+							<p><b>Additional information for Journals</b></p>
+							<div class="col-md-3 col-md-offset-1 text-left">
+								<label>
+									<b class="required">Publication Type</b>
+									<select name="journal" required="required">
+										<option disabled selected value>Select option</option>
+										<option value="1">Journal</option>
+										<option value="0">Patent</option>
+									</select>
+								</label>
+							</div>
+							<div class="col-md-2 text-left">
+								<label>
+									<b>Volume</b>
+									<input class="form-control" name="volume" type="number" min="0" max="5000" />
+								</label>
+							</div>
+							<div class="col-md-2 text-left">
+								<label>
+									<b>(Issue)</b>
+									<input class="form-control" name="issue" type="number" min="0" max="100" />
+								</label>
+							</div>
+							<div class="col-md-2 text-left">
+								<label>
+									<b>Start Page</b>
+									<input class="form-control" name="startpage" type="text" maxlength="16" />
+								</label>
+							</div>
+							<div class="col-md-2 text-left">
+								<label>
+									<b>(End Page)</b>
+									<input class="form-control" name="endpage" type="number" min="0" max="10000" />
+								</label>
+							</div>
+						</div>
+					</fieldset>
+					<br />
+					<fieldset class="formfieldgroup">
+						<div class="form-group clearfix">
+							<div class="col-md-10 col-md-offset-2 text-left">
+								<label>
+									<b>Other Sygnature authors/inventors:</b>
+									<select name="otherusers[]" id="otheruserlist" data-placeholder="Other attendees..." 
+										class="chosen-select" multiple style="width: 75%;">
+										<?php
+											foreach ($users as $user)
+											{
+												if($user["userid"] !== $_SESSION["userid"])
+												{
+													print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\">");
+													print(htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
+												}
+											}
+										?>
+									</select>
+								</label>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<fieldset>
+						<button class="btn btn-success" type="submit">Submit</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('addTrain')">Cancel</button>
+					</fieldset>
+				</div>
+			</form>
+		  </div>
+		</div>
+	</div>
+</div>
 
 <!-- Modal for deleting conference -->
 <div class="modal fade" id="modalDelConf" tabindex="-1" role="dialog" aria-labelledby="modalDelConf">
@@ -519,6 +688,29 @@ $ROWSPERPAGE = 5;
 					<fieldset>
 						<button class="btn btn-success" type="submit">Continue</button>
 						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delTrain')">Cancel</button>
+					</fieldset>
+				</div>
+			</form>
+		  </div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal for deleting publication record -->
+<div class="modal fade" id="modalDelPub" tabindex="-1" role="dialog" aria-labelledby="modalDelPub">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalDelPubLabel">Delete Training Record</h4>
+			</div>
+			<form id="delPub" method="post">
+				<div class="modal-body">
+				<p>Are you sure you want to delete this publication record?</p>
+				</div>
+				<div class="modal-footer">
+					<fieldset>
+						<button class="btn btn-success" type="submit">Continue</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delPub')">Cancel</button>
 					</fieldset>
 				</div>
 			</form>

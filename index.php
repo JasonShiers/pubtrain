@@ -28,8 +28,12 @@
 	
 	// get training types for multi select
 	$traintypes = query("SELECT trainingid, type FROM traininglibrary");
-	
+
+	// get user's publication history
+	$query = "SELECT * FROM publicationrecords WHERE userid = ? ORDER BY year DESC, journal, title";
+	$pubhistory = query($query, $_SESSION["userid"]);
+
 	// render table
-	render("templates/dashboard.php", ["users" => $users, "trainhistory" => $trainhistory, "traintypes" => $traintypes, 
-		"confhistory" => $confhistory, "title" => "Dashboard"]);
+	render("templates/dashboard.php", ["pubhistory" => $pubhistory, "users" => $users, 
+		"trainhistory" => $trainhistory, "traintypes" => $traintypes, "confhistory" => $confhistory, "title" => "Dashboard"]);
 ?>

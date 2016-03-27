@@ -3,6 +3,9 @@
 		<h3>To continue, please log in</h3> 
 		<h4>using your Sygnature username and password</h4>
 		<img alt="Login" src="img/login.png" />
+		<?php if (isset($failed) && $failed == 1): ?>
+			<div class="alert alert-danger" role="alert">Username/password is incorrect. Please try again.</div>
+		<?php endif?>
 		<div class="form-group">
 			<div class="col-xs-4 col-xs-offset-4">
 				<input autofocus class="form-control" name="username" placeholder="Username" type="text"/>
