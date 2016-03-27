@@ -57,7 +57,7 @@ $ROWSPERPAGE = 5;
 												<div class=\"imgdiv\"><span class=\"glyphicon glyphicon-thumbs-up\" title=\"Confirmed by ConferenceTracker\" 
 													style=\"color: darkblue;\" aria-hidden=\"true\"></span></div>
 												&nbsp;
-												<a type=\"button\" class=\"btn btn-info btn-xs\" 
+												<a class=\"btn btn-info btn-xs\" 
 												href=\"//intranet/confdb/feedbackreview.php?id=" . htmlspecialchars($h["req_id"]) 
 												. "&userid=" . htmlspecialchars($_SESSION["userid"]) . "\" target=\"_blank\">
 													&nbsp;<span class=\"glyphicon glyphicon-list-alt\" title=\"Review Feedback\" 
@@ -84,7 +84,7 @@ $ROWSPERPAGE = 5;
 									}
 									else
 									{
-										print("	<td><a type=\"button\" class=\"btn btn-info btn-xs\" 
+										print("	<td><a class=\"btn btn-info btn-xs\" 
 													href=\"modifyrecord.php?type=confirmConf&id=" . $h["id"] 
 													. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
 													&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm I Attended\" 
@@ -104,7 +104,7 @@ $ROWSPERPAGE = 5;
 					</tbody>
 					<tfoot>
 						<tr>
-							<th colspan=6>
+							<th colspan=5>
 								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewConf', 0)">
 									<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
 								</button>
@@ -208,7 +208,7 @@ $ROWSPERPAGE = 5;
 								}
 								else
 								{
-									print("	<td><a type=\"button\" class=\"btn btn-info btn-xs\" 
+									print("	<td><a class=\"btn btn-info btn-xs\" 
 												href=\"modifyrecord.php?type=confirmTrain&id=" . $h["id"] 
 													. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
 												&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm I Attended\" 
@@ -321,7 +321,7 @@ $ROWSPERPAGE = 5;
 								}
 								else
 								{
-									print("	<td><a type=\"button\" class=\"btn btn-info btn-xs\" 
+									print("	<td><a class=\"btn btn-info btn-xs\" 
 												href=\"modifyrecord.php?type=confirmPub&id=" . $h["id"] 
 												. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
 												&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm\" 
@@ -340,7 +340,7 @@ $ROWSPERPAGE = 5;
 					</tbody>
 					<tfoot>
 						<tr>
-							<th colspan=6>
+							<th colspan=4>
 								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewPub', 0)">
 									<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
 								</button>
@@ -367,9 +367,28 @@ $ROWSPERPAGE = 5;
 						<legend>Conference Information</legend>
 						<div class="form-group clearfix">
 							<div class="col-md-3 text-left">
-								<label>
-									<b class="required">Start Date (Month+Year)</b>
-									<input class="form-control" name="confdate" type="month" required="required" />
+								<label style="max-width:50%; float: left;">
+									<b class="required">Month</b>
+									<select class="form-control" name="month" required="required">
+										<option value selected disabled>Month</option>
+										<option value="01">Jan</option>
+										<option value="02">Feb</option>
+										<option value="03">Mar</option>
+										<option value="04">Apr</option>
+										<option value="05">May</option>
+										<option value="06">Jun</option>
+										<option value="07">Jul</option>
+										<option value="08">Aug</option>
+										<option value="09">Sep</option>
+										<option value="10">Oct</option>
+										<option value="11">Nov</option>
+										<option value="12">Dec</option>
+									</select>
+								</label>
+								<label style="max-width:40%; float: left;">
+									<b class="required">Year</b>
+									<?php print("<input class=\"form-control\" name=\"year\" type=\"number\" min=\"1980\" max=\"2500\" 
+										value=\"" . date('Y') . "\" required=\"required\" />"); ?>
 								</label>
 							</div>
 							<div class="col-md-9 text-left">
@@ -384,22 +403,22 @@ $ROWSPERPAGE = 5;
 						<div class="form-group clearfix">
 							<div class="col-md-7 text-left">
 								<label>
-									<b>Location</b>
+									<b class="required">Location</b>
 									<input class="form-control autocomplete" name="location" id="newConfLocation" type="text" maxlength="60" 
-										placeholder="e.g. Cambridge, UK" onfocus="setAutocompleteType('newConfLocation')" />
+										required="required" placeholder="e.g. Cambridge, UK" onfocus="setAutocompleteType('newConfLocation')" />
 								</label>
 							</div>
-							<div class="col-md-2 text-left">
+							<div class="col-md-3 text-left">
 								<label>
-									<b>Duration (days)</b>
-									<input class="form-control" name="days" type="number" min="0.5" max="10" step="0.5"/>
+									<b class="required">Duration (days)</b>
+									<input class="form-control" required="required" name="days" type="number" min="0.5" max="10" step="0.5"/>
 								</label>
 							</div>
 						</div>
 						<div class="form-group clearfix">
 							<label>
 								<b>Other attendees on this conference:</b>
-								<select name="otherusers[]" id="otheruserlist" data-placeholder="Other attendees..." 
+								<select name="otherusers[]" id="otherusersconf" data-placeholder="Other attendees..." 
 									class="chosen-select" multiple style="width: 75%;">
 									<?php
 										foreach ($users as $user)
@@ -423,7 +442,6 @@ $ROWSPERPAGE = 5;
 					</fieldset>
 				</div>
 			</form>
-		  </div>
 		</div>
 	</div>
 </div>	
@@ -442,10 +460,30 @@ $ROWSPERPAGE = 5;
 						<legend>Training Record Information</legend>
 						<div class="form-group clearfix">
 							<div class="col-md-3 text-left">
-								<label>
-									<b class="required">Start Date (Month+Year)</b>
-									<input class="form-control" name="traindate" type="month" required="required" />
+								<label style="max-width:50%; float: left;">
+									<b class="required">Month</b>
+									<select class="form-control" name="month" required="required">
+										<option value selected disabled>Month</option>
+										<option value="01">Jan</option>
+										<option value="02">Feb</option>
+										<option value="03">Mar</option>
+										<option value="04">Apr</option>
+										<option value="05">May</option>
+										<option value="06">Jun</option>
+										<option value="07">Jul</option>
+										<option value="08">Aug</option>
+										<option value="09">Sep</option>
+										<option value="10">Oct</option>
+										<option value="11">Nov</option>
+										<option value="12">Dec</option>
+									</select>
 								</label>
+								<label style="max-width:40%; float: left;">
+									<b class="required">Year</b>
+									<?php print("<input class=\"form-control\" name=\"year\" type=\"number\" min=\"1980\" max=\"2500\" 
+										value=\"" . date('Y') . "\" required=\"required\" />"); ?>
+								</label>
+								<p class="text-muted">Training start date</p>
 							</div>
 							<div class="col-md-5 text-left">
 								<label>
@@ -505,7 +543,7 @@ $ROWSPERPAGE = 5;
 						<div class="form-group clearfix">
 							<label>
 								<b>Other attendees on this training:</b>
-								<select name="otherusers[]" id="otheruserlist" data-placeholder="Other attendees..." 
+								<select name="otherusers[]" id="otheruserstrain" data-placeholder="Other attendees..." 
 									class="chosen-select" multiple style="width: 75%;">
 									<?php
 										foreach ($users as $user)
@@ -529,7 +567,6 @@ $ROWSPERPAGE = 5;
 					</fieldset>
 				</div>
 			</form>
-		  </div>
 		</div>
 	</div>
 </div>
@@ -550,7 +587,8 @@ $ROWSPERPAGE = 5;
 							<div class="col-md-3 text-left">
 								<label>
 									<b class="required">Year</b>
-									<input class="form-control" name="year" type="number" required="required" min="1900" max="2100" />
+									<?php print("<input class=\"form-control\" name=\"year\" type=\"number\" min=\"1980\" max=\"2500\" 
+										value=\"" . date('Y') . "\" required=\"required\" />"); ?>
 								</label>
 							</div>
 							<div class="col-md-5 text-left">
@@ -620,7 +658,7 @@ $ROWSPERPAGE = 5;
 							<div class="col-md-10 col-md-offset-2 text-left">
 								<label>
 									<b>Other Sygnature authors/inventors:</b>
-									<select name="otherusers[]" id="otheruserlist" data-placeholder="Other attendees..." 
+									<select name="otherusers[]" id="otheruserspub" data-placeholder="Other attendees..." 
 										class="chosen-select" multiple style="width: 75%;">
 										<?php
 											foreach ($users as $user)
@@ -645,7 +683,6 @@ $ROWSPERPAGE = 5;
 					</fieldset>
 				</div>
 			</form>
-		  </div>
 		</div>
 	</div>
 </div>
@@ -668,7 +705,6 @@ $ROWSPERPAGE = 5;
 					</fieldset>
 				</div>
 			</form>
-		  </div>
 		</div>
 	</div>
 </div>
@@ -691,7 +727,6 @@ $ROWSPERPAGE = 5;
 					</fieldset>
 				</div>
 			</form>
-		  </div>
 		</div>
 	</div>
 </div>
@@ -714,7 +749,6 @@ $ROWSPERPAGE = 5;
 					</fieldset>
 				</div>
 			</form>
-		  </div>
 		</div>
 	</div>
 </div>
@@ -763,7 +797,7 @@ $ROWSPERPAGE = 5;
 		
 		// Initiate Multi-select box
 		$('.chosen-select').chosen();
-		
+			
 		// Initialise each paginated table
 		$('table.paginated').each(function() {
 			var currentPage = 0;

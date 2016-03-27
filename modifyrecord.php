@@ -8,10 +8,12 @@
 	{
 		if ($_GET["type"] == "newConf")
 		{
-			if (isset($_POST["confdate"]) && isset($_POST["title"]))
+			if (isset($_POST["month"]) && isset($_POST["year"]) && isset($_POST["title"]))
 			{
+				$date = $_POST["year"] . "-" . $_POST["month"] . "-" . "01";
+				
 				$query = "INSERT INTO suppconfrecords (userid, date, title, location, days, confirmed) VALUES (?, ?, ?, ?, ?, 1)";
-				$success = query($query, $_SESSION["userid"], date("Y-m-d", strtotime($_POST["confdate"])), $_POST["title"],
+				$success = query($query, $_SESSION["userid"], date("Y-m-d", strtotime($date)), $_POST["title"],
 					$_POST["location"], $_POST["days"]);
 
 				if ($success === false)
@@ -26,7 +28,7 @@
 						{
 							$query = "	INSERT INTO suppconfrecords (userid, date, title, location, days, confirmed) 
 										VALUES (?, ?, ?, ?, ?, 0) ON DUPLICATE KEY UPDATE id=id";
-							$success = query($query, $otheruser, date("Y-m-d", strtotime($_POST["confdate"])), 
+							$success = query($query, $otheruser, date("Y-m-d", strtotime($date)), 
 								$_POST["title"], $_POST["location"], $_POST["days"]);
 
 							if ($success === false)
@@ -41,20 +43,21 @@
 						$url .= "?page=" . $_GET["page"];
 					}
 					redirect($url);
-				}
+				} 
 			}
 		}
 		else if ($_GET["type"] == "newTrain")
 		{
-			if (isset($_POST["traindate"]) && isset($_POST["trainingid"]) && isset($_POST["journal"]))
+			if (isset($_POST["month"]) && isset($_POST["year"]) && isset($_POST["trainingid"]))
 			{
+				$date = $_POST["year"] . "-" . $_POST["month"] . "-" . "01";
 				if($_POST["internal_trainer"]==2)
 				{
 					$_POST["internal_trainer"]=NULL;
 				}
 				$query = "INSERT INTO trainingrecords (userid, date, trainingid, description, total_days, 
 					internal_location, internal_trainer, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)";
-				$success = query($query, $_SESSION["userid"], date("Y-m-d", strtotime($_POST["traindate"])), $_POST["trainingid"], 
+				$success = query($query, $_SESSION["userid"], date("Y-m-d", strtotime($date)), $_POST["trainingid"], 
 					$_POST["description"], $_POST["days"], $_POST["internal_location"], $_POST["internal_trainer"]);
 
 				if ($success === false)
@@ -70,7 +73,7 @@
 							$query = "	INSERT INTO trainingrecords (userid, date, trainingid, description, total_days, 
 								internal_location, internal_trainer, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, 0) 
 								ON DUPLICATE KEY UPDATE recordid=recordid";
-							$success = query($query, $otheruser, date("Y-m-d", strtotime($_POST["traindate"])), 
+							$success = query($query, $otheruser, date("Y-m-d", strtotime($date)), 
 								$_POST["trainingid"], $_POST["description"], $_POST["days"], 
 								$_POST["internal_location"], $_POST["internal_trainer"]);
 

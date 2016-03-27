@@ -36,7 +36,7 @@
 							<p style="color: dimgray; font-size: 0.70vw;"><i><b>Sygnature Publication and Training Database</b></i></p>
 						</div>
 						<div class="col-xs-1 menucell">
-							<p><a href="index.php" class="imglink"><div class="imgdiv" id="dashbutton" title="Dashboard"></div></a></p>
+							<div><a href="index.php" class="imglink"><div class="imgdiv" id="dashbutton" title="Dashboard"></div></a></div>
 						</div>
 						<div class="col-xs-2 menucell">
 							<a href="#">Menu1</a>
