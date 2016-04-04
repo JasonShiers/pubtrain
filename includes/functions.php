@@ -166,4 +166,51 @@
         }
     }
 
+	function getLineTreeHelper(array $users, $depth)
+	{
+		/** 
+		 * Function to return array of line reports in tree under initial user(s) specified
+		 * $users: array of initial user(s), e.g. $users[0]["userid"] = "j.shiers"
+		 * $depth: integer to track depth within tree, will be incremented at each
+		 * recursive call and prevent further recursion beyond $depth = 5
+		 * Returns: Array of results including firstname, lastname and userid 
+		**/
+		
+		$query = ["SELECT firstname, lastname, userid FROM users WHERE linemgr IN ("];
+		
+		foreach($users as $user)
+		{
+			// Add parameter to query and append variable
+			$query[0] = $query[0] . "?, ";
+			$query[] = $user["userid"];
+		}
+		// Remove trailing comma and terminate query
+		$query[0] = rtrim($query[0], ", ") . ")";
+		
+		$reports = call_user_func_array("query", $query);
+			
+		if (count($reports) == 0 || $depth > 5)
+		{
+			// base case
+			return $reports;
+		}
+		else
+		{
+			// recursive case
+			return array_merge(getLineTreeHelper($reports, $depth + 1), $reports);
+		}
+	}
+	
+	function getLineTree($userid)
+	{
+		/**
+		 * Function to return array of line report tree under user excluding initial user
+		 * using call to getLineReportsHelper function.
+		 * $userid: UserID of the line manager
+		 * Returns: Array of results including firstname, lastname and userid
+		**/
+		$users = [];
+		$users[0]["userid"] = $userid;
+		return getLineTreeHelper($users, 0);
+	}
 ?>
