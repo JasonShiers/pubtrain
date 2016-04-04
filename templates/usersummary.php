@@ -786,7 +786,7 @@ $ROWSPERPAGE = 5;
 	$(document).ready(function(){
 
 		// Make navMyHistory navbar item selected
-		$('#navMyHistory').addClass("active");
+		$('#navSummaries').addClass("active");
 	
 		// Open accordion based on URL 
 		var url = document.location.toString();

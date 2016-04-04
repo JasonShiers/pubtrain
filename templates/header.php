@@ -45,42 +45,52 @@
 						</div>
 
 						<!-- Collect the nav links, forms, and other content for toggling -->
-						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-							<ul class="nav navbar-nav">
-								<li class="active"><a href="index.php">My History <span class="sr-only">(current)</span></a></li>
-								<li><a href="#">Link</a></li>
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-									<ul class="dropdown-menu">
-										<li><a href="#">Action</a></li>
-										<li><a href="#">Another action</a></li>
-										<li role="separator" class="divider"></li>
-										<li><a href="#">Separated link</a></li>
-									</ul>
-								</li>
-							</ul>
-							<ul class="nav navbar-nav navbar-right">
-								<li>
-									<div class="nav-username">
-										<?php 
-											if (isset($_SESSION["forename"]))
-											{
-												print(htmlspecialchars($_SESSION["forename"] . " " . $_SESSION["surname"] . " "));
-												if($_SESSION["admin"] != 0)
+						<?php if (isset($_SESSION["forename"])): ?>
+							<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+								<ul class="nav navbar-nav">
+									<li id="navMyHistory"><a href="index.php">My History <span class="sr-only">(current)</span></a></li>
+									<li id="navSummaries" class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Summaries <span class="caret"></span></a>
+										<ul class="dropdown-menu">
+											<li><a href="linereportsummary.php">Line Reports</a></li>
+											<li><a href="#">Super User</a></li>
+										</ul>
+									</li>
+									<?php if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1): ?>
+										<li id="navAdmin" class="dropdown">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Options <span class="caret"></span></a>
+											<ul class="dropdown-menu">
+												<li><a href="#">Action</a></li>
+												<li><a href="#">Another action</a></li>
+												<li role="separator" class="divider"></li>
+												<li><a href="#">Separated link</a></li>
+											</ul>
+										</li>
+									<?php endif ?>
+								</ul>
+								<ul class="nav navbar-nav navbar-right">
+									<li>
+										<div class="nav-username">
+											<?php 
+												if (isset($_SESSION["forename"]))
 												{
-													print("<span class=\"glyphicon glyphicon-cog\"></span>");
+													print(htmlspecialchars($_SESSION["forename"] . " " . $_SESSION["surname"] . " "));
+													if($_SESSION["admin"] != 0)
+													{
+														print("<span class=\"glyphicon glyphicon-cog\"></span>");
+													}
 												}
-											}
-										?>
-									</div>
-								</li>
-								<?php if (isset($_SESSION["forename"])): ?>
-								
-									<li><a href="userinfo.php" class="imglink" style="padding: 5px 15px 0" title="Edit User Profile"><div class="imgdiv" id="profilebutton"></div></a></li>
-									<li><a href="logout.php" class="imglink" style="padding: 5px 0;" title="Logout"><div class="imgdiv" id="logoutbutton"></div></a></li>
-								<?php endif ?>
-							</ul>
-						</div>
+											?>
+										</div>
+									</li>
+									<?php if (isset($_SESSION["forename"])): ?>
+									
+										<li><a href="userinfo.php" class="imglink" style="padding: 5px 15px 0" title="Edit User Profile"><div class="imgdiv" id="profilebutton"></div></a></li>
+										<li><a href="logout.php" class="imglink" style="padding: 5px 0;" title="Logout"><div class="imgdiv" id="logoutbutton"></div></a></li>
+									<?php endif ?>
+								</ul>
+							</div>
+						<?php endif ?>
 					</div>
 				</nav>
 			</div>
