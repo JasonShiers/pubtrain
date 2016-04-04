@@ -29,43 +29,60 @@
 		<div class="container">
 
 			<div id="top">
-				<div id="menu">
-					<div class="row menu">
-						<div class="col-xs-3 menucell">
-							<img src="img/logo.png" alt="logo" style="display: inline-block; vertical-align: top; width: 150px;" />
-							<p style="color: dimgray; font-size: 0.70vw;"><i><b>Sygnature Publication and Training Database</b></i></p>
+				<nav class="navbar navbar-default">
+					<div class="container-fluid">
+						<!-- Brand and toggle get grouped for better mobile display -->
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a class="navbar-brand" style="height: 48px; padding: 0;" href="index.php">
+								<img src="img/logo.png" alt="logo" style="height: 48px;" />
+							</a>
 						</div>
-						<div class="col-xs-1 menucell">
-							<div><a href="index.php" class="imglink"><div class="imgdiv" id="dashbutton" title="Dashboard"></div></a></div>
+
+						<!-- Collect the nav links, forms, and other content for toggling -->
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav">
+								<li class="active"><a href="index.php">My History <span class="sr-only">(current)</span></a></li>
+								<li><a href="#">Link</a></li>
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+									<ul class="dropdown-menu">
+										<li><a href="#">Action</a></li>
+										<li><a href="#">Another action</a></li>
+										<li role="separator" class="divider"></li>
+										<li><a href="#">Separated link</a></li>
+									</ul>
+								</li>
+							</ul>
+							<ul class="nav navbar-nav navbar-right">
+								<li>
+									<div class="nav-username">
+										<?php 
+											if (isset($_SESSION["forename"]))
+											{
+												print(htmlspecialchars($_SESSION["forename"] . " " . $_SESSION["surname"] . " "));
+												if($_SESSION["admin"] != 0)
+												{
+													print("<span class=\"glyphicon glyphicon-cog\"></span>");
+												}
+											}
+										?>
+									</div>
+								</li>
+								<?php if (isset($_SESSION["forename"])): ?>
+								
+									<li><a href="userinfo.php" class="imglink" style="padding: 5px 15px 0" title="Edit User Profile"><div class="imgdiv" id="profilebutton"></div></a></li>
+									<li><a href="logout.php" class="imglink" style="padding: 5px 0;" title="Logout"><div class="imgdiv" id="logoutbutton"></div></a></li>
+								<?php endif ?>
+							</ul>
 						</div>
-						<div class="col-xs-2 menucell">
-							<a href="#">Menu1</a>
-						</div>
-						<div class="col-xs-2 menucell">
-							<a href="#">Menu2</a>
-						</div>
-						<?php 
-							if (isset($_SESSION["forename"]))
-							{
-								print("<div class=\"col-xs-2 menucell\"><p>"
-								. htmlspecialchars($_SESSION["forename"] . " " . $_SESSION["surname"] . " "));
-								if($_SESSION["admin"] != 0)
-								{
-									print("<span class=\"glyphicon glyphicon-cog\"></span>");
-								}
-							}
-						?>
-						<?php if (isset($_SESSION["forename"])): ?>
-							</p></div>
-							<div class="col-xs-1 menucell left">
-								<a href="userinfo.php" class="imglink" title="Edit User Profile"><div class="imgdiv" id="profilebutton"></div></a>
-							</div>
-							<div class="col-xs-1 menucell left">
-								<a href="logout.php" class="imglink" title="Logout"><div class="imgdiv" id="logoutbutton"></div></a>
-							</div>
-						<?php endif ?>
 					</div>
-				</div>
+				</nav>
 			</div>
 
 			<div id="middle">

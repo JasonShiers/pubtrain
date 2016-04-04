@@ -250,39 +250,22 @@ body .container
 	display: inline-block;
 }
 
-#top
+#top .nav-username
 {
-	background-color: lightgray;
-	background-size: 100%;
-	border-bottom: solid gray 5px;
-	border-radius: 25px;
-	margin-bottom: 20px;
-}
-
-#top h1
-{
-	padding-top: 0.2em;
-	font-family: jaapokki;
-	font-size: 3em;
+	padding: 15px 0 15px 0;
 	font-weight: bold;
-	color: white;
-}
-
-#top div
-{
-	color: teal;
+	color: #265aa0;
 }
 
 #top a
 {
-	font-size: 1.25em;
-	text-transform: uppercase;
+	font-weight: bold;
 }
 
 #top a:hover
 {
 	text-decoration: none;
-	color: #EEFF66;
+	color: #265aa0;
 }
 #bottom
 {
