@@ -42,7 +42,7 @@ $ROWSPERPAGE = 5;
 							{
 								print("<tr ");
 								$rownumber++;
-								if ($h["confirmed"] === "0")
+								if ($h["confirmed"] === 0)
 								{
 									print("style=\"color: darkgray\";");
 								}
@@ -66,12 +66,12 @@ $ROWSPERPAGE = 5;
 								}
 								if ($h["editable"]==1)
 								{
-									if($h["confirmed"] !== "0")
+									if($h["confirmed"] !== 0)
 									{
 										print("	<td>
 													<div class=\"imgdiv\">
 														<span class=\"glyphicon glyphicon-thumbs-up\" ");
-										if ($h["confirmed"] === "1")
+										if ($h["confirmed"] === 1)
 										{
 											print("			title=\"Confirmed by you\" ");
 										}
@@ -158,7 +158,7 @@ $ROWSPERPAGE = 5;
 							{
 								print("<tr ");
 								$rownumber++;
-								if ($h["confirmed"] === "0")
+								if ($h["confirmed"] === 0)
 								{
 									print("style=\"color: darkgray\";");
 								}
@@ -177,7 +177,7 @@ $ROWSPERPAGE = 5;
 								{
 									print("<td>Internal</td>");
 								}									
-								if ($h["internal_trainer"] === "0")
+								if ($h["internal_trainer"] === 0)
 								{
 									print("<td>External</td>");
 								}
@@ -190,12 +190,12 @@ $ROWSPERPAGE = 5;
 									print("<td>N/A</td>");
 								}
 								print("<td>" . htmlspecialchars($h["total_days"]) . "</td>");
-								if($h["confirmed"] !== "0")
+								if($h["confirmed"] !== 0)
 								{
 									print("	<td>
 												<div class=\"imgdiv\">
 													<span class=\"glyphicon glyphicon-thumbs-up\" ");
-									if ($h["confirmed"] === "1")
+									if ($h["confirmed"] === 1)
 									{
 										print("			title=\"Confirmed by you\" ");
 									}
@@ -274,7 +274,7 @@ $ROWSPERPAGE = 5;
 							{
 								print("<tr ");
 								$rownumber++;
-								if ($h["confirmed"] === "0")
+								if ($h["confirmed"] === 0)
 								{
 									print("style=\"color: darkgray\";");
 								}
@@ -283,16 +283,16 @@ $ROWSPERPAGE = 5;
 								if ($h["journal"] == 1)
 								{
 									print("<td><i>" . htmlspecialchars($h["title"]) . "</i>");
-									if($h["volume"] !== "0")
+									if($h["volume"] !== 0)
 									{
 										print(", <b>" . htmlspecialchars($h["volume"]) . "</b>");
 									}
-									if($h["issue"] !== "0")
+									if($h["issue"] !== 0)
 									{
 										print("(" . htmlspecialchars($h["issue"]) . ")");
 									}
 									print(", " . htmlspecialchars($h["startpage"]));
-									if($h["endpage"] !== "0")
+									if($h["endpage"] !== 0)
 									{
 										print("-" . htmlspecialchars($h["endpage"]));
 									}
@@ -303,12 +303,12 @@ $ROWSPERPAGE = 5;
 								}
 								print("</td>");
 								print("<td>" . htmlspecialchars($h["source"]) . "</td>");
-								if($h["confirmed"] !== "0")
+								if($h["confirmed"] !== 0)
 								{
 									print("	<td>
 												<div class=\"imgdiv\">
 													<span class=\"glyphicon glyphicon-thumbs-up\" ");
-									if ($h["confirmed"] === "1")
+									if ($h["confirmed"] === 1)
 									{
 										print("			title=\"Confirmed by you\" ");
 									}
@@ -459,6 +459,9 @@ $ROWSPERPAGE = 5;
 					<fieldset class="formfieldgroup">
 						<legend>Training Record Information</legend>
 						<div class="form-group clearfix">
+							<p class="bg-warning">Please use this form to enter training records. For conferences 
+								<button type="button" class="btn btn-warning btn-xs" data-dismiss="modal" onclick="show_modal('modalNewConf', 0)">click here</button>
+							</p>
 							<div class="col-md-3 text-left">
 								<label style="max-width:50%; float: left;">
 									<b class="required">Month</b>

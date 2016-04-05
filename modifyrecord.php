@@ -96,6 +96,12 @@
 		{
 			if (isset($_POST["year"]) && isset($_POST["title"]) && isset($_POST["journal"]))
 			{
+				// Set blank fields to NULL where appropriate
+				if ($_POST["volume"] === "") $_POST["volume"] = NULL;
+				if ($_POST["issue"] === "") $_POST["issue"] = NULL;
+				if ($_POST["startpage"] === "") $_POST["startpage"] = NULL;
+				if ($_POST["endpage"] === "") $_POST["endpage"] = NULL;
+				
 				$query = "INSERT INTO publicationrecords (userid, journal, title, year, volume, 
 					issue, startpage, endpage, source, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)";
 				$success = query($query, $_SESSION["userid"], $_POST["journal"], $_POST["title"], $_POST["year"], 
@@ -103,6 +109,8 @@
 
 				if ($success === false)
 				{
+					echo $query . "<br />" . $_SESSION["userid"] . "<br />" .  $_POST["journal"] . "<br />" .  $_POST["title"] . "<br />" .  $_POST["year"] . "<br />" .  
+					$_POST["volume"] . "<br />" .  $_POST["issue"] . "<br />" .  $_POST["startpage"] . "<br />" .  $_POST["endpage"] . "<br />" .  $_POST["source"]  . "<br />";
 					apologize("Can't update database.");
 				}
 				else

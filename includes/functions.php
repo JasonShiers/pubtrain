@@ -166,17 +166,17 @@
         }
     }
 
-	function getLineTreeArray(array $users, $depth)
+	function getLineGroupArray(array $users, $depth)
 	{
 		/** 
-		 * Function to return array of line reports in tree under initial user(s) specified
+		 * Function to return array of line reports in group under initial user(s) specified
 		 * $users: array of initial user(s) in an associative array with key userid
 		 * e.g. [["userid" => "j.shiers"], ...]
 		 * $depth: integer to track depth within tree, will be incremented at each
 		 * recursive call and prevent further recursion beyond $depth = $MAXDEPTH
 		 * Returns: Indexed array of results in an associative array
 		 * Associative array keys: firstname, lastname and userid
-		**/
+		 */
 		$MAXDEPTH = 5;
 		
 		$query = ["SELECT firstname, lastname, userid FROM users WHERE linemgr IN ("];
@@ -200,19 +200,19 @@
 		else
 		{
 			// recursive case
-			return array_merge(getLineTreeArray($reports, $depth + 1), $reports);
+			return array_merge(getLineGroupArray($reports, $depth + 1), $reports);
 		}
 	}
 	
-	function getLineTreeUser($userid)
+	function getLineGroupUser($userid)
 	{
 		/**
-		 * Function to return array of line report tree under user excluding initial user
+		 * Function to return array of line report group under user excluding initial user
 		 * using call to getLineReportsHelper function.
 		 * $userid: UserID of the line manager
 		 * Returns: Indexed array of results in an associative array
 		 * Associative array keys: firstname, lastname and userid
-		**/
-		return getLineTreeArray([["userid" => $userid]], 0);
+		 */
+		return getLineGroupArray([["userid" => $userid]], 0);
 	}
 ?>
