@@ -64,6 +64,14 @@ $ROWSPERPAGE = 5;
 													aria-hidden=\"true\"></span>&nbsp;</a>
 											</td>");
 								}
+								else if ($h["editable"]==0)
+								{
+									print("	<td >
+												<div class=\"imgdiv\"><span class=\"glyphicon glyphicon-thumbs-up\" title=\"Approved in ConferenceTracker\" 
+													style=\"color: darkgray;\" aria-hidden=\"true\"></span></div>
+												&nbsp;
+											</td>");
+								}
 								if ($h["editable"]==1)
 								{
 									if($h["confirmed"] !== 0)

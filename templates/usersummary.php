@@ -4,10 +4,10 @@ $ROWSPERPAGE = 5;
 
 <form action="linereportsummary.php" method="post" class="form-horizontal">
 	<div class="form-group">
-		<div class="col-md-2 col-md-offset-4">
+		<div class="col-md-4 col-md-offset-3">
 			<label>
-				<b>User </b>
-				<select name="userid" data-placeholder="Choose a user to view..." class="chosen-select">
+				<b>User:</b>&nbsp;
+				<select name="userid" data-placeholder="Choose a user to view..." class="chosen-select" style="width: 75%;">
 					<?php
 						print("<option disabled selected value>Select an option</option>");
 						foreach($linegroup as $line)
@@ -91,6 +91,14 @@ $ROWSPERPAGE = 5;
 													. "&userid=" . htmlspecialchars($_SESSION["userid"]) . "\" target=\"_blank\">
 														&nbsp;<span class=\"glyphicon glyphicon-list-alt\" title=\"Review Feedback\" 
 														aria-hidden=\"true\"></span>&nbsp;</a>
+												</td>");
+									}
+									else if ($h["editable"]==0)
+									{
+										print("	<td >
+													<div class=\"imgdiv\"><span class=\"glyphicon glyphicon-thumbs-up\" title=\"Approved in ConferenceTracker\" 
+														style=\"color: darkgray;\" aria-hidden=\"true\"></span></div>
+													&nbsp;
 												</td>");
 									}
 									if ($h["editable"]==1)
