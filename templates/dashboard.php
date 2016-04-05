@@ -640,7 +640,7 @@ $ROWSPERPAGE = 5;
 							<div class="col-md-2 text-left">
 								<label>
 									<b>Volume</b>
-									<input class="form-control" name="volume" type="number" min="0" max="5000" />
+									<input class="form-control" name="volume" type="text" maxlength="6" />
 								</label>
 							</div>
 							<div class="col-md-2 text-left">

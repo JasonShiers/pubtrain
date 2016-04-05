@@ -4,6 +4,10 @@ $ROWSPERPAGE = 5;
 
 <form action="linereportsummary.php" method="post" class="form-horizontal">
 	<div class="form-group">
+		<?php if ((isset($_GET["admin"]) && $_GET["admin"] == 1) || (isset($admin) && $admin == 1)): ?>
+			<input type="hidden" name="admin" value="1" />
+		<?php endif ?>
+		
 		<div class="col-md-4 col-md-offset-3">
 			<label>
 				<b>User:</b>&nbsp;
@@ -40,7 +44,7 @@ $ROWSPERPAGE = 5;
 				</a>
 			</h4>
 		</div>
-		<div id="collapseConferenceHistory" class="panel-collapse collapse" role="tabpanel" aria-labelledby="ConferenceHistory">
+		<div id="collapseConferenceHistory" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="ConferenceHistory">
 			<div class="panel-body">
 				<table class="conflist paginated" style="width: 100%">
 					<thead>
@@ -96,8 +100,8 @@ $ROWSPERPAGE = 5;
 									else if ($h["editable"]==0)
 									{
 										print("	<td >
-													<div class=\"imgdiv\"><span class=\"glyphicon glyphicon-thumbs-up\" title=\"Approved in ConferenceTracker\" 
-														style=\"color: darkgray;\" aria-hidden=\"true\"></span></div>
+													<div class=\"imgdiv\"><span class=\"glyphicon glyphicon-question-sign\" title=\"Not Confirmed\" 
+														aria-hidden=\"true\"></span></div>
 													&nbsp;
 												</td>");
 									}
@@ -121,19 +125,10 @@ $ROWSPERPAGE = 5;
 										}
 										else
 										{
-											print("	<td><a class=\"btn btn-info btn-xs\" 
-														href=\"modifyrecord.php?type=confirmConf&id=" . $h["id"] 
-														. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
-														&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm user Attended\" 
-														aria-hidden=\"true\"></span>&nbsp;</a>");
+											print("	<td>&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Not Confirmed\" 
+														aria-hidden=\"true\"></span>&nbsp;");
 										}
-										print("		&nbsp;
-													<button type=\"button\" class=\"btn btn-danger btn-xs\" 
-													onclick=\"bindModalButton('modalDelConf', " 
-														. "'delConf' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) . ", '')\">
-														&nbsp;<span class=\"glyphicon glyphicon-trash\" 
-														title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
-													</button></td>");
+										print("</td>");
 									}
 									print("</tr>");
 								}
@@ -238,20 +233,10 @@ $ROWSPERPAGE = 5;
 									}
 									else
 									{
-										print("	<td><a class=\"btn btn-info btn-xs\" 
-													href=\"modifyrecord.php?type=confirmTrain&id=" . $h["id"] 
-														. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
-													&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm user Attended\" 
-													aria-hidden=\"true\"></span>&nbsp;</a>");
+										print("	<td>&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Not Confirmed\" 
+													aria-hidden=\"true\"></span>&nbsp;");
 									}
-									print("		&nbsp;
-												<button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"bindModalButton('modalDelTrain', " 
-													. "'delTrain' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) 
-													. ", '#collapseTrainingHistory')\">
-													&nbsp;<span class=\"glyphicon glyphicon-trash\" 
-													title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
-												</button></td>");
-									print("</tr>");
+									print("</td></tr>");
 								}
 							}
 						?>
@@ -334,31 +319,21 @@ $ROWSPERPAGE = 5;
 														<span class=\"glyphicon glyphicon-thumbs-up\" ");
 										if ($h["confirmed"] === "1")
 										{
-											print("			title=\"Confirmed by you\" ");
+											print("			title=\"Confirmed by user\" ");
 										}
 										else
 										{
-											print("			title=\"Entered by you\" ");
+											print("			title=\"Entered by user\" ");
 										}
 										print("				style=\"color: forestgreen;\" aria-hidden=\"true\"></span>
 													</div>");
 									}
 									else
 									{
-										print("	<td><a class=\"btn btn-info btn-xs\" 
-													href=\"modifyrecord.php?type=confirmPub&id=" . $h["id"] 
-													. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
-													&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm\" 
-													aria-hidden=\"true\"></span>&nbsp;</a>");
+										print("	<td>&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Not Confirmed\" 
+													aria-hidden=\"true\"></span>&nbsp;");
 									}
-									print("		&nbsp;
-												<button type=\"button\" class=\"btn btn-danger btn-xs\" 
-													onclick=\"bindModalButton('modalDelPub', " 
-													. "'delPub' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) . ", '')\">
-													&nbsp;<span class=\"glyphicon glyphicon-trash\" 
-													title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
-												</button></td>");
-									print("</tr>");
+									print("</td></tr>");
 								}
 							}
 						?>
@@ -369,116 +344,16 @@ $ROWSPERPAGE = 5;
 	</div>
 </div>
 
-<!-- Modal for deleting conference -->
-<div class="modal fade" id="modalDelConf" tabindex="-1" role="dialog" aria-labelledby="modalDelConf">
-	<div class="modal-dialog modal-sm" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="modalDelConfLabel">Delete Conference</h4>
-			</div>
-			<form id="delConf" method="post">
-				<div class="modal-body">
-				<p>Are you sure you want to delete this conference record?</p>
-				</div>
-				<div class="modal-footer">
-					<fieldset>
-						<button class="btn btn-success" type="submit">Continue</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delConf')">Cancel</button>
-					</fieldset>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
-<!-- Modal for deleting training record -->
-<div class="modal fade" id="modalDelTrain" tabindex="-1" role="dialog" aria-labelledby="modalDelTrain">
-	<div class="modal-dialog modal-sm" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="modalDelTrainLabel">Delete Training Record</h4>
-			</div>
-			<form id="delTrain" method="post">
-				<div class="modal-body">
-				<p>Are you sure you want to delete this training record?</p>
-				</div>
-				<div class="modal-footer">
-					<fieldset>
-						<button class="btn btn-success" type="submit">Continue</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delTrain')">Cancel</button>
-					</fieldset>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
-<!-- Modal for deleting publication record -->
-<div class="modal fade" id="modalDelPub" tabindex="-1" role="dialog" aria-labelledby="modalDelPub">
-	<div class="modal-dialog modal-sm" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="modalDelPubLabel">Delete Training Record</h4>
-			</div>
-			<form id="delPub" method="post">
-				<div class="modal-body">
-				<p>Are you sure you want to delete this publication record?</p>
-				</div>
-				<div class="modal-footer">
-					<fieldset>
-						<button class="btn btn-success" type="submit">Continue</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delPub')">Cancel</button>
-					</fieldset>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
 <script>
-	// function to show modal with specified id, triggered by button in HTML
-	function show_modal(id){
-		$( "#"+id ).modal( "toggle" );
-		$(".chosen-container").width("75%");
-	}
-	
-	// reset form with specified id, used when cancel button is pressed
-	function resetForm(id){
-		$("#"+id).trigger("reset");
-	}
-
-	// keep track of which input box has focus and return appropriate autocomplete results
-	function setAutocompleteType(type){
-		var autocompleteType = type;
-
-		// set up autocomplete using appropriate type
-		$( "input.autocomplete" ).autocomplete({
-			source: "getautocomplete.php?type=" + autocompleteType,
-			minLength: 2
-		});
-	}
-	
-	// Bind Continue button to appropriate action
-	function bindModalButton(modal_id, form_id, record_id, return_page, return_modal){
-		$( "#" + form_id ).attr("action", "modifyrecord.php?type=" + form_id + "&page=" 
-			+ return_page + "&id=" + record_id + return_modal);
-		show_modal(modal_id);
-	}
-
 	$(document).ready(function(){
 
-		// Make navMyHistory navbar item selected
+		<?php if ((isset($_GET["admin"]) && $_GET["admin"] ==1) || (isset($admin) && $admin == 1)): ?>
+		// Make navAdmin navbar item selected
+		$('#navAdmin').addClass("active");
+		<?php else: ?>
+		// Make navSummaries navbar item selected
 		$('#navSummaries').addClass("active");
-	
-		// Open accordion based on URL 
-		var url = document.location.toString();
-		if ( url.match('#') ) {
-			$('#'+url.split('#')[1]).addClass("in");
-		}
-		else
-		{
-			$("#collapseConferenceHistory").addClass("in");
-		}
+		<?php endif ?>
 		
 		// Initiate Multi-select box
 		$('.chosen-select').chosen();
@@ -532,21 +407,6 @@ $ROWSPERPAGE = 5;
 			// Run initial pagination
 			$table.trigger('repaginate');
 			
-
-			// Go to specified page
-			<?php if (isset($_GET["page"])): ?>
-				// Check this is the correct table by finding it in the expanded accordion
-				if ($(".in").find($table).attr("class") !== undefined)
-				{
-					// Set page according to URL and repaginate table
-					currentPage = <?= $_GET["page"] - 1 ?>;
-					$table.trigger('repaginate');
-					
-					// Set appropriate page as active in pager
-					$activepage = $(this).parent().find(".page-number:contains(" + (currentPage+1) + ")")[0];
-					$($activepage).addClass('active').siblings().removeClass('active');
-				}
-			<?php endif ?>
 		});
 	});
 </script>

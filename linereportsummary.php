@@ -2,11 +2,18 @@
 
 	// configuration
 	require("includes/config.php"); 
-
-	$linegroup = getLineGroupUser($_SESSION["userid"]);
 	
 	if ($_SERVER["REQUEST_METHOD"] == "GET")
 	{
+		if(isset($_GET["admin"]) && $_GET["admin"] == 1)
+		{
+			$linegroup = query("SELECT userid, firstname, lastname FROM users WHERE department=? "
+			. "ORDER BY lastname ASC, firstname ASC", $_SESSION["department"]);
+		}
+		else
+		{
+			$linegroup = getLineGroupUser($_SESSION["userid"]);
+		}
 		// render table
 		render("templates/usersummary.php", ["linegroup" => $linegroup, "title" => "User Summary"]);
 	}
@@ -17,9 +24,18 @@
 		{
 			apologize("Error: No username submitted");
 		}
-		else if($_SESSION["admin"] == 0 && array_search($_POST["userid"], $linegroup) === FALSE)
+		else if($_SESSION["admin"] == 0 || !isset($_POST["admin"]) || $_POST["admin"] == 0)
 		{
-			apologize("Error: This user is not in your line group");
+			$linegroup = getLineGroupUser($_SESSION["userid"]);
+			if (array_search($_POST["userid"], array_column($linegroup, "userid")) === FALSE)
+			{
+				apologize("Error: This user is not in your line group");
+			}
+		}
+		else
+		{
+			$linegroup = query("SELECT userid, firstname, lastname FROM users WHERE department=? "
+			. "ORDER BY lastname ASC, firstname ASC", $_SESSION["department"]);
 		}
 
 		// get user's conference history
@@ -46,6 +62,6 @@
 
 		// render table
 		render("templates/usersummary.php", ["linegroup" => $linegroup, "pubhistory" => $pubhistory, "trainhistory" => $trainhistory,
-			"confhistory" => $confhistory, "userid" => $_POST["userid"], "title" => "User Summary"]);
+			"confhistory" => $confhistory, "userid" => $_POST["userid"], "admin" => (isset($_POST["admin"])?$_POST["admin"]:0), "title" => "User Summary"]);
 	}
 ?>

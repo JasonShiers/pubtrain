@@ -12,7 +12,7 @@
 			{
 				$date = $_POST["year"] . "-" . $_POST["month"] . "-" . "01";
 				
-				$query = "INSERT INTO suppconfrecords (userid, date, title, location, days, confirmed) VALUES (?, ?, ?, ?, ?, 1)";
+				$query = "INSERT INTO suppconfrecords (userid, date, title, location, days, confirmed) VALUES (?, ?, ?, ?, ?, NULL)";
 				$success = query($query, $_SESSION["userid"], date("Y-m-d", strtotime($date)), $_POST["title"],
 					$_POST["location"], $_POST["days"]);
 
@@ -109,8 +109,6 @@
 
 				if ($success === false)
 				{
-					echo $query . "<br />" . $_SESSION["userid"] . "<br />" .  $_POST["journal"] . "<br />" .  $_POST["title"] . "<br />" .  $_POST["year"] . "<br />" .  
-					$_POST["volume"] . "<br />" .  $_POST["issue"] . "<br />" .  $_POST["startpage"] . "<br />" .  $_POST["endpage"] . "<br />" .  $_POST["source"]  . "<br />";
 					apologize("Can't update database.");
 				}
 				else
