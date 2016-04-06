@@ -39,11 +39,13 @@
 		}
 
 		// get verified users
-		$verified = query("SELECT userid FROM trainingrecords WHERE verified = 1 AND trainingid = ? 
+		$verified = query("SELECT u.firstname, u.lastname, u.userid FROM users u, trainingrecords t 
+			WHERE u.userid = t.userid AND verified = 1 AND trainingid = ? 
 			AND date > ? AND date < ?", $_POST["trainingid"], $_POST["startdate"], $_POST["enddate"]);
 		
 		// get confirmed users
-		$unverified = query("SELECT userid FROM trainingrecords WHERE (confirmed = 1 OR confirmed IS NULL) AND trainingid = ? 
+		$unverified = query("SELECT u.firstname, u.lastname, u.userid FROM users u, trainingrecords t 
+			WHERE u.userid = t.userid AND (confirmed = 1 OR confirmed IS NULL) AND trainingid = ? 
 			AND date > ? AND date < ?", $_POST["trainingid"], $_POST["startdate"], $_POST["enddate"]);
 
 		
