@@ -337,8 +337,36 @@ body .container
 	background-image: url('../img/viewonly-spr.png');
 }
 
+.button_check {
+	margin-left: auto;
+	margin-right: auto;
+	background-color:#EFEFEF;
+	border-radius:4px;
+	border:1px solid #D0D0D0;
+	overflow:auto;	
+}
+
+.button_check:hover {
+    background:lightgreen;
+}
+
+.button_check label span {
+    text-align:center;
+    padding:3px 0px;
+    display:block;
+}
+
+.button_check label input {
+    position:absolute;
+    top:-2000px;
+}
+
+.button_check input:checked + span {
+    background-color: green;
+    color:#fff;
+}
+
 input[type=radio] {
-    float: left;
     margin-left: 0.5em;
 }
 
