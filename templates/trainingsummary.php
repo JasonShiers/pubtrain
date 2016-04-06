@@ -1,7 +1,7 @@
 <?php
 	if (!isset($startdate)) $startdate = "2005-01-01";
 	if (!isset($enddate)) $enddate = date("Y-m-d");
-	$ROWSPERPAGE = 5;
+	$ROWSPERPAGE = 10;
 ?>
 
 <form action="trainingsummary.php" method="post" class="form-horizontal">
@@ -83,6 +83,31 @@
 					<tbody>
 						<?php
 							foreach ($unverified as $user)
+							{
+								print("<tr>
+											<td><div class=\"button_check\"><label for=\"" . htmlspecialchars($user["userid"]) 
+												. "\"><input type=\"checkbox\" id=\"" . htmlspecialchars($user["userid"]) . "\" value=\""
+												. htmlspecialchars($user["userid"]) . "\" name=\"verify_users[]\" /><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]) 
+												. "</span></label></div></td>
+										</tr>");
+							}
+						?>
+					</tbody>
+				</table>
+				<button class="btn btn-success" type="submit">Verify Selected</button>
+			</form>
+		</div>
+		<div class="col-md-4">
+			<form action="trainingverify.php" method="post">
+				<table class="conflist paginated" style="width: 100%;">
+					<thead>
+						<th class="left right">
+							Unconfirmed Users
+						</th>
+					</thead>
+					<tbody>
+						<?php
+							foreach ($unconfirmed as $user)
 							{
 								print("<tr>
 											<td><div class=\"button_check\"><label for=\"" . htmlspecialchars($user["userid"]) 

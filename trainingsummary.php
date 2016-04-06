@@ -41,17 +41,21 @@
 		// get verified users
 		$verified = query("SELECT u.firstname, u.lastname, u.userid FROM users u, trainingrecords t 
 			WHERE u.userid = t.userid AND verified = 1 AND trainingid = ? 
-			AND date > ? AND date < ?", $_POST["trainingid"], $_POST["startdate"], $_POST["enddate"]);
+			AND date > ? AND date < ? ORDER BY u.lastname, u.firstname", $_POST["trainingid"], $_POST["startdate"], $_POST["enddate"]);
 		
 		// get confirmed users
 		$unverified = query("SELECT u.firstname, u.lastname, u.userid FROM users u, trainingrecords t 
-			WHERE u.userid = t.userid AND (confirmed = 1 OR confirmed IS NULL) AND trainingid = ? 
-			AND date > ? AND date < ?", $_POST["trainingid"], $_POST["startdate"], $_POST["enddate"]);
+			WHERE u.userid = t.userid AND (confirmed = 1 OR confirmed IS NULL) AND verified = 0 AND trainingid = ? 
+			AND date > ? AND date < ? ORDER BY u.lastname, u.firstname", $_POST["trainingid"], $_POST["startdate"], $_POST["enddate"]);
 
+		// get unverified, unconfirmed users
+		$unconfirmed = query("SELECT u.firstname, u.lastname, u.userid FROM users u WHERE NOT EXISTS
+		(SELECT 1 FROM trainingrecords t WHERE u.userid = t.userid AND (confirmed = 1 OR confirmed IS NULL) AND trainingid = ? 
+			AND date > ? AND date < ?) ORDER BY u.lastname, u.firstname", $_POST["trainingid"], $_POST["startdate"], $_POST["enddate"]);
 		
 		// render table
 		render("templates/trainingsummary.php", ["trainingopts" => $trainingopts, "verified" => $verified, "unverified" => $unverified,
-			"trainingid" => $_POST["trainingid"], "startdate" => $_POST["startdate"], "enddate" => $_POST["enddate"], 
+			"unconfirmed" => $unconfirmed, "trainingid" => $_POST["trainingid"], "startdate" => $_POST["startdate"], "enddate" => $_POST["enddate"], 
 			"admin" => (isset($_POST["admin"])?$_POST["admin"]:0), "title" => "Training Summary"]);
 	}
 ?>
