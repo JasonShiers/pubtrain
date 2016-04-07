@@ -29,6 +29,12 @@
 					?>							
 				</select>
 			</label>
+			<label>
+				<b>Description (Optional)</b>
+				<input class="form-control autocomplete" name="description" id="newTrainDesc" type="text" maxlength="60" 
+				placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc')" 
+				<?= (isset($description) && strlen($description)>0)?"value=\"" . $description . "\" ":"" ?> />
+			</label>
 		</div>
 		<div class="col-md-2 text-left">
 			<label>
@@ -36,17 +42,34 @@
 				<input class="form-control" name="startdate" type="date" required="required" value="<?= $startdate ?>" 
 					min="2005-01-01" max="<?= date("Y-m-d") ?>" />
 			</label>
-		</div>
-		<div class="col-md-2 text-left">
 			<label>
 				<b class="required">End Date</b>
 				<input class="form-control" name="enddate" type="date" required="required" value="<?= $enddate ?>"
 					min="2005-01-01" max="<?= date("Y-m-d") ?>" />
 			</label>
 		</div>
+		<div class="col-md-3 text-left">
+			<b>Departments</b><br />
+			<?php
+				foreach ($depts as $dept)
+				{
+					print("<label style=\"float: left;\"><input type=\"checkbox\" name=\"departments[]\" value=\"" 
+						. $dept["depmask"] . "\" ");
+					if(isset($departments))
+					{
+						if(array_search($dept["depmask"], $departments) !== FALSE) print("checked=\"checked\" ");
+					}
+					else
+					{
+						print("checked=\"checked\" ");
+					}
+					print("/>" . $dept["department"] . "&nbsp;&nbsp;</label>");
+				}
+			?>
+		</div>
 		<div class="col-md-1 text-center">
 			<br />
-			<button class="btn btn-success" type="submit">Submit</button>
+			<button class="btn btn-info" type="submit">Submit</button>
 		</div>
 	</div>
 </form>
@@ -65,8 +88,9 @@
 						{
 							print("<tr>
 										<td>" . htmlspecialchars($user["firstname"]) . " " 
-											. htmlspecialchars($user["lastname"]) . "</td>
-									</tr>");
+											. htmlspecialchars($user["lastname"]));
+							if ($user["count"] != 1) print(" (" . intval($user["count"]) . ")");
+							print("</td></tr>");
 						}
 					?>
 				</tbody>
@@ -85,11 +109,12 @@
 							foreach ($unverified as $user)
 							{
 								print("<tr>
-											<td><div class=\"button_check\"><label for=\"" . htmlspecialchars($user["userid"]) 
-												. "\"><input type=\"checkbox\" id=\"" . htmlspecialchars($user["userid"]) . "\" value=\""
-												. htmlspecialchars($user["userid"]) . "\" name=\"verify_users[]\" /><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]) 
-												. "</span></label></div></td>
-										</tr>");
+											<td><div class=\"button_check\"><label for=\"" . htmlspecialchars($user["recordid"]) 
+												. "\"><input type=\"checkbox\" id=\"" . htmlspecialchars($user["recordid"]) . "\" value=\""
+												. htmlspecialchars($user["recordid"]) . "\" name=\"verify_records[]\" /><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]));
+								if ($user["count"] != 1) print(" (" . intval($user["count"]) . ")");
+								if ($user["confirmed"] == 0) print(" (Unconfirmed)");
+								print("</span></label></div></td></tr>");
 							}
 						?>
 					</tbody>
@@ -112,24 +137,31 @@
 								print("<tr>
 											<td><div class=\"button_check\"><label for=\"" . htmlspecialchars($user["userid"]) 
 												. "\"><input type=\"checkbox\" id=\"" . htmlspecialchars($user["userid"]) . "\" value=\""
-												. htmlspecialchars($user["userid"]) . "\" name=\"verify_users[]\" /><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]) 
+												. htmlspecialchars($user["userid"]) . "\" name=\"verify_records[]\" /><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]) 
 												. "</span></label></div></td>
 										</tr>");
 							}
 						?>
 					</tbody>
 				</table>
-				<button class="btn btn-success" type="submit">Verify Selected</button>
+				<button class="btn btn-success" type="submit">Add and Verify</button>
 			</form>
 		</div>
 	</div>
 <?php endif ?>
 
 <script>	
-	// Initiate checkbox styling
-	/*$(function() {
-		$('.buttonset').buttonset();
-	});*/
+
+	// keep track of which input box has focus and return appropriate autocomplete results
+	function setAutocompleteType(type){
+		var autocompleteType = type;
+
+		// set up autocomplete using appropriate type
+		$( "input.autocomplete" ).autocomplete({
+			source: "getautocomplete.php?type=" + autocompleteType,
+			minLength: 2
+		});
+	}
 
 	$(document).ready(function(){
 
