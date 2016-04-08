@@ -31,7 +31,7 @@
 			</label>
 			<label>
 				<b>Description (Optional)</b>
-				<input class="form-control autocomplete" name="description" id="newTrainDesc" type="text" maxlength="60" 
+				<input class="form-control autocomplete" name="description" id="newTrainDesc2" type="text" maxlength="60" 
 				placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc')" 
 				<?= (isset($description) && strlen($description)>0)?"value=\"" . $description . "\" ":"" ?> />
 			</label>
@@ -97,7 +97,9 @@
 			</table>
 		</div>
 		<div class="col-md-4">
-			<form action="trainingverify.php" method="post">
+			<form action="modifyrecord.php?type=verifyTrain" method="post">
+				<input type="hidden" name="superuser" value="1" />
+				<input type="hidden" name="trainingid" value="<?= $trainingid ?>" />
 				<table class="conflist paginated" style="width: 100%;">
 					<thead>
 						<th class="left right">
@@ -111,7 +113,9 @@
 								print("<tr>
 											<td><div class=\"button_check\"><label for=\"" . htmlspecialchars($user["recordid"]) 
 												. "\"><input type=\"checkbox\" id=\"" . htmlspecialchars($user["recordid"]) . "\" value=\""
-												. htmlspecialchars($user["recordid"]) . "\" name=\"verify_records[]\" /><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]));
+												. htmlspecialchars($user["recordid"]) . "\" name=\"verifyrecords[]\" ");
+								if ($user["count"] != 1) print("disabled ");
+								print("/><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]));
 								if ($user["count"] != 1) print(" (" . intval($user["count"]) . ")");
 								if ($user["confirmed"] == 0) print(" (Unconfirmed)");
 								print("</span></label></div></td></tr>");
@@ -123,7 +127,8 @@
 			</form>
 		</div>
 		<div class="col-md-4">
-			<form action="trainingverify.php" method="post">
+			<form id="addTrain" action="modifyrecord.php?type=newTrain" method="post">
+				<input type="hidden" name="superuser" value="1" />
 				<table class="conflist paginated" style="width: 100%;">
 					<thead>
 						<th class="left right">
@@ -137,20 +142,142 @@
 								print("<tr>
 											<td><div class=\"button_check\"><label for=\"" . htmlspecialchars($user["userid"]) 
 												. "\"><input type=\"checkbox\" id=\"" . htmlspecialchars($user["userid"]) . "\" value=\""
-												. htmlspecialchars($user["userid"]) . "\" name=\"verify_records[]\" /><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]) 
+												. htmlspecialchars($user["userid"]) . "\" name=\"otherusers[]\" /><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]) 
 												. "</span></label></div></td>
 										</tr>");
 							}
 						?>
 					</tbody>
 				</table>
-				<button class="btn btn-success" type="submit">Add and Verify</button>
+				<button type="button" class="btn btn-primary" onclick="show_modal('modalNewTrain', 0)">
+					<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add and Verify
+				</button>
+				<!-- Modal for adding new training record -->
+				<div class="modal fade" id="modalNewTrain" tabindex="-1" role="dialog" aria-labelledby="modalNewTrain">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="modalAddTrainLabel">Add New Training Record</h4>
+								<p>To add an entry to the training history of the selected users, please confirm the following details:</p>
+							</div>
+							<div class="modal-body">
+								<fieldset class="formfieldgroup">
+									<legend>Training Record Information</legend>
+									<div class="form-group clearfix">
+										<div class="col-md-3 text-left">
+											<label style="max-width:50%; float: left;">
+												<b class="required">Month</b>
+												<select class="form-control" name="month" required="required">
+													<option value selected disabled>Month</option>
+													<option value="01">Jan</option>
+													<option value="02">Feb</option>
+													<option value="03">Mar</option>
+													<option value="04">Apr</option>
+													<option value="05">May</option>
+													<option value="06">Jun</option>
+													<option value="07">Jul</option>
+													<option value="08">Aug</option>
+													<option value="09">Sep</option>
+													<option value="10">Oct</option>
+													<option value="11">Nov</option>
+													<option value="12">Dec</option>
+												</select>
+											</label>
+											<label style="max-width:40%; float: left;">
+												<b class="required">Year</b>
+												<?php print("<input class=\"form-control\" name=\"year\" type=\"number\" min=\"1980\" max=\"2500\" 
+													value=\"" . date('Y') . "\" required=\"required\" />"); ?>
+											</label>
+											<p class="text-muted">Training start date</p>
+										</div>
+										<div class="col-md-5 text-left">
+											<label>
+												<b class="required">Training Type</b>
+												<select name="trainingid" data-placeholder="Select training type..." class="chosen-select" 
+													required="required">
+													<?php
+														print("<option disabled selected value>Select an option</option>");
+														foreach($trainingopts as $opt)
+														{
+															print("<option value=\"" . $opt["trainingid"] . "\" ");
+															if(isset($trainingid) && $opt["trainingid"] == $trainingid)
+															{
+																print("selected=\"selected\" ");
+															}
+															print(">" . htmlspecialchars($opt["type"]) 
+																. "</option>\n");
+														}
+													?>							
+												</select>
+											</label>
+										</div>
+									</div>
+									<div class="form-group clearfix">
+										<div class="col-md-7 text-left">
+											<label>
+												<b>Description (Optional)</b>
+												<input class="form-control autocomplete" name="description" id="newTrainDesc" type="text" maxlength="60" 
+													placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc')" 
+													<?= (isset($description) && strlen($description)>0)?"value=\"" . $description . "\" ":"" ?> />
+											</label>
+										</div>
+										<div class="col-md-3 text-left">
+											<label>
+												<b class="required">Total Duration (days)</b>
+												<input class="form-control" name="days" type="number" min="0" max="10" step="0.1" required="required" />
+											</label>
+										</div>
+									</div>
+									<div class="form-group clearfix">
+										<div class="col-md-3 col-md-offset-1 text-left">
+											<label>
+												<b class="required">Location</b>
+												<select name="internal_location" required="required">
+													<option disabled selected value>Select option</option>
+													<option value="1">Internal</option>
+													<option value="0">External</option>
+												</select>
+											</label>
+										</div>
+										<div class="col-md-3 text-left">
+											<label>
+												<b class="required">Trainer</b>
+												<select name="internal_trainer" required="required">
+													<option disabled selected value>Select option</option>
+													<option value="1">Internal</option>
+													<option value="0">External</option>
+													<option value="2">No Trainer</option>
+												</select>
+											</label>
+										</div>
+									</div>
+								</fieldset>
+							</div>
+							<div class="modal-footer">
+								<fieldset>
+									<button class="btn btn-success" type="submit">Submit</button>
+									<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('addTrain')">Cancel</button>
+								</fieldset>
+							</div>
+						</div>
+					</div>
+				</div>
 			</form>
 		</div>
 	</div>
 <?php endif ?>
 
 <script>	
+	// function to show modal with specified id, triggered by button in HTML
+	function show_modal(id){
+		$( "#"+id ).modal( "toggle" );
+		$(".chosen-container").width("75%");
+	}
+	
+	// reset form with specified id, used when cancel button is pressed
+	function resetForm(id){
+		$("#"+id).trigger("reset");
+	}
 
 	// keep track of which input box has focus and return appropriate autocomplete results
 	function setAutocompleteType(type){

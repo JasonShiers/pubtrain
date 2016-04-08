@@ -55,31 +55,65 @@
 				{
 					$_POST["internal_trainer"]=NULL;
 				}
-				$query = "INSERT INTO trainingrecords (userid, date, trainingid, description, total_days, 
-					internal_location, internal_trainer, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)";
-				$success = query($query, $_SESSION["userid"], date("Y-m-d", strtotime($date)), $_POST["trainingid"], 
-					$_POST["description"], $_POST["days"], $_POST["internal_location"], $_POST["internal_trainer"]);
-
-				if ($success === false)
+				
+				if (isset($_POST["superuser"]) && $_POST["superuser"] == 1)
 				{
-					apologize("Can't update database.");
-				}
-				else
-				{
-					if (isset($_POST["otherusers"]) && count($_POST["otherusers"]) > 0)
+					// Insert verified records from a superuser or admin
+					$success = query("SELECT 1 FROM trainingsuperusers WHERE trainingid=? AND userid=?",
+						$_POST["trainingid"], $_SESSION["userid"]);
+					if (count($success) > 0 || (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1))
 					{
 						foreach ($_POST["otherusers"] as $otheruser)
 						{
-							$query = "	INSERT INTO trainingrecords (userid, date, trainingid, description, total_days, 
-								internal_location, internal_trainer, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, 0) 
-								ON DUPLICATE KEY UPDATE recordid=recordid";
+							$query = "INSERT INTO trainingrecords (userid, date, trainingid, description, total_days, 
+								internal_location, internal_trainer, confirmed, verified) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 1) 
+								ON DUPLICATE KEY UPDATE verified=1";
 							$success = query($query, $otheruser, date("Y-m-d", strtotime($date)), 
 								$_POST["trainingid"], $_POST["description"], $_POST["days"], 
 								$_POST["internal_location"], $_POST["internal_trainer"]);
-
 							if ($success === false)
 							{
-								apologize("Added your record. Can't add for one or more of the other attendees.");
+								apologize("Can't add for one or more of the other attendees.");
+							}
+						}
+					}
+					else
+					{
+						apologize("You do not have permission to verify records for this training.");
+					}
+					$url="trainingsummary.php";
+					if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) $url .= "?admin=1";
+					redirect($url);
+				}
+				else
+				{
+					// Insert record for a user and others they have specified
+					$query = "INSERT INTO trainingrecords (userid, date, trainingid, description, total_days, 
+						internal_location, internal_trainer, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)";
+					$success = query($query, $_SESSION["userid"], date("Y-m-d", strtotime($date)), $_POST["trainingid"], 
+						$_POST["description"], $_POST["days"], $_POST["internal_location"], $_POST["internal_trainer"]);
+
+					if ($success === false)
+					{
+						apologize("Can't update database.");
+					}
+					else
+					{
+						if (isset($_POST["otherusers"]) && count($_POST["otherusers"]) > 0)
+						{
+							foreach ($_POST["otherusers"] as $otheruser)
+							{
+								$query = "	INSERT INTO trainingrecords (userid, date, trainingid, description, total_days, 
+									internal_location, internal_trainer, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, 0) 
+									ON DUPLICATE KEY UPDATE recordid=recordid";
+								$success = query($query, $otheruser, date("Y-m-d", strtotime($date)), 
+									$_POST["trainingid"], $_POST["description"], $_POST["days"], 
+									$_POST["internal_location"], $_POST["internal_trainer"]);
+
+								if ($success === false)
+								{
+									apologize("Added your record. Can't add for one or more of the other attendees.");
+								}
 							}
 						}
 					}
@@ -138,7 +172,46 @@
 				}
 				redirect($url . "#collapsePublicationHistory");
 			}
-		}		
+		}
+		else if ($_GET["type"] == "verifyTrain")
+		{
+			if (isset($_POST["verifyrecords"]) && isset($_POST["superuser"]) && $_POST["superuser"] == 1)
+			{
+				// Insert verified records from a superuser or admin
+				$success = query("SELECT 1 FROM trainingsuperusers WHERE trainingid=? AND userid=?",
+					$_POST["trainingid"], $_SESSION["userid"]);
+				if (count($success) > 0 || (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1))
+				{
+					$query = $_POST["verifyrecords"];
+					
+					// Prepend SQL statement to start of query array
+					array_unshift($query, "UPDATE trainingrecords SET verified = 1 WHERE recordid IN(");
+
+					foreach ($_POST["verifyrecords"] as $record)
+					{
+						$query[0] = $query[0] . "?, ";
+					}
+					
+					// Replace trailing comma with end of statement
+					$query[0] = rtrim($query[0], ", ") . ")";
+
+					// Call query function
+					$success = call_user_func_array("query", $query);
+					
+					if ($success === false)
+					{
+						apologize("Can't verify records.");
+					}
+				}
+				else
+				{
+					apologize("You do not have permission to verify records for this training.");
+				}
+			}
+			$url="trainingsummary.php";
+			if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) $url .= "?admin=1";
+			redirect($url);
+		}
 		else if ($_GET["type"] == "delConf")
 		{
 			if (isset($_GET["id"]))

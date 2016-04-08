@@ -59,11 +59,7 @@
 		
 		// get users with record
 		$unverified = query("SELECT t.recordid, u.firstname, u.lastname, u.userid, COUNT(u.userid) AS count,
-			CASE confirmed
-				WHEN 1 THEN 1
-				WHEN NULL THEN 1
-				WHEN 0 THEN 0
-			END AS confirmed 
+			IF(confirmed IS NULL || confirmed=1, 1, 0) AS confirmed 
 			FROM users u, trainingrecords t, departments d 
 			WHERE u.userid = t.userid AND t.verified = 0 AND t.trainingid = ? AND t.description LIKE ? 
 			AND t.date > ? AND t.date < ? AND u.department = d.department AND d.depmask & ? 

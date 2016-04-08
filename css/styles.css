@@ -346,7 +346,7 @@ body .container
 	overflow:auto;	
 }
 
-.button_check:hover {
+.button_check span:hover {
     background:lightgreen;
 }
 
@@ -363,6 +363,11 @@ body .container
 
 .button_check input:checked + span {
     background-color: green;
+    color:#fff;
+}
+
+.button_check input:disabled + span {
+    background-color: darkred;
     color:#fff;
 }
 

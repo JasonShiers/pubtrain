@@ -228,8 +228,12 @@ $ROWSPERPAGE = 5;
 												. ", '#collapseTrainingHistory')\">
 												&nbsp;<span class=\"glyphicon glyphicon-trash\" 
 												title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
-											</button></td>");
-								print("</tr>");
+											</button>");
+								print("	&nbsp;
+										<div class=\"imgdiv\"" . (($h["verified"] === 1)?"":" style=\"visibility: hidden;\"") . ">
+											<span class=\"glyphicon glyphicon-ok-circle\" title=\"Verified\" 
+												style=\"color: green;\" aria-hidden=\"true\">");
+								print("</td></tr>");
 							}
 						?>
 					</tbody>
