@@ -233,9 +233,16 @@ $ROWSPERPAGE = 5;
 									}
 									else
 									{
-										print("	<td>&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Not Confirmed\" 
-													aria-hidden=\"true\"></span>&nbsp;");
+										print("	<td>&nbsp;
+											<div class=\"imgdiv\">
+												<span class=\"glyphicon glyphicon-question-sign\" title=\"Not Confirmed\" 
+													aria-hidden=\"true\"></span>
+											</div>");
 									}
+									print("	&nbsp;
+										<div class=\"imgdiv\"" . (($h["verified"] === 1)?"":" style=\"visibility: hidden;\"") . ">
+											<span class=\"glyphicon glyphicon-ok-circle\" title=\"Verified\" 
+												style=\"color: green;\" aria-hidden=\"true\">");
 									print("</td></tr>");
 								}
 							}
