@@ -29,8 +29,14 @@
 		}
 		else if ($_GET["type"] == "newTrainDesc")
 		{
-			$results = query("SELECT description FROM trainingrecords WHERE description LIKE ? GROUP BY description", 
-				"%" . $_GET["term"] . "%");
+			$query = ["SELECT description FROM trainingrecords WHERE description LIKE ? ", "%" . $_GET["term"] . "%"];
+			if (isset($_GET["filter"]))
+			{
+				$query[0] .= "AND trainingid = ? ";
+				array_push($query, $_GET["filter"]);
+			}
+			$query[0] .= "GROUP BY description";
+			$results = call_user_func_array("query", $query);
 
 			header("Content-type: application/json");
 			print(json_encode(array_column($results, "description"), JSON_PRETTY_PRINT));
