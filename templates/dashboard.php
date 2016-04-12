@@ -430,7 +430,7 @@ $ROWSPERPAGE = 5;
 						<div class="form-group clearfix">
 							<label>
 								<b>Other attendees on this conference:</b>
-								<select name="otherusers[]" id="otherusersconf" data-placeholder="Other attendees..." 
+								<select name="otherusers[]" id="otherusersconf" data-placeholder="Other attendees...type here to filter list" 
 									class="chosen-select" multiple style="width: 75%;">
 									<?php
 										foreach ($users as $user)
@@ -443,6 +443,7 @@ $ROWSPERPAGE = 5;
 										}
 									?>
 								</select>
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 							</label>
 						</div>
 					</fieldset>
@@ -565,7 +566,7 @@ $ROWSPERPAGE = 5;
 						<div class="form-group clearfix">
 							<label>
 								<b>Other attendees on this training:</b>
-								<select name="otherusers[]" id="otheruserstrain" data-placeholder="Other attendees..." 
+								<select name="otherusers[]" id="otheruserstrain" data-placeholder="Other attendees... type here to filter list" 
 									class="chosen-select" multiple style="width: 75%;">
 									<?php
 										foreach ($users as $user)
@@ -578,6 +579,7 @@ $ROWSPERPAGE = 5;
 										}
 									?>
 								</select>
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 							</label>
 						</div>
 					</fieldset>
@@ -680,7 +682,7 @@ $ROWSPERPAGE = 5;
 							<div class="col-md-10 col-md-offset-2 text-left">
 								<label>
 									<b>Other Sygnature authors/inventors:</b>
-									<select name="otherusers[]" id="otheruserspub" data-placeholder="Other attendees..." 
+									<select name="otherusers[]" id="otheruserspub" data-placeholder="Other attendees... type here to filter list" 
 										class="chosen-select" multiple style="width: 75%;">
 										<?php
 											foreach ($users as $user)
@@ -693,6 +695,7 @@ $ROWSPERPAGE = 5;
 											}
 										?>
 									</select>
+									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 								</label>
 							</div>
 						</div>
@@ -779,6 +782,7 @@ $ROWSPERPAGE = 5;
 	// function to show modal with specified id, triggered by button in HTML
 	function show_modal(id){
 		$( "#"+id ).modal( "toggle" );
+		$('.chosen-select', this).chosen();
 		$(".chosen-container").width("75%");
 	}
 	
@@ -827,7 +831,7 @@ $ROWSPERPAGE = 5;
 		}
 		
 		// Initiate Multi-select box
-		$('.chosen-select').chosen();
+		
 		
 		// Initiate Popover
 		$('[data-toggle="popover"]').popover({
