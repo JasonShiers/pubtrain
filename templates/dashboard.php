@@ -830,9 +830,6 @@ $ROWSPERPAGE = 5;
 			$("#collapseConferenceHistory").addClass("in");
 		}
 		
-		// Initiate Multi-select box
-		
-		
 		// Initiate Popover
 		$('[data-toggle="popover"]').popover({
 			html: true
