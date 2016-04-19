@@ -408,7 +408,7 @@ $ROWSPERPAGE = 5;
 									<b class="required">Conference Name</b>
 									<input class="form-control autocomplete" name="title" id="newConfName" required="required" 
 										placeholder="Paste here, or type keyword for autocomplete" type="text" maxlength="90"
-										onfocus="setAutocompleteType('newConfName', 0)" />
+										onfocus="setAutocompleteType('newConfName', 0, 2)" />
 								</label>
 							</div>
 						</div>
@@ -417,7 +417,7 @@ $ROWSPERPAGE = 5;
 								<label>
 									<b class="required">Location</b>
 									<input class="form-control autocomplete" name="location" id="newConfLocation" type="text" maxlength="60" 
-										required="required" placeholder="e.g. Cambridge, UK" onfocus="setAutocompleteType('newConfLocation', 0)" />
+										required="required" placeholder="e.g. Cambridge, UK" onfocus="setAutocompleteType('newConfLocation', 0, 2)" />
 								</label>
 							</div>
 							<div class="col-md-3 text-left">
@@ -528,7 +528,7 @@ $ROWSPERPAGE = 5;
 									of the course.</li><li>Sign-off records (e.g. 'Health & Safety Review of COPs/BOPs') include the title of the provided in 
 									the sign-off sheet.</li></ul><br />Not needed for specific training activities (e.g. equipment training and SOPs)">(What is this?)</button>
 									<input class="form-control autocomplete" name="description" id="newTrainDesc" type="text" maxlength="60" 
-										placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc', 'trainingid')" />
+										placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc', 'trainingid', 2)" />
 								</label>
 							</div>
 							<div class="col-md-3 text-left">
@@ -619,7 +619,7 @@ $ROWSPERPAGE = 5;
 								<label>
 									<b class="required">Reference Title</b>
 									<input class="form-control autocomplete" name="title" id="newPubDesc" type="text" maxlength="60" 
-										minlength="8" required="required" onfocus="setAutocompleteType('newPubDesc', 0)" />
+										minlength="8" required="required" onfocus="setAutocompleteType('newPubDesc', 0, 1)" />
 								</label>
 								<p class="text-muted">Patent Reference (e.g. WO/2005/123456) or 
 									<a href="https://images.webofknowledge.com/WOK46/help/WOS/J_abrvjt.html" target="_blank">
@@ -630,7 +630,7 @@ $ROWSPERPAGE = 5;
 								<label>
 									<b class="required">Source of work</b>
 									<input class="form-control autocomplete" name="source" id="newPubSource" type="text" maxlength="32" 
-										minlength="3" required="required" onfocus="setAutocompleteType('newPubSource', 0)" />
+										minlength="3" required="required" onfocus="setAutocompleteType('newPubSource', 0, 1)" />
 								</label>
 								<p class="text-muted">
 									Enter name of client for project work, "Internal" for Sygnature internal research and "External" for 
@@ -794,8 +794,9 @@ $ROWSPERPAGE = 5;
 	/* keep track of which input box has focus and return appropriate autocomplete results
 	 * type is submitted in the query string and determines which query is used to obtain results
 	 * filter specifies the id of the form element passed in the query string used to filter the
-	 * results (0 for no filtering) */
-	function setAutocompleteType(type, filter){
+	 * results (0 for no filtering)
+	 * minLength is the number of characters below which results will not be returned */
+	function setAutocompleteType(type, filter, minLength){
 		var autocompleteType = type;
 		
 		var source = "getautocomplete.php?type=" + autocompleteType;
@@ -804,7 +805,7 @@ $ROWSPERPAGE = 5;
 		// set up autocomplete using appropriate type
 		$( "input.autocomplete" ).autocomplete({
 			source: source,
-			minLength: 2
+			minLength: minLength
 		});
 	}
 	

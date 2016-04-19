@@ -35,6 +35,11 @@ body .container
 	text-align: center;
 }
 
+.autocomplete
+{
+	background: #fff url('chosen-sprite.png') no-repeat 100% -20px;
+}
+
 .conflist table, .requestlist table
 {
 	margin-left: auto;

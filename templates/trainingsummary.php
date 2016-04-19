@@ -274,44 +274,46 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 
-	// Load the Visualization API and the corechart package.
-	google.charts.load('current', {'packages':['corechart']});
+	<?php if (isset($verified)): ?>
+		// Load the Visualization API and the corechart package.
+		google.charts.load('current', {'packages':['corechart']});
 
-	// Set a callback to run when the Google Visualization API is loaded.
-	google.charts.setOnLoadCallback(drawCharts);
+		// Set a callback to run when the Google Visualization API is loaded.
+		google.charts.setOnLoadCallback(drawCharts);
 
-	// Callback that creates and populates a data table,
-	// instantiates the pie chart, passes in the data and
-	// draws it.
-	function drawCharts() {
+		// Callback that creates and populates a data table,
+		// instantiates the pie chart, passes in the data and
+		// draws it.
+		function drawCharts() {
 
-		// Status Chart
-		// Create the data table.
-		var data1 = new google.visualization.DataTable();
-		data1.addColumn('string', 'Status');
-		data1.addColumn('number', 'Frequency');
-		
-		data1.addRows( 
-			<?php 
-				echo "[['Verified', " . count($verified) . "], "
-					."['Unverified', " . count($unverified) . "], "
-					."['Unconfirmed', " . count($unconfirmed) . "]]"
-			?> );
+			// Status Chart
+			// Create the data table.
+			var data1 = new google.visualization.DataTable();
+			data1.addColumn('string', 'Status');
+			data1.addColumn('number', 'Frequency');
+			
+			data1.addRows( 
+				<?php 
+					echo "[['Verified', " . count($verified) . "], "
+						."['Unverified', " . count($unverified) . "], "
+						."['Unconfirmed', " . count($unconfirmed) . "]]"
+				?> );
 
-		// Set chart options
-		var options1 = {
-			title:'Users Status',
-			width:250,
-			height:250,
-			is3D:true,
-			legend: {position: 'bottom'}
-		};
+			// Set chart options
+			var options1 = {
+				title:'Users Status',
+				width:250,
+				height:250,
+				is3D:true,
+				legend: {position: 'bottom'}
+			};
 
-		// Instantiate and draw our chart, passing in some options.
-		var chart = new google.visualization.PieChart(document.getElementById('statusChart'));
-		chart.draw(data1, options1);
-		
-	}
+			// Instantiate and draw our chart, passing in some options.
+			var chart = new google.visualization.PieChart(document.getElementById('statusChart'));
+			chart.draw(data1, options1);
+			
+		}
+	<?php endif ?>
 
 	// function to show modal with specified id, triggered by button in HTML
 	function show_modal(id){
