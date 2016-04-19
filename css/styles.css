@@ -125,6 +125,14 @@ body .container
 	width: 33%;
 }
 
+.emailsign
+{
+	color: blue;
+	font-weight: bold;
+	font-size: 1.2em;
+	padding-top: 0.25em;
+}
+
 .userupdate td, .userupdate th
 {
 	text-align: left;
