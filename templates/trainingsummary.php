@@ -13,7 +13,7 @@
 		<div class="col-md-4 col-md-offset-1 text-left">
 			<label>
 				<b class="required">Training type</b>
-				<select name="trainingid" data-placeholder="Choose a training type..." class="chosen-select" style="width: 75%;">
+				<select name="trainingid" id="trainingid" data-placeholder="Choose a training type..." class="chosen-select" style="width: 75%;">
 					<?php
 						print("<option disabled selected value>Select an option</option>");
 						foreach($trainingopts as $opt)
@@ -32,7 +32,7 @@
 			<label>
 				<b>Description (Optional)</b>
 				<input class="form-control autocomplete" name="description" id="newTrainDesc2" type="text" maxlength="60" 
-				placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc')" 
+				placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc', 'trainingid')" 
 				<?= (isset($description) && strlen($description)>0)?"value=\"" . $description . "\" ":"" ?> />
 			</label>
 		</div>
@@ -75,7 +75,7 @@
 </form>
 <?php if (isset($verified)): ?>
 	<div class="form-group">
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<table class="conflist paginated" style="width: 100%;">
 				<thead>
 					<th class="left right" style="width: 6em;">
@@ -96,7 +96,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<form action="modifyrecord.php?type=verifyTrain" method="post">
 				<input type="hidden" name="superuser" value="1" />
 				<input type="hidden" name="trainingid" value="<?= $trainingid ?>" />
@@ -126,7 +126,7 @@
 				<button class="btn btn-success" type="submit">Verify Selected</button>
 			</form>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<form id="addTrain" action="modifyrecord.php?type=newTrain" method="post">
 				<input type="hidden" name="superuser" value="1" />
 				<table class="conflist paginated" style="width: 100%;">
@@ -193,7 +193,7 @@
 										<div class="col-md-5 text-left">
 											<label>
 												<b class="required">Training Type</b>
-												<select name="trainingid" data-placeholder="Select training type..." class="chosen-select" 
+												<select name="trainingid" id="newTrainID" data-placeholder="Select training type..." class="chosen-select" 
 													required="required">
 													<?php
 														print("<option disabled selected value>Select an option</option>");
@@ -217,7 +217,7 @@
 											<label>
 												<b>Description (Optional)</b>
 												<input class="form-control autocomplete" name="description" id="newTrainDesc" type="text" maxlength="60" 
-													placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc')" 
+													placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc', 'newTrainID')" 
 													<?= (isset($description) && strlen($description)>0)?"value=\"" . $description . "\" ":"" ?> />
 											</label>
 										</div>
@@ -264,10 +264,55 @@
 				</div>
 			</form>
 		</div>
+		<div class="col-md-3">
+			<div id="statusChart"></div>
+		</div>
 	</div>
 <?php endif ?>
 
-<script>	
+<!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+	// Load the Visualization API and the corechart package.
+	google.charts.load('current', {'packages':['corechart']});
+
+	// Set a callback to run when the Google Visualization API is loaded.
+	google.charts.setOnLoadCallback(drawCharts);
+
+	// Callback that creates and populates a data table,
+	// instantiates the pie chart, passes in the data and
+	// draws it.
+	function drawCharts() {
+
+		// Status Chart
+		// Create the data table.
+		var data1 = new google.visualization.DataTable();
+		data1.addColumn('string', 'Status');
+		data1.addColumn('number', 'Frequency');
+		
+		data1.addRows( 
+			<?php 
+				echo "[['Verified', " . count($verified) . "], "
+					."['Unverified', " . count($unverified) . "], "
+					."['Unconfirmed', " . count($unconfirmed) . "]]"
+			?> );
+
+		// Set chart options
+		var options1 = {
+			title:'Users Status',
+			width:250,
+			height:250,
+			is3D:true,
+			legend: {position: 'bottom'}
+		};
+
+		// Instantiate and draw our chart, passing in some options.
+		var chart = new google.visualization.PieChart(document.getElementById('statusChart'));
+		chart.draw(data1, options1);
+		
+	}
+
 	// function to show modal with specified id, triggered by button in HTML
 	function show_modal(id){
 		$( "#"+id ).modal( "toggle" );
@@ -279,14 +324,20 @@
 		$("#"+id).trigger("reset");
 	}
 
-	// keep track of which input box has focus and return appropriate autocomplete results
-	function setAutocompleteType(type){
+	/* keep track of which input box has focus and return appropriate autocomplete results
+	 * type is submitted in the query string and determines which query is used to obtain results
+	 * filter specifies the id of the form element passed in the query string used to filter the
+	 * results (0 for no filtering) */
+	function setAutocompleteType(type, filter){
 		var autocompleteType = type;
+		
+		var source = "getautocomplete.php?type=" + autocompleteType;
+		if (filter != 0) source += "&filter=" + $("#" + filter).children(":selected").val();
 
 		// set up autocomplete using appropriate type
 		$( "input.autocomplete" ).autocomplete({
-			source: "getautocomplete.php?type=" + autocompleteType,
-			minLength: 2
+			source: source,
+			minLength: 1
 		});
 	}
 
