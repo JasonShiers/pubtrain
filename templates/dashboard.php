@@ -286,75 +286,56 @@ $ROWSPERPAGE = 5;
 						</tr>
 					</thead>
 					<tbody>
-						<?php
-							$rownumber = -1;
-							foreach ($pubhistory as $h)
-							{
-								print("<tr ");
-								$rownumber++;
-								if ($h["confirmed"] === 0)
-								{
-									print("style=\"color: darkgray\";");
-								}
-								print(">");
-								print("<td>" . htmlspecialchars($h["year"]) . "</td>");
-								if ($h["journal"] == 1)
-								{
-									print("<td><i>" . htmlspecialchars($h["title"]) . "</i>");
-									if($h["volume"] !== 0)
-									{
-										print(", <b>" . htmlspecialchars($h["volume"]) . "</b>");
-									}
-									if($h["issue"] !== 0)
-									{
-										print("(" . htmlspecialchars($h["issue"]) . ")");
-									}
-									print(", " . htmlspecialchars($h["startpage"]));
-									if($h["endpage"] !== 0)
-									{
-										print("-" . htmlspecialchars($h["endpage"]));
-									}
-								}
-								else
-								{
-									print("<td>" . htmlspecialchars($h["title"]));								
-								}
-								print("</td>");
-								print("<td>" . htmlspecialchars($h["source"]) . "</td>");
-								if($h["confirmed"] !== 0)
-								{
-									print("	<td>
-												<div class=\"imgdiv\">
-													<span class=\"glyphicon glyphicon-thumbs-up\" ");
-									if ($h["confirmed"] === 1)
-									{
-										print("			title=\"Confirmed by you\" ");
-									}
-									else
-									{
-										print("			title=\"Entered by you\" ");
-									}
-									print("				style=\"color: forestgreen;\" aria-hidden=\"true\"></span>
-												</div>");
-								}
-								else
-								{
-									print("	<td><a class=\"btn btn-info btn-xs\" 
-												href=\"modifyrecord.php?type=confirmPub&id=" . $h["id"] 
-												. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
-												&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm\" 
-												aria-hidden=\"true\"></span>&nbsp;</a>");
-								}
-								print("		&nbsp;
-											<button type=\"button\" class=\"btn btn-danger btn-xs\" 
-												onclick=\"bindModalButton('modalDelPub', " 
-												. "'delPub' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) . ", '')\">
-												&nbsp;<span class=\"glyphicon glyphicon-trash\" 
-												title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
-											</button></td>");
-								print("</tr>");
-							}
-						?>
+						<?php $rownumber = -1; ?>
+						<?php foreach ($pubhistory as $h): ?>
+							<tr <?php if ($h["confirmed"] === 0){ ?>style="color: darkgray"<?php } ?>>
+								<?php $rownumber++; ?>
+								<td><?= htmlspecialchars($h["year"]) ?></td>
+								<td>
+									<?php if ($h["journal"] == 1): ?>
+										<i><?= htmlspecialchars($h["title"]) ?></i>
+										<?php if($h["volume"] !== 0): ?>
+											, <b><?= htmlspecialchars($h["volume"]) ?></b>
+										<?php endif ?>
+										<?php if($h["issue"] !== 0): ?>
+											(<?= htmlspecialchars($h["issue"]) ?>)
+										<?php endif ?>
+										, <?= htmlspecialchars($h["startpage"])?>
+										<?php if($h["endpage"] !== 0): ?>
+											-<?= htmlspecialchars($h["endpage"])?>
+										<?php endif ?>
+									<?php else: ?>
+										<?= htmlspecialchars($h["title"]) ?>
+									<?php endif ?>
+								</td>
+								<td><?= htmlspecialchars($h["source"]) ?></td>
+								<td>
+									<?php if($h["confirmed"] !== 0): ?>
+										<div class="imgdiv">
+											<span class="glyphicon glyphicon-thumbs-up"
+												<?= ($h["confirmed"] === 1)?" title=\"Confirmed by you\" ":" title=\"Entered by you\" " ?>
+												style="color: forestgreen;" aria-hidden="true">
+											</span>
+										</div>
+									<?php else: ?>
+										<a class="btn btn-info btn-xs" href="<?= "modifyrecord.php?type=confirmPub&id=" . $h["id"] 
+													. "&page=" . intval($rownumber/$ROWSPERPAGE+1) ?> ">
+											&nbsp;
+											<span class="glyphicon glyphicon-question-sign" title="Confirm" 
+												aria-hidden="true"></span>
+											&nbsp;
+										</a>
+									<?php endif ?>
+									&nbsp;
+									<button type="button" class="btn btn-danger btn-xs" 
+										onclick="bindModalButton('modalDelPub', 'delPub', <?= $h["id"] ?>, <?= intval($rownumber/$ROWSPERPAGE+1) ?>, '')">
+											&nbsp;
+											<span class="glyphicon glyphicon-trash" title="Delete" aria-hidden="true"></span>
+											&nbsp;
+									</button>
+								</td>
+							</tr>
+						<?php endforeach ?>
 					</tbody>
 					<tfoot>
 						<tr>
