@@ -36,79 +36,71 @@ $ROWSPERPAGE = 5;
 						</tr>
 					</thead>
 					<tbody>
-						<?php
-							$rownumber = -1;
-							foreach ($confhistory as $h)
-							{
-								print("<tr ");
-								$rownumber++;
-								if ($h["confirmed"] === 0)
-								{
-									print("style=\"color: darkgray\";");
-								}
-								print(">");
-								print("<td>" . htmlspecialchars($h["confdate"]) . "</td>");
-								print("<td>" . htmlspecialchars($h["title"]) . "</td>");
-								print("<td>" . htmlspecialchars($h["location"]) . "</td>");
-								print("<td>" . htmlspecialchars($h["days"]) . "</td>");
-								if ($h["attended"]==1)
-								{
-									print("	<td >
-												<div class=\"imgdiv\"><span class=\"glyphicon glyphicon-thumbs-up\" title=\"Confirmed by ConferenceTracker\" 
-													style=\"color: darkblue;\" aria-hidden=\"true\"></span></div>
+						<?php $rownumber = -1; ?>
+						<?php foreach ($confhistory as $h): ?>
+							<tr <?php if ($h["confirmed"] === 0){ ?>style="color: darkgray;" <?php } ?>>
+								<?php $rownumber++; ?>
+								<td><?= htmlspecialchars($h["confdate"]) ?></td>
+								<td><?= htmlspecialchars($h["title"]) ?></td>
+								<td><?= htmlspecialchars($h["location"]) ?></td>
+								<td><?= htmlspecialchars($h["days"]) ?></td>
+								<?php if ($h["attended"]==1): ?>
+									<td>
+										<div class="imgdiv">
+											<span class="glyphicon glyphicon-thumbs-up" title="Confirmed by ConferenceTracker" 
+												style="color: darkblue;" aria-hidden="true"></span>
+										</div>
+										&nbsp;
+										<a class="btn btn-info btn-xs" href="
+											<?= htmlspecialchars("//intranet/confdb/feedbackreview.php?id={$h['req_id']}&userid={$_SESSION['userid']}") ?>
+											" target="_blank">
+											&nbsp;
+											<span class="glyphicon glyphicon-list-alt" title="Review Feedback" 
+												aria-hidden="true"></span>
+											</a>
+										&nbsp;
+									</td>
+								<?php elseif ($h["editable"]==0): ?>
+									<td>
+										<div class="imgdiv">
+											<span class="glyphicon glyphicon-thumbs-up" title="Approved in ConferenceTracker" 
+												style="color: darkgray;" aria-hidden="true"></span>
+										</div>
+										&nbsp;
+									</td>
+								<?php endif ?>
+								<?php if ($h["editable"]==1): ?>
+									<?php if($h["confirmed"] !== 0): ?>
+										<td>
+											<div class="imgdiv">
+												<span class="glyphicon glyphicon-thumbs-up" title="
+													<?= ($h["confirmed"] === 1)?"Confirmed by you":"Entered by you"; ?>
+													" style="color: forestgreen;" aria-hidden="true">
+												</span>
+											</div>
+									<?php else: ?>
+										<td>
+											<a class="btn btn-info btn-xs" href="<?=
+												"modifyrecord.php?type=confirmConf&id={$h['id']}&page=" . intval($rownumber/$ROWSPERPAGE+1) ?>
+												">
 												&nbsp;
-												<a class=\"btn btn-info btn-xs\" 
-												href=\"//intranet/confdb/feedbackreview.php?id=" . htmlspecialchars($h["req_id"]) 
-												. "&userid=" . htmlspecialchars($_SESSION["userid"]) . "\" target=\"_blank\">
-													&nbsp;<span class=\"glyphicon glyphicon-list-alt\" title=\"Review Feedback\" 
-													aria-hidden=\"true\"></span>&nbsp;</a>
-											</td>");
-								}
-								else if ($h["editable"]==0)
-								{
-									print("	<td >
-												<div class=\"imgdiv\"><span class=\"glyphicon glyphicon-thumbs-up\" title=\"Approved in ConferenceTracker\" 
-													style=\"color: darkgray;\" aria-hidden=\"true\"></span></div>
+												<span class="glyphicon glyphicon-question-sign" title="Confirm I Attended" 
+													aria-hidden="true"></span>
 												&nbsp;
-											</td>");
-								}
-								if ($h["editable"]==1)
-								{
-									if($h["confirmed"] !== 0)
-									{
-										print("	<td>
-													<div class=\"imgdiv\">
-														<span class=\"glyphicon glyphicon-thumbs-up\" ");
-										if ($h["confirmed"] === 1)
-										{
-											print("			title=\"Confirmed by you\" ");
-										}
-										else
-										{
-											print("			title=\"Entered by you\" ");
-										}
-										print("				style=\"color: forestgreen;\" aria-hidden=\"true\"></span>
-													</div>");
-									}
-									else
-									{
-										print("	<td><a class=\"btn btn-info btn-xs\" 
-													href=\"modifyrecord.php?type=confirmConf&id=" . $h["id"] 
-													. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
-													&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm I Attended\" 
-													aria-hidden=\"true\"></span>&nbsp;</a>");
-									}
-									print("		&nbsp;
-												<button type=\"button\" class=\"btn btn-danger btn-xs\" 
-												onclick=\"bindModalButton('modalDelConf', " 
-													. "'delConf' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) . ", '')\">
-													&nbsp;<span class=\"glyphicon glyphicon-trash\" 
-													title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
-												</button></td>");
-								}
-								print("</tr>");
-							}
-						?>
+											</a>
+									<?php endif ?>
+										&nbsp;
+										<button type="button" class="btn btn-danger btn-xs" 
+											onclick="bindModalButton('modalDelConf', 'delConf', <?= "{$h['id']}, " . intval($rownumber/$ROWSPERPAGE+1) ?>, '')">
+											&nbsp;
+											<span class="glyphicon glyphicon-trash" 
+												title="Delete" aria-hidden="true"></span>
+											&nbsp;
+										</button>
+									</td>
+								<?php endif ?>
+							</tr>
+						<?php endforeach ?>
 					</tbody>
 					<tfoot>
 						<tr>
@@ -163,82 +155,60 @@ $ROWSPERPAGE = 5;
 						</tr>
 					</thead>
 					<tbody>
-						<?php
-							$rownumber = -1;
-							foreach ($trainhistory as $h)
-							{
-								print("<tr ");
-								$rownumber++;
-								if ($h["confirmed"] === 0)
-								{
-									print("style=\"color: darkgray\";");
-								}
-								print(">");
-								print("<td>" . htmlspecialchars($h["date"]) . "</td>");
-								print("<td>" . htmlspecialchars($h["type"]));
-								if ($h["description"] !== ""){
-									print("<br />" . htmlspecialchars($h["description"]));
-								}
-								print("</td>");
-								if ($h["internal_location"] == 0)
-								{
-									print("<td>External</td>");
-								}
-								else
-								{
-									print("<td>Internal</td>");
-								}									
-								if ($h["internal_trainer"] === 0)
-								{
-									print("<td>External</td>");
-								}
-								else if ($h["internal_trainer"] == 1)
-								{
-									print("<td>Internal</td>");
-								}
-								else
-								{
-									print("<td>N/A</td>");
-								}
-								print("<td>" . htmlspecialchars($h["total_days"]) . "</td>");
-								if($h["confirmed"] !== 0)
-								{
-									print("	<td>
-												<div class=\"imgdiv\">
-													<span class=\"glyphicon glyphicon-thumbs-up\" ");
-									if ($h["confirmed"] === 1)
-									{
-										print("			title=\"Confirmed by you\" ");
-									}
-									else
-									{
-										print("			title=\"Entered by you\" ");
-									}
-									print("				style=\"color: forestgreen;\" aria-hidden=\"true\"></span>
-												</div>");
-								}
-								else
-								{
-									print("	<td><a class=\"btn btn-info btn-xs\" 
-												href=\"modifyrecord.php?type=confirmTrain&id=" . $h["id"] 
-													. "&page=" . intval($rownumber/$ROWSPERPAGE+1) . "\">
-												&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Confirm I Attended\" 
-												aria-hidden=\"true\"></span>&nbsp;</a>");
-								}
-								print("		&nbsp;
-											<button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"bindModalButton('modalDelTrain', " 
-												. "'delTrain' , " . $h["id"] . ", " . intval($rownumber/$ROWSPERPAGE+1) 
-												. ", '#collapseTrainingHistory')\">
-												&nbsp;<span class=\"glyphicon glyphicon-trash\" 
-												title=\"Delete\" aria-hidden=\"true\"></span>&nbsp;
-											</button>");
-								print("	&nbsp;
-										<div class=\"imgdiv\"" . (($h["verified"] === 1)?"":" style=\"visibility: hidden;\"") . ">
-											<span class=\"glyphicon glyphicon-ok-circle\" title=\"Verified\" 
-												style=\"color: green;\" aria-hidden=\"true\">");
-								print("</td></tr>");
-							}
-						?>
+						<?php $rownumber = -1; ?>
+						<?php foreach ($trainhistory as $h): ?>
+							<tr <?php if ($h["confirmed"] === 0){ ?>style="color: darkgray;" <?php } ?>>
+							<?php $rownumber++; ?>
+								<td><?= htmlspecialchars($h["date"]) ?></td>
+								<td>
+									<?= htmlspecialchars($h["type"]) ?>
+									<?php if ($h["description"] !== ""): ?>
+										<br /><?= htmlspecialchars($h["description"]) ?>
+									<?php endif ?>
+								</td>
+								<td>
+									<?= ($h["internal_location"] == 0)?"External":"Internal" ?>
+								</td>
+								<td>
+									<?php if ($h["internal_trainer"] === 0): ?>External
+									<?php elseif ($h["internal_trainer"] == 1): ?>Internal
+									<?php else: ?>N/A
+									<?php endif ?>
+								</td>
+								<td><?= htmlspecialchars($h["total_days"]) ?></td>
+								<td>
+									<?php if($h["confirmed"] !== 0): ?>
+										<div class="imgdiv">
+											<span class="glyphicon glyphicon-thumbs-up" title="
+											<?= ($h["confirmed"] === 1)?"Confirmed by you":"Entered by you" ?>"
+											style="color: forestgreen;" aria-hidden="true"></span>
+										</div>
+									<?php else: ?>
+										<a class="btn btn-info btn-xs" href="modifyrecord.php?type=confirmTrain&id=<?= "{$h['id']}&page=" . intval($rownumber/$ROWSPERPAGE+1) ?>">
+											&nbsp;
+											<span class="glyphicon glyphicon-question-sign" title="Confirm I Attended" 
+												aria-hidden="true">
+											</span>
+											&nbsp;
+										</a>
+									<?php endif ?>
+									&nbsp;
+									<button type="button" class="btn btn-danger btn-xs" 
+										onclick="bindModalButton('modalDelTrain', 'delTrain', 
+										<?= "{$h["id"]}, " . intval($rownumber/$ROWSPERPAGE+1) ?>, '#collapseTrainingHistory')">
+										&nbsp;
+										<span class="glyphicon glyphicon-trash" title="Delete" aria-hidden="true"></span>
+										&nbsp;
+									</button>
+									&nbsp;
+									<div class="imgdiv" <?= ($h["verified"] === 1)?"":"style=\"visibility: hidden;\"" ?>>
+										<span class="glyphicon glyphicon-ok-circle" title="Verified" 
+											style="color: green;" aria-hidden="true">
+										</span>
+									</div>
+								</td>
+							</tr>
+						<?php endforeach ?>
 					</tbody>
 					<tfoot>
 						<tr>
@@ -288,7 +258,7 @@ $ROWSPERPAGE = 5;
 					<tbody>
 						<?php $rownumber = -1; ?>
 						<?php foreach ($pubhistory as $h): ?>
-							<tr <?php if ($h["confirmed"] === 0){ ?>style="color: darkgray"<?php } ?>>
+							<tr <?php if ($h["confirmed"] === 0){ ?>style="color: darkgray;"<?php } ?>>
 								<?php $rownumber++; ?>
 								<td><?= htmlspecialchars($h["year"]) ?></td>
 								<td>
@@ -510,24 +480,26 @@ $ROWSPERPAGE = 5;
 						</div>
 						<div class="form-group clearfix">
 							<div class="col-md-7 text-left">
-								<label>
+								<label for="newTrainDesc" style="display: inline;">
 									<b>Description (Optional) </b>
-									<button type="button" class="btn btn-xs btn-info" data-toggle="popover" title="Using the Description field" 
-									data-placement="bottom" data-content="An optional field used to differentiate between activities of the same type. Examples:<br /><br />
-									<ul><li>General training types (e.g. 'Medicinal Chemistry', 'Managing People') cover a number of different courses, so please include the name 
-									of the course.</li><li>Sign-off records (e.g. 'Health & Safety Review of COPs/BOPs') include the title of the provided in 
-									the sign-off sheet.</li></ul><br />Not needed for specific training activities (e.g. equipment training and SOPs)">(What is this?)</button>
-									<input class="form-control autocomplete" name="description" id="newTrainDesc" type="text" maxlength="60" 
-										placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc', 'trainingid', 2)" />
 								</label>
+								&nbsp;&nbsp;
+								<button type="button" class="btn btn-xs btn-info" data-toggle="popover" title="Using the Description field" 
+								data-placement="bottom" data-content="An optional field used to differentiate between activities of the same type. Examples:<br /><br />
+								<ul><li>General training types (e.g. 'Medicinal Chemistry', 'Managing People') cover a number of different courses, so please include the name 
+								of the course.</li><li>Sign-off records (e.g. 'Health & Safety Review of COPs/BOPs') include the title of the provided in 
+								the sign-off sheet.</li></ul><br />Not needed for specific training activities (e.g. equipment training and SOPs)">(What is this?)</button>
+								<input class="form-control autocomplete" name="description" id="newTrainDesc" type="text" maxlength="60" 
+									placeholder="e.g. Scientific Update Med Chem Course" onfocus="setAutocompleteType('newTrainDesc', 'trainingid', 2)" />
 							</div>
 							<div class="col-md-3 text-left">
-								<label>
+								<label for="newTrainDays" style="display: inline;">
 									<b class="required">Total Duration (days)</b>
-									<button type="button" class="btn btn-xs btn-info" data-toggle="popover" title="Training duration" 
-									data-placement="bottom" data-content="Please enter 0 for SOP/COP sign-off">?</button>
-									<input class="form-control" name="days" type="number" min="0" max="10" step="0.1" required="required" />
 								</label>
+								&nbsp;&nbsp;
+								<button type="button" class="btn btn-xs btn-info" data-toggle="popover" title="Training duration" 
+								data-placement="bottom" data-content="Please enter 0 for SOP/COP sign-off">?</button>
+								<input class="form-control" name="days" id="newTrainDays" type="number" min="0" max="10" step="0.1" required="required" />
 							</div>
 						</div>
 						<div class="form-group clearfix">
@@ -710,7 +682,7 @@ $ROWSPERPAGE = 5;
 			<div class="modal-header">
 				<h4 class="modal-title" id="<?= "modal" . $section . "Label" ?>">Delete <?= ucfirst($description) ?></h4>
 			</div>
-			<form id="delConf" method="post">
+			<form id="<?= strtolower($section) ?>" method="post">
 				<div class="modal-body">
 				<p>Are you sure you want to delete this <?= $description ?> record?</p>
 				</div>
@@ -753,11 +725,10 @@ $ROWSPERPAGE = 5;
 								</label>
 							</div>
 							<div class="col-md-4 text-left">
-								<label>
 									<b class="required">Sections:</b><br />
-									<input type="radio" name="sections" value="current" checked /> Current<br />
-									<input type="radio" name="sections" value="all" /> All<br />
-								</label>
+									<label><input type="radio" name="sections" value="current" checked /> Current</label>
+									<br />
+									<label><input type="radio" name="sections" value="all" /> All</label>
 							</div>
 						</div>
 					</div>
