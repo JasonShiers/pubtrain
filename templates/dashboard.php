@@ -113,10 +113,13 @@ $ROWSPERPAGE = 5;
 					<tfoot>
 						<tr>
 							<th colspan=5>
-								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewConf', 0)">
+								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewConf')">
 									<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
 								</button>
-								 conference not requested through ConferenceTracker.
+								 conference not requested through ConferenceTracker. &nbsp;&nbsp;
+								 <button type="button" class="btn btn-default btn-xs" onclick="show_modal('modalExportConf')">
+									<span class="glyphicon glyphicon-save-file" aria-hidden="true"></span> Export
+								</button>
 							</th>
 						</tr>
 					</tfoot>
@@ -243,6 +246,9 @@ $ROWSPERPAGE = 5;
 								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewTrain', 0)">
 									<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
 								</button>
+								 <button type="button" class="btn btn-default btn-xs" onclick="show_modal('modalExportTrain')">
+									<span class="glyphicon glyphicon-save-file" aria-hidden="true"></span> Export
+								</button>
 							</th>
 						</tr>
 					</tfoot>
@@ -355,6 +361,9 @@ $ROWSPERPAGE = 5;
 							<th colspan=4>
 								<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewPub', 0)">
 									<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+								</button>
+								 <button type="button" class="btn btn-default btn-xs" onclick="show_modal('modalExportPub')">
+									<span class="glyphicon glyphicon-save-file" aria-hidden="true"></span> Export
 								</button>
 							</th>
 						</tr>
@@ -712,71 +721,76 @@ $ROWSPERPAGE = 5;
 	</div>
 </div>
 
-<!-- Modal for deleting conference -->
-<div class="modal fade" id="modalDelConf" tabindex="-1" role="dialog" aria-labelledby="modalDelConf">
+<!-- Modals for deleting records of each type -->
+<?php foreach(['DelConf' => 'conference', 'DelTrain' => 'training', 'DelPub' => 'publication'] as $section => $description): ?>
+<div class="modal fade" id="<?= "modal" . $section ?>" tabindex="-1" role="dialog" aria-labelledby="<?= "modal" . $section ?>">
 	<div class="modal-dialog modal-sm" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="modalDelConfLabel">Delete Conference</h4>
+				<h4 class="modal-title" id="<?= "modal" . $section . "Label" ?>">Delete <?= ucfirst($description) ?></h4>
 			</div>
 			<form id="delConf" method="post">
 				<div class="modal-body">
-				<p>Are you sure you want to delete this conference record?</p>
+				<p>Are you sure you want to delete this <?= $description ?> record?</p>
 				</div>
 				<div class="modal-footer">
 					<fieldset>
 						<button class="btn btn-success" type="submit">Continue</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delConf')">Cancel</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('<?= $section ?>')">Cancel</button>
 					</fieldset>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
+<?php endforeach ?>
 
-<!-- Modal for deleting training record -->
-<div class="modal fade" id="modalDelTrain" tabindex="-1" role="dialog" aria-labelledby="modalDelTrain">
-	<div class="modal-dialog modal-sm" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="modalDelTrainLabel">Delete Training Record</h4>
+<!-- Modals for exporting history of each section -->
+<?php foreach(['ExportConf' => 'Conference History', 'ExportTrain' => 'Training History', 'ExportPub' => 'Publication History'] as $section => $description): ?>
+	<div class="modal fade" id="<?= "modal" . $section ?>" tabindex="-1" role="dialog" aria-labelledby="<?= "modal" . $section ?>">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="<?= "modal" . $section . "Label" ?>">Export <?= $description ?></h4>
+				</div>
+				<form id="<?= $section ?>" method="post" action="exportdocument.php?type=<?= $section ?>">
+					<div class="modal-body">
+						<p>Please choose from the date range and sections to include:</p>
+						<div class="form-group clearfix">
+							<div class="col-md-4 text-left">
+								<label>
+									<b class="required">Start Date</b>
+									<input class="form-control" name="fromdate" type="date" max="<?= date("Y-m-d") ?>" 
+										value="<?= date("Y-m-d", strtotime("-1 year")) ?>" required="required" />
+								</label>
+							</div>
+							<div class="col-md-4 text-left">
+								<label>
+									<b class="required">To Date</b>
+									<input class="form-control" name="todate" type="date" max="<?= date("Y-m-d") ?>" 
+										value="<?= date("Y-m-d") ?>" required="required" />
+								</label>
+							</div>
+							<div class="col-md-4 text-left">
+								<label>
+									<b class="required">Sections:</b><br />
+									<input type="radio" name="sections" value="current" checked /> Current<br />
+									<input type="radio" name="sections" value="all" /> All<br />
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<fieldset>
+							<button class="btn btn-success" type="submit">Continue</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('<?= $section ?>')">Cancel</button>
+						</fieldset>
+					</div>
+				</form>
 			</div>
-			<form id="delTrain" method="post">
-				<div class="modal-body">
-				<p>Are you sure you want to delete this training record?</p>
-				</div>
-				<div class="modal-footer">
-					<fieldset>
-						<button class="btn btn-success" type="submit">Continue</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delTrain')">Cancel</button>
-					</fieldset>
-				</div>
-			</form>
 		</div>
 	</div>
-</div>
-
-<!-- Modal for deleting publication record -->
-<div class="modal fade" id="modalDelPub" tabindex="-1" role="dialog" aria-labelledby="modalDelPub">
-	<div class="modal-dialog modal-sm" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="modalDelPubLabel">Delete Training Record</h4>
-			</div>
-			<form id="delPub" method="post">
-				<div class="modal-body">
-				<p>Are you sure you want to delete this publication record?</p>
-				</div>
-				<div class="modal-footer">
-					<fieldset>
-						<button class="btn btn-success" type="submit">Continue</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('delPub')">Cancel</button>
-					</fieldset>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
+<?php endforeach ?>
 
 <script>
 	// function to show modal with specified id, triggered by button in HTML
@@ -809,7 +823,12 @@ $ROWSPERPAGE = 5;
 		});
 	}
 	
-	// Bind Continue button to appropriate action
+	/* Bind Continue button to appropriate action
+	 * modal_id is the id of the modal to be targeted and popped up 
+	 * form_id is the id of the form within modal_id. This should match the name of the modify record type.
+	 * record_id is the record id to be modified in the appropriate mySQL table
+	 * return_page is the current page in the table containing the action button
+	 * return_modal is the bookmark to expand the relevant modal (e.g. '#collapseModalName') */
 	function bindModalButton(modal_id, form_id, record_id, return_page, return_modal){
 		$( "#" + form_id ).attr("action", "modifyrecord.php?type=" + form_id + "&page=" 
 			+ return_page + "&id=" + record_id + return_modal);
