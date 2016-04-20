@@ -682,7 +682,7 @@ $ROWSPERPAGE = 5;
 			<div class="modal-header">
 				<h4 class="modal-title" id="<?= "modal" . $section . "Label" ?>">Delete <?= ucfirst($description) ?></h4>
 			</div>
-			<form id="<?= strtolower($section) ?>" method="post">
+			<form id="<?= lcfirst($section) ?>" method="post">
 				<div class="modal-body">
 				<p>Are you sure you want to delete this <?= $description ?> record?</p>
 				</div>
