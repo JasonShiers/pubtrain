@@ -3,8 +3,7 @@
 <?php endif ?>
 <form action="userinfo.php" method="post" class="form-horizontal">
 
-	<?php print("<input type=\"hidden\" name=\"userid\" value=\"" 
-		. htmlspecialchars($userinfo[0]["userid"]) . "\" />\n"); ?>
+	<input type="hidden" name="userid" value="<?= htmlspecialchars($userinfo[0]["userid"]) ?>" />
 
 	<div class="col-md-4 col-md-offset-4 text-left">
 		<fieldset class="formfieldgroup">
@@ -47,27 +46,20 @@
 					<label>
 						<b>Department</b>
 						<select name="department" required>
-							<?php
-								if (isset($userinfo[0]["department"]))
-								{
-									print("<option value=\"" . htmlspecialchars($userinfo[0]["department"]) 
-										. "\" selected=\"selected\">" 
-										. htmlspecialchars($userinfo[0]["department"]) . "</option>");
-								}
-								else
-								{
-									print("<option disabled selected value>Select an option</option>");
-								}
-								foreach($departments as $department)
-								{
-									if(!isset($userinfo[0]["department"]) || $department["department"] !== $userinfo[0]["department"])
-									{
-										print("<option value=\"" . $department["department"] . "\">"
-											. htmlspecialchars($department["department"]) 
-											. "</option>\n");
-									}
-								}
-							?>							
+							<?php if (isset($userinfo[0]["department"])): ?>
+								<option value="<?= htmlspecialchars($userinfo[0]["department"]) ?>" selected="selected"> 
+									<?= htmlspecialchars($userinfo[0]["department"]) ?>
+								</option>
+							<?php else: ?>
+								<option disabled selected value>Select an option</option>
+							<?php endif ?>
+							<?php foreach($departments as $department): ?>
+								<?php if(!isset($userinfo[0]["department"]) || $department["department"] !== $userinfo[0]["department"]): ?>
+									<option value="<?= $department["department"] ?>">
+										<?= htmlspecialchars($department["department"]) ?>
+									</option>
+								<?php endif ?>
+							<?php endforeach ?>							
 						</select>
 					</label>
 				</div>
