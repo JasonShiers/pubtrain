@@ -14,19 +14,13 @@
 			<label>
 				<b class="required">Training type</b>
 				<select name="trainingid" id="trainingid" data-placeholder="Choose a training type..." class="chosen-select" style="width: 75%;">
-					<?php
-						print("<option disabled selected value>Select an option</option>");
-						foreach($trainingopts as $opt)
-						{
-							print("<option value=\"" . $opt["trainingid"] . "\" ");
-							if(isset($trainingid) && $opt["trainingid"] == $trainingid)
-							{
-								print("selected=\"selected\" ");
-							}
-							print(">" . htmlspecialchars($opt["type"]) 
-								. "</option>\n");
-						}
-					?>							
+					<option disabled selected value>Select an option</option>
+					<?php foreach($traintypes as $traintype): ?>
+						<option value="<?= $traintype["trainingid"] ?>" 
+							<?php if(isset($trainingid) && $traintype["trainingid"] == $trainingid){ ?> selected="selected" <?php } ?>>
+							<?= htmlspecialchars($traintype["type"]) ?>
+						</option>
+					<?php endforeach ?>
 				</select>
 			</label>
 			<label>
@@ -50,22 +44,14 @@
 		</div>
 		<div class="col-md-3 text-left">
 			<b>Departments</b><br />
-			<?php
-				foreach ($depts as $dept)
-				{
-					print("<label style=\"float: left;\"><input type=\"checkbox\" name=\"departments[]\" value=\"" 
-						. $dept["depmask"] . "\" ");
-					if(isset($departments))
-					{
-						if(array_search($dept["depmask"], $departments) !== FALSE) print("checked=\"checked\" ");
-					}
-					else
-					{
-						print("checked=\"checked\" ");
-					}
-					print("/>" . $dept["department"] . "&nbsp;&nbsp;</label>");
-				}
-			?>
+			<?php foreach ($depts as $dept): ?>
+				<label style="float: left;"><input type="checkbox" name="departments[]" value="<?= $dept["depmask"] ?>" 
+					<?php if((isset($departments) && array_search($dept["depmask"], $departments) !== FALSE) || !isset($departments)): ?>
+						checked="checked" 
+					<?php endif ?>
+					/><?= $dept["department"] ?>&nbsp;&nbsp;
+				</label>
+			<?php endforeach ?>
 		</div>
 		<div class="col-md-1 text-center">
 			<br />
@@ -83,16 +69,14 @@
 					</th>
 				</thead>
 				<tbody>
-					<?php
-						foreach ($verified as $user)
-						{
-							print("<tr>
-										<td>" . htmlspecialchars($user["firstname"]) . " " 
-											. htmlspecialchars($user["lastname"]));
-							if ($user["count"] != 1) print(" (" . intval($user["count"]) . ")");
-							print("</td></tr>");
-						}
-					?>
+					<?php foreach ($verified as $user): ?>
+						<tr>
+							<td>
+								<?= htmlspecialchars($user["firstname"] . " " . $user["lastname"]) ?>
+								<?php if ($user["count"] != 1) print(" (" . intval($user["count"]) . ")"); ?>
+							</td>
+						</tr>
+					<?php endforeach ?>
 				</tbody>
 			</table>
 		</div>
@@ -107,20 +91,27 @@
 						</th>
 					</thead>
 					<tbody>
-						<?php
-							foreach ($unverified as $user)
-							{
-								print("<tr>
-											<td><div class=\"button_check\"><label for=\"" . htmlspecialchars($user["recordid"]) 
-												. "\"><input type=\"checkbox\" id=\"" . htmlspecialchars($user["recordid"]) . "\" value=\""
-												. htmlspecialchars($user["recordid"]) . "\" name=\"verifyrecords[]\" ");
-								if ($user["count"] != 1) print("disabled ");
-								print("/><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]));
-								if ($user["count"] != 1) print(" (" . intval($user["count"]) . ")");
-								if ($user["confirmed"] == 0) print(" (Unconfirmed)");
-								print("</span></label></div></td></tr>");
-							}
-						?>
+						<?php foreach ($unverified as $user): ?>
+							<tr>
+								<td>
+									<div class="button_check">
+										<label for="<?= htmlspecialchars($user["recordid"]) ?>">
+											<input type="checkbox" id="<?= htmlspecialchars($user["recordid"]) ?>" 
+												value="<?= htmlspecialchars($user["recordid"]) ?>" name="verifyrecords[]" 
+												<?php if ($user["count"] != 1) print("disabled "); ?>
+											/>
+											<span>
+												<?= htmlspecialchars($user["firstname"] . " " . $user["lastname"]) ?>
+												<?php 
+													if ($user["count"] != 1) print(" (" . intval($user["count"]) . ")");
+													if ($user["confirmed"] == 0) print(" (Unconfirmed)"); 
+												?>
+											</span>
+										</label>
+									</div>
+								</td>
+							</tr>
+						<?php endforeach ?>
 					</tbody>
 				</table>
 				<button class="btn btn-success" type="submit">Verify Selected</button>
@@ -136,17 +127,19 @@
 						</th>
 					</thead>
 					<tbody>
-						<?php
-							foreach ($unconfirmed as $user)
-							{
-								print("<tr>
-											<td><div class=\"button_check\"><label for=\"" . htmlspecialchars($user["userid"]) 
-												. "\"><input type=\"checkbox\" id=\"" . htmlspecialchars($user["userid"]) . "\" value=\""
-												. htmlspecialchars($user["userid"]) . "\" name=\"otherusers[]\" /><span>" . htmlspecialchars($user["firstname"]) . " " . htmlspecialchars($user["lastname"]) 
-												. "</span></label></div></td>
-										</tr>");
-							}
-						?>
+						<?php foreach ($unconfirmed as $user): ?>
+							<tr>
+								<td>
+									<div class="button_check">
+										<label for="<?= htmlspecialchars($user["userid"]) ?>">
+											<input type="checkbox" id="<?= htmlspecialchars($user["userid"]) ?>" 
+												value="<?= htmlspecialchars($user["userid"]) ?>" name="otherusers[]" />
+											<span><?= htmlspecialchars($user["firstname"] . " " . $user["lastname"]) ?></span>
+										</label>
+									</div>
+								</td>
+							</tr>
+						<?php endforeach ?>
 					</tbody>
 				</table>
 				<button type="button" class="btn btn-primary" onclick="show_modal('modalNewTrain', 0)">
@@ -168,25 +161,13 @@
 											<label style="max-width:50%; float: left;">
 												<b class="required">Month</b>
 												<select class="form-control" name="month" required="required">
-													<option value selected disabled>Month</option>
-													<option value="01">Jan</option>
-													<option value="02">Feb</option>
-													<option value="03">Mar</option>
-													<option value="04">Apr</option>
-													<option value="05">May</option>
-													<option value="06">Jun</option>
-													<option value="07">Jul</option>
-													<option value="08">Aug</option>
-													<option value="09">Sep</option>
-													<option value="10">Oct</option>
-													<option value="11">Nov</option>
-													<option value="12">Dec</option>
+													<?php enumeratemonthoptions() ?>
 												</select>
 											</label>
 											<label style="max-width:40%; float: left;">
 												<b class="required">Year</b>
-												<?php print("<input class=\"form-control\" name=\"year\" type=\"number\" min=\"1980\" max=\"2500\" 
-													value=\"" . date('Y') . "\" required=\"required\" />"); ?>
+												<input class="form-control" name="year" type="number" min="1980" max="2500" 
+													value="<?= date('Y') ?>" required="required" />
 											</label>
 											<p class="text-muted">Training start date</p>
 										</div>
@@ -195,19 +176,12 @@
 												<b class="required">Training Type</b>
 												<select name="trainingid" id="newTrainID" data-placeholder="Select training type..." class="chosen-select" 
 													required="required">
-													<?php
-														print("<option disabled selected value>Select an option</option>");
-														foreach($trainingopts as $opt)
-														{
-															print("<option value=\"" . $opt["trainingid"] . "\" ");
-															if(isset($trainingid) && $opt["trainingid"] == $trainingid)
-															{
-																print("selected=\"selected\" ");
-															}
-															print(">" . htmlspecialchars($opt["type"]) 
-																. "</option>\n");
-														}
-													?>							
+													<option disabled selected value>Select an option</option>
+													<?php foreach($traintypes as $traintype): ?>
+														<option value="<?= $traintype["trainingid"] ?>">
+															<?= htmlspecialchars($traintype["type"]) ?>
+														</option>
+													<?php endforeach ?>
 												</select>
 											</label>
 										</div>
@@ -292,12 +266,11 @@
 			data1.addColumn('string', 'Status');
 			data1.addColumn('number', 'Frequency');
 			
-			data1.addRows( 
-				<?php 
-					echo "[['Verified', " . count($verified) . "], "
-						."['Unverified', " . count($unverified) . "], "
-						."['Unconfirmed', " . count($unconfirmed) . "]]"
-				?> );
+			data1.addRows(	[
+								['Verified', <?= count($verified) ?>], 
+								['Unverified', <?= count($unverified) ?>], 
+								['Unconfirmed', <?= count($unconfirmed) ?>]
+							]);
 
 			// Set chart options
 			var options1 = {

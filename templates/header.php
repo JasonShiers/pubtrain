@@ -71,20 +71,13 @@
 								<ul class="nav navbar-nav navbar-right">
 									<li>
 										<div class="nav-username">
-											<?php 
-												if (isset($_SESSION["forename"]))
-												{
-													print(htmlspecialchars($_SESSION["forename"] . " " . $_SESSION["surname"] . " "));
-													if($_SESSION["admin"] != 0)
-													{
-														print("<span class=\"glyphicon glyphicon-cog\"></span>");
-													}
-												}
-											?>
+											<?php if (isset($_SESSION["forename"])): ?>
+												<?= htmlspecialchars($_SESSION["forename"] . " " . $_SESSION["surname"] . " ") ?>
+												<?php if($_SESSION["admin"] != 0){ ?><span class="glyphicon glyphicon-cog"></span><?php } ?>
+											<?php endif ?>
 										</div>
 									</li>
 									<?php if (isset($_SESSION["forename"])): ?>
-									
 										<li><a href="userinfo.php" class="imglink" style="padding: 5px 15px 0" title="Edit User Profile"><div class="imgdiv" id="profilebutton"></div></a></li>
 										<li><a href="logout.php" class="imglink" style="padding: 5px 0;" title="Logout"><div class="imgdiv" id="logoutbutton"></div></a></li>
 									<?php endif ?>

@@ -1,32 +1,5 @@
 <?php 
-	/* Function to enumerate the <option> tags for a <select> container that is used to
-	 * select other users. 
-	 * $users is the associative array passed by render function */
-	function enumerateselectusers($users)
-	{
-		foreach ($users as $user)
-		{
-			if($user["userid"] !== $_SESSION["userid"])
-			{
-				print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\">");
-				print(htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
-			}
-		}
-	}
-
-	/* Function to enumerate the <option> tags for a <select> container that is used to
-	 * select a month. */
-	function enumeratemonthoptions()
-	{
-		print("<option value selected disabled>Month</option>\n");
-		foreach (['01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'May', '06' => 'Jun', 
-					'07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'] AS $val => $label)
-		{
-			print("<option value=\"{$val}\">{$label}</option>");
-		}
-	}
-
-$ROWSPERPAGE = 5;
+	$ROWSPERPAGE = 5;
 ?>
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -407,7 +380,7 @@ $ROWSPERPAGE = 5;
 								<b>Other attendees on this conference:</b>
 								<select name="otherusers[]" id="otherusersconf" data-placeholder="Other attendees...type here to filter list" 
 									class="chosen-select" multiple style="width: 75%;">
-									<?php enumerateselectusers($users); ?>
+									<?php enumerateselectusers($users, ""); ?>
 								</select>
 								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 							</label>
@@ -460,14 +433,12 @@ $ROWSPERPAGE = 5;
 									<b class="required">Training Type</b>
 									<select id="trainingid" name="trainingid" data-placeholder="Select training type..." class="chosen-select" 
 										required="required">
-										<?php
-											print("<option disabled selected value>Select an option</option>");
-											foreach($traintypes as $traintype)
-											{
-												print("<option value=\"" . $traintype["trainingid"] . "\" ");
-												print(">" . htmlspecialchars($traintype["type"]) . "</option>\n");
-											}
-										?>							
+										<option disabled selected value>Select an option</option>
+										<?php foreach($traintypes as $traintype): ?>
+											<option value="<?= $traintype["trainingid"] ?>">
+												<?= htmlspecialchars($traintype["type"]) ?>
+											</option>
+										<?php endforeach ?>
 									</select>
 								</label>
 							</div>
@@ -524,7 +495,7 @@ $ROWSPERPAGE = 5;
 								<b>Other attendees on this training:</b>
 								<select name="otherusers[]" id="otheruserstrain" data-placeholder="Other attendees... type here to filter list" 
 									class="chosen-select" multiple style="width: 75%;">
-									<?php enumerateselectusers($users); ?>
+									<?php enumerateselectusers($users, ""); ?>
 								</select>
 								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 							</label>
@@ -631,7 +602,7 @@ $ROWSPERPAGE = 5;
 									<b>Other Sygnature authors/inventors:</b>
 									<select name="otherusers[]" id="otheruserspub" data-placeholder="Other attendees... type here to filter list" 
 										class="chosen-select" multiple style="width: 75%;">
-										<?php enumerateselectusers($users); ?>
+										<?php enumerateselectusers($users, ""); ?>
 									</select>
 									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 								</label>

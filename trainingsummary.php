@@ -7,18 +7,18 @@
 	{
 		if(isset($_GET["admin"]) && $_GET["admin"] == 1)
 		{
-			$trainingopts = query("SELECT trainingid, type FROM traininglibrary ORDER BY type ASC");
+			$traintypes = query("SELECT trainingid, type FROM traininglibrary ORDER BY type ASC");
 		}
 		else
 		{
-			$trainingopts = query("SELECT l.trainingid, l.type FROM traininglibrary l, trainingsuperusers s 
+			$traintypes = query("SELECT l.trainingid, l.type FROM traininglibrary l, trainingsuperusers s 
 				WHERE s.userid = ? AND l.trainingid = s.trainingid ORDER BY type ASC");
 		}
 		
 		$depts = query("SELECT department, depmask from departments");
 		
 		// render table
-		render("templates/trainingsummary.php", ["trainingopts" => $trainingopts, "depts" => $depts, "title" => "Training Summary"]);
+		render("templates/trainingsummary.php", ["traintypes" => $traintypes, "depts" => $depts, "title" => "Training Summary"]);
 	}
 	else if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
@@ -29,16 +29,16 @@
 		}
 		else if($_SESSION["admin"] == 0 || !isset($_POST["admin"]) || $_POST["admin"] == 0)
 		{
-			$trainingopts = query("SELECT l.trainingid, l.type FROM traininglibrary l, trainingsuperusers s 
+			$traintypes = query("SELECT l.trainingid, l.type FROM traininglibrary l, trainingsuperusers s 
 				WHERE s.userid = ? AND l.trainingid = s.trainingid ORDER BY type ASC");
-			if (array_search($_POST["trainingid"], array_column($trainingopts, "id")) === FALSE)
+			if (array_search($_POST["trainingid"], array_column($traintypes, "id")) === FALSE)
 			{
 				apologize("Error: You are not a super user for this type of training");
 			}
 		}
 		else
 		{
-			$trainingopts = query("SELECT trainingid, type FROM traininglibrary ORDER BY type ASC");
+			$traintypes = query("SELECT trainingid, type FROM traininglibrary ORDER BY type ASC");
 		}
 		
 		$depmask = 0;
@@ -77,7 +77,7 @@
 		$depts = query("SELECT department, depmask from departments");
 			
 		// render table
-		render("templates/trainingsummary.php", ["trainingopts" => $trainingopts, "verified" => $verified, "unverified" => $unverified,
+		render("templates/trainingsummary.php", ["traintypes" => $traintypes, "verified" => $verified, "unverified" => $unverified,
 			"unconfirmed" => $unconfirmed, "trainingid" => $_POST["trainingid"], "startdate" => $_POST["startdate"], "enddate" => $_POST["enddate"], 
 			"description" => $_POST["description"], "depts" => $depts, "departments" => $_POST["departments"], 
 			"admin" => (isset($_POST["admin"])?$_POST["admin"]:0), "title" => "Training Summary"]);

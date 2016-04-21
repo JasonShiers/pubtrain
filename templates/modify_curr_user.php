@@ -12,9 +12,7 @@
 				<div class="col-md-12">
 					<p class="label-static">First Name</p>
 					<p class="form-control-static">
-							<?php
-								print(htmlspecialchars($userinfo[0]["firstname"]));
-							?>
+							<?= htmlspecialchars($userinfo[0]["firstname"]) ?>
 					</p>
 				</div>
 			</div>
@@ -22,9 +20,7 @@
 				<div class="col-md-12">
 					<p class="label-static">Last Name</p>
 					<p class="form-control-static">
-						<?php
-							print(htmlspecialchars($userinfo[0]["lastname"]));
-						?>
+						<?= htmlspecialchars($userinfo[0]["lastname"]) ?>
 					</p>
 				</div>
 			</div>
@@ -32,9 +28,7 @@
 				<div class="col-md-12">
 					<p class="label-static">Email</p>
 					<p class="form-control-static">
-						<?php
-							print(htmlspecialchars($userinfo[0]["email"]));
-						?>
+						<?= htmlspecialchars($userinfo[0]["email"])	?>
 					</p>
 				</div>
 			</div>
@@ -43,22 +37,7 @@
 					<label>
 						<b>Line Manager</b>
 						<select name="linemgr" data-placeholder="Choose a line manager..." class="chosen-select">
-							<?php
-								print("<option disabled selected value>Select an option</option>");
-								foreach($linemgrs as $linemgr)
-								{
-									if($linemgr["userid"] !== $userinfo[0]["userid"])
-									{
-										print("<option value=\"" . $linemgr["userid"] . "\" ");
-										if($linemgr["userid"] == $userinfo[0]["linemgr"])
-										{
-											print("selected=\"selected\" ");
-										}
-										print(">" . htmlspecialchars($linemgr["firstname"] . " " . $linemgr["lastname"]) 
-											. "</option>\n");
-									}
-								}
-							?>							
+							<?php enumerateselectusers($linemgrs, $userinfo[0]["linemgr"]); ?>
 						</select>
 					</label>
 				</div>
