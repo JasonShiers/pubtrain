@@ -178,8 +178,9 @@
 													required="required">
 													<option disabled selected value>Select an option</option>
 													<?php foreach($traintypes as $traintype): ?>
-														<option value="<?= $traintype["trainingid"] ?>">
-															<?= htmlspecialchars($traintype["type"]) ?>
+														<option value="<?= $traintype["trainingid"] ?>" 
+														<?php if(isset($trainingid) && $traintype["trainingid"] == $trainingid){ ?> selected="selected" <?php } ?>>
+														<?= htmlspecialchars($traintype["type"]) ?>
 														</option>
 													<?php endforeach ?>
 												</select>
