@@ -1,4 +1,31 @@
 <?php 
+	/* Function to enumerate the <option> tags for a <select> container that is used to
+	 * select other users. 
+	 * $users is the associative array passed by render function */
+	function enumerateselectusers($users)
+	{
+		foreach ($users as $user)
+		{
+			if($user["userid"] !== $_SESSION["userid"])
+			{
+				print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\">");
+				print(htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
+			}
+		}
+	}
+
+	/* Function to enumerate the <option> tags for a <select> container that is used to
+	 * select a month. */
+	function enumeratemonthoptions()
+	{
+		print("<option value selected disabled>Month</option>\n");
+		foreach (['01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'May', '06' => 'Jun', 
+					'07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'] AS $val => $label)
+		{
+			print("<option value=\"{$val}\">{$label}</option>");
+		}
+	}
+
 $ROWSPERPAGE = 5;
 ?>
 
@@ -342,25 +369,13 @@ $ROWSPERPAGE = 5;
 								<label style="max-width:50%; float: left;">
 									<b class="required">Month</b>
 									<select class="form-control" name="month" required="required">
-										<option value selected disabled>Month</option>
-										<option value="01">Jan</option>
-										<option value="02">Feb</option>
-										<option value="03">Mar</option>
-										<option value="04">Apr</option>
-										<option value="05">May</option>
-										<option value="06">Jun</option>
-										<option value="07">Jul</option>
-										<option value="08">Aug</option>
-										<option value="09">Sep</option>
-										<option value="10">Oct</option>
-										<option value="11">Nov</option>
-										<option value="12">Dec</option>
+										<?php enumeratemonthoptions(); ?>
 									</select>
 								</label>
 								<label style="max-width:40%; float: left;">
 									<b class="required">Year</b>
-									<?php print("<input class=\"form-control\" name=\"year\" type=\"number\" min=\"1980\" max=\"2500\" 
-										value=\"" . date('Y') . "\" required=\"required\" />"); ?>
+									<input class="form-control" name="year" type="number" min="1980" max="2500" 
+										value="<?= date('Y') ?>" required="required" />
 								</label>
 							</div>
 							<div class="col-md-9 text-left">
@@ -392,16 +407,7 @@ $ROWSPERPAGE = 5;
 								<b>Other attendees on this conference:</b>
 								<select name="otherusers[]" id="otherusersconf" data-placeholder="Other attendees...type here to filter list" 
 									class="chosen-select" multiple style="width: 75%;">
-									<?php
-										foreach ($users as $user)
-										{
-											if($user["userid"] !== $_SESSION["userid"])
-											{
-												print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\">");
-												print(htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
-											}
-										}
-									?>
+									<?php enumerateselectusers($users); ?>
 								</select>
 								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 							</label>
@@ -439,19 +445,7 @@ $ROWSPERPAGE = 5;
 								<label style="max-width:50%; float: left;">
 									<b class="required">Month</b>
 									<select class="form-control" name="month" required="required">
-										<option value selected disabled>Month</option>
-										<option value="01">Jan</option>
-										<option value="02">Feb</option>
-										<option value="03">Mar</option>
-										<option value="04">Apr</option>
-										<option value="05">May</option>
-										<option value="06">Jun</option>
-										<option value="07">Jul</option>
-										<option value="08">Aug</option>
-										<option value="09">Sep</option>
-										<option value="10">Oct</option>
-										<option value="11">Nov</option>
-										<option value="12">Dec</option>
+										<?php enumeratemonthoptions(); ?>
 									</select>
 								</label>
 								<label style="max-width:40%; float: left;">
@@ -530,16 +524,7 @@ $ROWSPERPAGE = 5;
 								<b>Other attendees on this training:</b>
 								<select name="otherusers[]" id="otheruserstrain" data-placeholder="Other attendees... type here to filter list" 
 									class="chosen-select" multiple style="width: 75%;">
-									<?php
-										foreach ($users as $user)
-										{
-											if($user["userid"] !== $_SESSION["userid"])
-											{
-												print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\">");
-												print(htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
-											}
-										}
-									?>
+									<?php enumerateselectusers($users); ?>
 								</select>
 								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 							</label>
@@ -573,8 +558,8 @@ $ROWSPERPAGE = 5;
 							<div class="col-md-3 text-left">
 								<label>
 									<b class="required">Year</b>
-									<?php print("<input class=\"form-control\" name=\"year\" type=\"number\" min=\"1980\" max=\"2500\" 
-										value=\"" . date('Y') . "\" required=\"required\" />"); ?>
+									<input class="form-control" name="year" type="number" min="1980" max="2500" 
+										value="<?= date('Y') ?>" required="required" />
 								</label>
 							</div>
 							<div class="col-md-5 text-left">
@@ -646,16 +631,7 @@ $ROWSPERPAGE = 5;
 									<b>Other Sygnature authors/inventors:</b>
 									<select name="otherusers[]" id="otheruserspub" data-placeholder="Other attendees... type here to filter list" 
 										class="chosen-select" multiple style="width: 75%;">
-										<?php
-											foreach ($users as $user)
-											{
-												if($user["userid"] !== $_SESSION["userid"])
-												{
-													print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\">");
-													print(htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
-												}
-											}
-										?>
+										<?php enumerateselectusers($users); ?>
 									</select>
 									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 								</label>
