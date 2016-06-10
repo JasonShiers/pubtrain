@@ -54,6 +54,8 @@
 										<ul class="dropdown-menu">
 											<li><a href="linereportsummary.php">Line Reports</a></li>
 											<li><a href="trainingsummary.php">Super User</a></li>
+											<li role="separator" class="divider"></li>
+											<li><a href="publicationsummary.php">Publication summary</a></li>
 										</ul>
 									</li>
 									<?php if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1): ?>
