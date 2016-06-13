@@ -216,14 +216,14 @@
 		return getLineGroupArray([["userid" => $userid]], 0);
 	}
 	
-	function enumerateselectusers($users, $selected)
+	function enumerateselectusers($users, $selected, $includeself = false)
 	{
 		/* Function to enumerate the <option> tags for a <select> container that is used to select users. 
 		 * $users is an array of associative arrays including keys: firstname, lastname, userid 
 		 * $selected is the userid that should be selected by default */	
 		foreach ($users as $user)
 		{
-			if($user["userid"] !== $_SESSION["userid"])
+			if($includeself === true || $user["userid"] !== $_SESSION["userid"])
 			{
 				print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\" ");
 				if(strlen($selected)>0 && $user["userid"] == $selected)

@@ -37,8 +37,8 @@
 
 		if (isset($_POST["title"]) && $_POST["title"] !== "")
 		{
-			$query[0] = $query[0] . "AND p.title LIKE '%?%' ";
-			$query[] = $_POST["title"];
+			$query[0] = $query[0] . "AND p.title LIKE ? ";
+			$query[] = "%" . $_POST["title"] . "%";
 		}
 		
 		if (!isset($_POST["patents"]))
@@ -92,6 +92,10 @@
 		
 		$query[0] = $query[0] . "GROUP BY p.title, p.year, p.volume, p.startpage, p.endpage ORDER BY p.year DESC";
 		
+		// get users list for multi select
+		$users = query("SELECT userid, firstname, lastname FROM users "
+			. "ORDER BY lastname ASC, firstname ASC");
+				
 		// dump($query);
 		
 		$publications = call_user_func_array("query", $query);
@@ -100,6 +104,7 @@
 		render("templates/publicationsummary.php", ["publications" => $publications, "pubtitle" => (isset($_POST["title"])?$_POST["title"]:""), 
 			"startyear" => $_POST["startyear"], "endyear" => $_POST["endyear"], "patents" => (isset($_POST["patents"])?TRUE:FALSE), 
 			"journals" => (isset($_POST["journals"])?TRUE:FALSE), "clients" => (isset($_POST["clients"])?TRUE:FALSE), 
-			"internal" => (isset($_POST["internal"])?TRUE:FALSE), "external" => (isset($_POST["external"])?TRUE:FALSE), "title" => "Publication Summary"]);
+			"internal" => (isset($_POST["internal"])?TRUE:FALSE), "external" => (isset($_POST["external"])?TRUE:FALSE), "users" => $users, 
+			"title" => "Publication Summary"]);
 	}
 ?>
