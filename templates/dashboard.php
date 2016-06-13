@@ -613,7 +613,7 @@
 				<div class="modal-footer">
 					<fieldset>
 						<button class="btn btn-success" type="submit">Submit</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('addTrain')">Cancel</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('addPub')">Cancel</button>
 					</fieldset>
 				</div>
 			</form>
