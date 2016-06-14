@@ -5,8 +5,14 @@
 	
 	if ($_SERVER["REQUEST_METHOD"] == "GET")
 	{
+		$args = ["title" => "Publication Summary"];
+		if (isset($_GET["success"]))
+		{
+			$args["success"] = TRUE;
+		}
+
 		// render table
-		render("templates/publicationsummary.php");
+		render("templates/publicationsummary.php", $args);
 	}
 	else if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{

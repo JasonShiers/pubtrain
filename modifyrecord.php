@@ -136,36 +136,38 @@
 				if ($_POST["startpage"] === "") $_POST["startpage"] = NULL;
 				if ($_POST["endpage"] === "") $_POST["endpage"] = NULL;
 				
-				$query = "INSERT INTO publicationrecords (userid, journal, title, year, volume, 
-					issue, startpage, endpage, source, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)";
-				$success = query($query, $_SESSION["userid"], $_POST["journal"], $_POST["title"], $_POST["year"], 
-					$_POST["volume"], $_POST["issue"], $_POST["startpage"], $_POST["endpage"], $_POST["source"]);
+				if(!isset($_GET["3rdParty"]))
+				{
+					$query = "INSERT INTO publicationrecords (userid, journal, title, year, volume, 
+						issue, startpage, endpage, source, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)";
+					$success = query($query, $_SESSION["userid"], $_POST["journal"], $_POST["title"], $_POST["year"], 
+						$_POST["volume"], $_POST["issue"], $_POST["startpage"], $_POST["endpage"], $_POST["source"]);
 
-				if ($success === false)
-				{
-					apologize("Can't update database.");
-				}
-				else
-				{
-					if (isset($_POST["otherusers"]) && count($_POST["otherusers"]) > 0)
+					if ($success === false)
 					{
-						foreach ($_POST["otherusers"] as $otheruser)
-						{
-							$query = "INSERT INTO publicationrecords (userid, journal, title, year, volume, 
-								issue, startpage, endpage, source, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
-								ON DUPLICATE KEY UPDATE id=id";
-							$success = query($query, $otheruser, $_POST["journal"], $_POST["title"], 
-								$_POST["year"], $_POST["volume"], $_POST["issue"], $_POST["startpage"], 
-								$_POST["endpage"], $_POST["source"]);
+						apologize("Can't update database.");
+					}
+				}
+				
+				if (isset($_POST["otherusers"]) && count($_POST["otherusers"]) > 0)
+				{
+					foreach ($_POST["otherusers"] as $otheruser)
+					{
+						$query = "INSERT INTO publicationrecords (userid, journal, title, year, volume, 
+							issue, startpage, endpage, source, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
+							ON DUPLICATE KEY UPDATE id=id";
+						$success = query($query, $otheruser, $_POST["journal"], $_POST["title"], 
+							$_POST["year"], $_POST["volume"], $_POST["issue"], $_POST["startpage"], 
+							$_POST["endpage"], $_POST["source"]);
 
-							if ($success === false)
-							{
-								apologize("Added your record. Can't add for one or more of the other attendees.");
-							}
+						if ($success === false)
+						{
+							apologize("Can't add record for one or more attendee(s).");
 						}
 					}
 				}
-				$url = "index.php";
+				
+				$url = "index.php"
 				if (isset($_GET["page"]) && $_GET["page"] > 1)
 				{
 					$url .= "?page=" . $_GET["page"];

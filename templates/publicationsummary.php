@@ -75,8 +75,6 @@
 	</div>
 </form>
 
-<?php // dump($publications); ?>
-
 <?php if (isset($publications) && isset($publications[0]["title"])): ?>
 	<div>
 		<table class="conflist paginated" style="width: 100%">
@@ -149,7 +147,7 @@
 					<h4 class="modal-title" id="modalAddPubLabel">Add New Publication</h4>
 					<p>To add a new publication please enter the following details:</p>
 				</div>
-				<form id="addPub" action="modifyrecord.php?type=newPub" method="post">
+				<form id="addPub" action="modifyrecord.php?type=newPub&3rdParty=1" method="post">
 					<div class="modal-body">
 						<fieldset class="formfieldgroup">
 							<legend>Publication Record Information</legend>
@@ -247,6 +245,10 @@
 				</form>
 			</div>
 		</div>
+	</div>
+<?php elseif (isset($success)): ?>
+	<div>
+		<div class="alert alert-success" role="alert">Publication record added successfully</div>
 	</div>
 <?php endif ?>
 
