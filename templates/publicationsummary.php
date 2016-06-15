@@ -272,7 +272,8 @@
 						<div class="form-group clearfix">
 							<div class="col-md-3 text-left">
 								<b class="label-static">Year</b>
-								<p class="form-control-static" id="editPubYear"></p>
+								<input class="form-control" id="editPubYear" name="year" type="number" readonly />
+<!--								<p class="form-control-static" id="editPubYear"></p> -->
 							</div>
 							<div class="col-md-5 text-left">
 								<b class="label-static">Reference Title</b>
@@ -371,8 +372,9 @@
 	 * modal_id is the id of the modal to be targeted and popped up 
 	 * publication is the JSON encoded publication record */
 	function setupModalDetails(modal_id, publication){
-		$('#editPubYear').empty();
-		$('#editPubYear').append(publication.year);
+		//$('#editPubYear').empty();
+		//$('#editPubYear').append(publication.year);
+		$('#editPubYear').val(publication.year);
 		$('#editPubTitle').empty();
 		$('#editPubTitle').append(publication.title);
 		$('#editPubSource').empty();
