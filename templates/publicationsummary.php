@@ -268,45 +268,47 @@
 				<form id="editPub" action="modifyrecord.php?type=editPub" method="post">
 					<div class="modal-body">
 						<fieldset class="formfieldgroup">
-						<legend>Publication Record Information</legend>
-						<div class="form-group clearfix">
-							<div class="col-md-3 text-left">
-								<b class="label-static">Year</b>
-								<input class="form-control" id="editPubYear" name="year" type="number" readonly />
-<!--								<p class="form-control-static" id="editPubYear"></p> -->
+							<legend>Publication Record Information</legend>
+							<div class="form-group clearfix">
+								<div class="col-md-3 text-left">
+									<b class="label-static">Year</b>
+									<input class="form-control" id="editPubYear" name="year" type="number" readonly />
+								</div>
+								<div class="col-md-5 text-left">
+									<b class="label-static">Reference Title</b>
+									<input class="form-control" id="editPubTitle" name="title" type="text" readonly />
+								</div>
+								<div class="col-md-4 text-left">
+									<b class="label-static">Source of work</b>
+									<input class="form-control" id="editPubSource" name="source" type="text" readonly />
+								</div>
 							</div>
-							<div class="col-md-5 text-left">
-								<b class="label-static">Reference Title</b>
-								<p class="form-control-static" id="editPubTitle"></p>
+							<div class="form-group clearfix text-center">
+								<p><b>Additional information for Journals</b></p>
+								<div class="col-md-3 text-left">
+									<b class="label-static">Publication Type</b>
+									<select name="journal" readonly>
+										<option id="editPubTypeJ" value="1">Journal</option>
+										<option id="editPubTypeP" value="0">Patent</option>
+									</select>
+								</div>
+								<div class="col-md-2 text-left">
+									<b class="label-static">Volume</b>
+									<input class="form-control" id="editPubVolume" name="volume" type="text" readonly />
+								</div>
+								<div class="col-md-2 text-left">
+									<b class="label-static">(Issue)</b>
+									<input class="form-control" id="editPubIssue" name="issue" type="number" readonly />
+								</div>
+								<div class="col-md-2 text-left">
+									<b class="label-static">Start Page</b>
+									<input class="form-control" id="editPubStartPage" name="startpage" type="text" readonly />
+								</div>
+								<div class="col-md-2 text-left">
+									<b class="label-static">(End Page)</b>
+									<input class="form-control" id="editPubEndPage" name="endpage" type="number" readonly />
+								</div>
 							</div>
-							<div class="col-md-4 text-left">
-								<b class="label-static">Source of work</b>
-								<p class="form-control-static" id="editPubSource"></p>
-							</div>
-						</div>
-						<div class="form-group clearfix text-center">
-							<p><b>Additional information for Journals</b></p>
-							<div class="col-md-3 text-left">
-								<b class="label-static">Publication Type</b>
-								<p class="form-control-static" id="editPubType"></p>
-							</div>
-							<div class="col-md-2 text-left">
-								<b class="label-static">Volume</b>
-								<p class="form-control-static" id="editPubVolume"></p>
-							</div>
-							<div class="col-md-2 text-left">
-								<b class="label-static">(Issue)</b>
-								<p class="form-control-static" id="editPubIssue"></p>
-							</div>
-							<div class="col-md-2 text-left">
-								<b class="label-static">Start Page</b>
-								<p class="form-control-static" id="editPubStartPage"></p>
-							</div>
-							<div class="col-md-2 text-left">
-								<b class="label-static">(End Page)</b>
-								<p class="form-control-static" id="editPubEndPage"></p>
-							</div>
-						</div>
 						</fieldset>
 						<br />
 						<fieldset class="formfieldgroup">
@@ -372,23 +374,15 @@
 	 * modal_id is the id of the modal to be targeted and popped up 
 	 * publication is the JSON encoded publication record */
 	function setupModalDetails(modal_id, publication){
-		//$('#editPubYear').empty();
-		//$('#editPubYear').append(publication.year);
 		$('#editPubYear').val(publication.year);
-		$('#editPubTitle').empty();
-		$('#editPubTitle').append(publication.title);
-		$('#editPubSource').empty();
-		$('#editPubSource').append(publication.source);
-		$('#editPubType').empty();
-		$('#editPubType').append((publication.journal==1)?'Journal':'Patent');
-		$('#editPubVolume').empty();
-		$('#editPubVolume').append(publication.volume);
-		$('#editPubIssue').empty();
-		$('#editPubIssue').append(publication.issue);
-		$('#editPubStartPage').empty();
-		$('#editPubStartPage').append(publication.startpage);
-		$('#editPubEndPage').empty();
-		$('#editPubEndPage').append(publication.endpage);
+		$('#editPubTitle').val(publication.title);
+		$('#editPubSource').val(publication.source);
+		$('#editPubTypeJ').prop('selected', (publication.journal==1?true:false));
+		$('#editPubTypeP').prop('selected', (publication.journal==1?false:true));
+		$('#editPubVolume').val(publication.volume);
+		$('#editPubIssue').val(publication.issue);
+		$('#editPubStartPage').val(publication.startpage);
+		$('#editPubEndPage').val(publication.endpage);
 		$('#deleteuserspub').empty();
 		var idlist = publication.idlist.split(', ');
 		var userlist = publication.userlist.split(', ');

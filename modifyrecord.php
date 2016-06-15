@@ -3,7 +3,7 @@
 	// configuration
 	require("includes/config.php"); 
 
-	
+
 	if (isset($_GET["type"]))
 	{
 		if ($_GET["type"] == "newConf")
@@ -155,7 +155,7 @@
 					foreach ($_POST["otherusers"] as $otheruser)
 					{
 						$query = "INSERT INTO publicationrecords (userid, journal, title, year, volume, 
-							issue, startpage, endpage, source, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
+							issue, startpage, endpage, source, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) 
 							ON DUPLICATE KEY UPDATE id=id";
 						$success = query($query, $otheruser, $_POST["journal"], $_POST["title"], 
 							$_POST["year"], $_POST["volume"], $_POST["issue"], $_POST["startpage"], 
@@ -163,12 +163,12 @@
 
 						if ($success === false)
 						{
-							apologize("Can't add record for one or more attendee(s).");
+							apologize("Can't add record for one or more author(s)/inventor(s).");
 						}
 					}
 				}
-				
-				$url = "index.php"
+
+				$url = "index.php";
 				if (isset($_GET["page"]) && $_GET["page"] > 1)
 				{
 					$url .= "?page=" . $_GET["page"];
@@ -178,60 +178,49 @@
 		}
 		else if ($_GET["type"] == "editPub")
 		{
-			if (isset($_GET["rowid"]))
+			if (isset($_POST["year"]) && isset($_POST["title"]) && isset($_POST["journal"]))
 			{
-				$query = "CREATE TEMPORARY TABLE tmptable_1 SELECT * FROM publicationrecords WHERE id = ?;
-							UPDATE tmptable_1 SET id = NULL";
-				$success = query($query, $_GET["rowid"]);
-				if ($success === false)
-				{
-					apologize("Can't generate temporary table.");
-				}
-
+				// Set blank fields to NULL where appropriate
+				if ($_POST["volume"] === "") $_POST["volume"] = NULL;
+				if ($_POST["issue"] === "") $_POST["issue"] = NULL;
+				if ($_POST["startpage"] === "") $_POST["startpage"] = NULL;
+				if ($_POST["endpage"] === "") $_POST["endpage"] = NULL;
+								
 				if (isset($_POST["addusers"]) && count($_POST["addusers"]) > 0)
 				{
-					foreach $user in $_POST["addusers"]
+					foreach ($_POST["addusers"] as $user)
 					{
-						$query = "UPDATE tmptable_1 SET userid = ? WHERE 1;
-								INSERT INTO publicationrecords SELECT * FROM tmptable_1 
-								ON DUPLICATE KEY UPDATE id=id";
-						$success = query($query, $_GET["rowid"], $user);
+						$query = "INSERT INTO publicationrecords (userid, journal, title, year, volume, 
+							issue, startpage, endpage, source, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
+							ON DUPLICATE KEY UPDATE id=id";
+						$success = query($query, $user, $_POST["journal"], $_POST["title"], 
+							$_POST["year"], $_POST["volume"], $_POST["issue"], $_POST["startpage"], 
+							$_POST["endpage"], $_POST["source"]);
+
 						if ($success === false)
 						{
-							apologize("Error adding new user.");
+							apologize("Can't add record for one or more author(s)/inventor(s).");
 						}
 					}
-					
-					$query = "DROP TEMPORARY TABLE IF EXISTS tmptable_1";
-					$success = query($query);
-					if ($success === false)
-					{
-						apologize("Can't update database.");
-					}
 				}
-			}
-				
-			if (isset($_POST["deleteusers"]) && count($_POST["deleteusers"]) > 0)
-			{
-				foreach ($_POST["deleteusers"] as $id)
-				{
-					$query = "DELETE FROM publicationrecords WHERE id = ?";
-					$success = query($query, $id);
 
-					if ($success === false)
+				if (isset($_POST["deleteusers"]) && count($_POST["deleteusers"]) > 0)
+				{
+					foreach ($_POST["deleteusers"] as $id)
 					{
-						apologize("Error deleting user.");
+						$query = "DELETE FROM publicationrecords WHERE id = ?";
+						$success = query($query, $id);
+
+						if ($success === false)
+						{
+							apologize("Can't delete record for one or more author(s)/inventor(s).");
+						}
 					}
 				}
+				
+				redirect("publicationsummary.php");
 			}
-			
-			$url = "index.php"
-			if (isset($_GET["page"]) && $_GET["page"] > 1)
-			{
-				$url .= "?page=" . $_GET["page"];
-			}
-			redirect($url . "#collapsePublicationHistory");
-		}
+		} 
 		else if ($_GET["type"] == "verifyTrain")
 		{
 			if (isset($_POST["verifyrecords"]) && isset($_POST["superuser"]) && $_POST["superuser"] == 1)
