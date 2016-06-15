@@ -35,9 +35,10 @@
 		}
 		
 		$query = array("SELECT p.title, p.year, p.volume, p.issue, p.startpage, p.endpage, p.source, p.journal, "
-			. "GROUP_CONCAT(u.firstname, ' ', u.lastname SEPARATOR ', ') AS userlist FROM publicationrecords p, "
+			. "GROUP_CONCAT(u.firstname, ' ', u.lastname ORDER BY p.id SEPARATOR ', ') AS userlist, "
+			. "GROUP_CONCAT(p.id ORDER BY p.id SEPARATOR ', ') AS idlist FROM publicationrecords p, "
 			. "users u WHERE p.userid = u.userid AND p.year BETWEEN ? AND ? ");
-			
+		
 		$query[] = $_POST["startyear"];
 		$query[] = $_POST["endyear"];
 
@@ -105,7 +106,7 @@
 		// dump($query);
 		
 		$publications = call_user_func_array("query", $query);
-			
+		
 		// render table
 		render("templates/publicationsummary.php", ["publications" => $publications, "pubtitle" => (isset($_POST["title"])?$_POST["title"]:""), 
 			"startyear" => $_POST["startyear"], "endyear" => $_POST["endyear"], "patents" => (isset($_POST["patents"])?TRUE:FALSE), 

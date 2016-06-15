@@ -139,7 +139,8 @@
 				if(!isset($_GET["3rdParty"]))
 				{
 					$query = "INSERT INTO publicationrecords (userid, journal, title, year, volume, 
-						issue, startpage, endpage, source, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)";
+						issue, startpage, endpage, source, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL) 
+						ON DUPLICATE KEY UPDATE id=id";
 					$success = query($query, $_SESSION["userid"], $_POST["journal"], $_POST["title"], $_POST["year"], 
 						$_POST["volume"], $_POST["issue"], $_POST["startpage"], $_POST["endpage"], $_POST["source"]);
 

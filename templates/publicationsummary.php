@@ -89,8 +89,11 @@
 					<th>
 						Source
 					</th>
-					<th class="right">
+					<th>
 						Authors
+					</th>
+					<th class="right">
+						Options
 					</th>
 				</tr>
 			</thead>
@@ -121,12 +124,20 @@
 						</td>
 						<td><?= htmlspecialchars($h["source"]) ?></td>
 						<td><?= htmlspecialchars($h["userlist"]) ?></td>
+						<td>
+							<button type='button' class='btn btn-warning btn-xs' 
+								onclick='setupModalDetails("modalEditPub", <?= json_encode($h) ?>)'>
+									&nbsp;
+									<span class="glyphicon glyphicon-pencil" title="Edit" aria-hidden="true"></span>
+									&nbsp;
+							</button>
+						</td>
 					</tr>
 				<?php endforeach ?>
 			</tbody>
 			<tfoot>
 				<tr>
-					<th colspan=4>
+					<th colspan=5>
 						<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewPub', 0)">
 							<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
 						</button>
@@ -246,6 +257,92 @@
 			</div>
 		</div>
 	</div>
+	<!-- Modal for editing publication -->
+	<div class="modal fade" id="modalEditPub" tabindex="-1" role="dialog" aria-labelledby="modalEditPub">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modalEditPubLabel">Edit Publication Authors</h4>
+					<p>To change the authors or delete the publication record for all authors, please use the following form:</p>
+				</div>
+				<form id="editPub" action="modifyrecord.php?type=editPub" method="post">
+					<div class="modal-body">
+						<legend>Publication Record Information</legend>
+						<div class="form-group clearfix">
+							<div class="col-md-3 text-left">
+								<b class="required">Year</b>
+								<p id="editPubYear"></p>
+							</div>
+							<div class="col-md-5 text-left">
+								<b class="required">Reference Title</b>
+								<p id="editPubTitle"></p>
+							</div>
+							<div class="col-md-4 text-left">
+								<b class="required">Source of work</b>
+								<p id="editPubSource"></p>
+							</div>
+						</div>
+						<div class="form-group clearfix text-center">
+							<p><b>Additional information for Journals</b></p>
+							<div class="col-md-3 text-left">
+								<b class="required">Publication Type</b>
+								<p id="editPubType"></p>
+							</div>
+							<div class="col-md-2 text-left">
+								<b>Volume</b>
+								<p id="editPubVolume"></p>
+							</div>
+							<div class="col-md-2 text-left">
+								<b>(Issue)</b>
+								<p id="editPubIssue"></p>
+							</div>
+							<div class="col-md-2 text-left">
+								<b>Start Page</b>
+								<p id="editPubStartPage"></p>
+							</div>
+							<div class="col-md-2 text-left">
+								<b>(End Page)</b>
+								<p id="editPubEndPage"></p>
+							</div>
+						</div>
+						<br />
+						<fieldset class="formfieldgroup">
+							<div class="form-group clearfix">
+								<div class="col-md-10 col-md-offset-2 text-left">
+									<label>
+										<b>Sygnature authors/inventors to add:</b>
+										<select name="addusers[]" id="adduserspub" data-placeholder="Add attendees... type here to filter list" 
+											class="chosen-select" multiple style="width: 75%;">
+											<?php enumerateselectusers($users, "", true); ?>
+										</select>
+										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+									</label>
+								</div>
+							</div>
+							<div class="form-group clearfix">
+								<div class="col-md-10 col-md-offset-2 text-left">
+									<label>
+										<b>Sygnature authors/inventors to delete:</b>
+										<select name="deleteusers[]" id="deleteuserspub" data-placeholder="Delete attendees... type here to filter list" 
+											class="chosen-select" multiple style="width: 75%;">
+										</select>
+										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+									</label>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="modal-footer">
+						<fieldset>
+							<button class="btn btn-success" type="submit">Submit</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetForm('editPub')">Cancel</button>
+						</fieldset>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 <?php elseif (isset($success)): ?>
 	<div>
 		<div class="alert alert-success" role="alert">Publication record added successfully</div>
@@ -268,6 +365,36 @@
 		$("#"+id).trigger("reset");
 	}
 
+	/* Populate the details in the edit publication modal
+	 * modal_id is the id of the modal to be targeted and popped up 
+	 * publication is the JSON encoded publication record */
+	function setupModalDetails(modal_id, form_id, publication){
+		$('#editPubYear').empty();
+		$('#editPubYear').append(publication.year);
+		$('#editPubTitle').empty();
+		$('#editPubTitle').append(publication.title);
+		$('#editPubSource').empty();
+		$('#editPubSource').append(publication.source);
+		$('#editPubType').empty();
+		$('#editPubType').append((publication.journal==1)?'Journal':'Patent');
+		$('#editPubVolume').empty();
+		$('#editPubVolume').append(publication.volume);
+		$('#editPubIssue').empty();
+		$('#editPubIssue').append(publication.issue);
+		$('#editPubStartPage').empty();
+		$('#editPubStartPage').append(publication.startpage);
+		$('#editPubEndPage').empty();
+		$('#editPubEndPage').append(publication.endpage);
+		$('#deleteuserspub').empty();
+		var idlist = publication.idlist.split(', ');
+		var userlist = publication.userlist.split(', ');
+		for (i=0; i<idlist.length; i++){
+			$('#deleteuserspub').append('<option value="' + idlist[i] + '">' + userlist[i] + '</option>');
+		}
+		$('#deleteuserspub').trigger("chosen:updated");
+		show_modal(modal_id);
+	}	
+	
 	$(document).ready(function(){
 
 		<?php if ((isset($_GET["admin"]) && $_GET["admin"] ==1) || (isset($admin) && $admin == 1)): ?>
