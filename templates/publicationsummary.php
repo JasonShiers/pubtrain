@@ -267,44 +267,46 @@
 				</div>
 				<form id="editPub" action="modifyrecord.php?type=editPub" method="post">
 					<div class="modal-body">
+						<fieldset class="formfieldgroup">
 						<legend>Publication Record Information</legend>
 						<div class="form-group clearfix">
 							<div class="col-md-3 text-left">
-								<b class="required">Year</b>
-								<p id="editPubYear"></p>
+								<b class="label-static">Year</b>
+								<p class="form-control-static" id="editPubYear"></p>
 							</div>
 							<div class="col-md-5 text-left">
-								<b class="required">Reference Title</b>
-								<p id="editPubTitle"></p>
+								<b class="label-static">Reference Title</b>
+								<p class="form-control-static" id="editPubTitle"></p>
 							</div>
 							<div class="col-md-4 text-left">
-								<b class="required">Source of work</b>
-								<p id="editPubSource"></p>
+								<b class="label-static">Source of work</b>
+								<p class="form-control-static" id="editPubSource"></p>
 							</div>
 						</div>
 						<div class="form-group clearfix text-center">
 							<p><b>Additional information for Journals</b></p>
 							<div class="col-md-3 text-left">
-								<b class="required">Publication Type</b>
-								<p id="editPubType"></p>
+								<b class="label-static">Publication Type</b>
+								<p class="form-control-static" id="editPubType"></p>
 							</div>
 							<div class="col-md-2 text-left">
-								<b>Volume</b>
-								<p id="editPubVolume"></p>
+								<b class="label-static">Volume</b>
+								<p class="form-control-static" id="editPubVolume"></p>
 							</div>
 							<div class="col-md-2 text-left">
-								<b>(Issue)</b>
-								<p id="editPubIssue"></p>
+								<b class="label-static">(Issue)</b>
+								<p class="form-control-static" id="editPubIssue"></p>
 							</div>
 							<div class="col-md-2 text-left">
-								<b>Start Page</b>
-								<p id="editPubStartPage"></p>
+								<b class="label-static">Start Page</b>
+								<p class="form-control-static" id="editPubStartPage"></p>
 							</div>
 							<div class="col-md-2 text-left">
-								<b>(End Page)</b>
-								<p id="editPubEndPage"></p>
+								<b class="label-static">(End Page)</b>
+								<p class="form-control-static" id="editPubEndPage"></p>
 							</div>
 						</div>
+						</fieldset>
 						<br />
 						<fieldset class="formfieldgroup">
 							<div class="form-group clearfix">
@@ -368,7 +370,7 @@
 	/* Populate the details in the edit publication modal
 	 * modal_id is the id of the modal to be targeted and popped up 
 	 * publication is the JSON encoded publication record */
-	function setupModalDetails(modal_id, form_id, publication){
+	function setupModalDetails(modal_id, publication){
 		$('#editPubYear').empty();
 		$('#editPubYear').append(publication.year);
 		$('#editPubTitle').empty();

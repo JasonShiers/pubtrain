@@ -176,6 +176,62 @@
 				redirect($url . "#collapsePublicationHistory");
 			}
 		}
+		else if ($_GET["type"] == "editPub")
+		{
+			if (isset($_GET["rowid"]))
+			{
+				$query = "CREATE TEMPORARY TABLE tmptable_1 SELECT * FROM publicationrecords WHERE id = ?;
+							UPDATE tmptable_1 SET id = NULL";
+				$success = query($query, $_GET["rowid"]);
+				if ($success === false)
+				{
+					apologize("Can't generate temporary table.");
+				}
+
+				if (isset($_POST["addusers"]) && count($_POST["addusers"]) > 0)
+				{
+					foreach $user in $_POST["addusers"]
+					{
+						$query = "UPDATE tmptable_1 SET userid = ? WHERE 1;
+								INSERT INTO publicationrecords SELECT * FROM tmptable_1 
+								ON DUPLICATE KEY UPDATE id=id";
+						$success = query($query, $_GET["rowid"], $user);
+						if ($success === false)
+						{
+							apologize("Error adding new user.");
+						}
+					}
+					
+					$query = "DROP TEMPORARY TABLE IF EXISTS tmptable_1";
+					$success = query($query);
+					if ($success === false)
+					{
+						apologize("Can't update database.");
+					}
+				}
+			}
+				
+			if (isset($_POST["deleteusers"]) && count($_POST["deleteusers"]) > 0)
+			{
+				foreach ($_POST["deleteusers"] as $id)
+				{
+					$query = "DELETE FROM publicationrecords WHERE id = ?";
+					$success = query($query, $id);
+
+					if ($success === false)
+					{
+						apologize("Error deleting user.");
+					}
+				}
+			}
+			
+			$url = "index.php"
+			if (isset($_GET["page"]) && $_GET["page"] > 1)
+			{
+				$url .= "?page=" . $_GET["page"];
+			}
+			redirect($url . "#collapsePublicationHistory");
+		}
 		else if ($_GET["type"] == "verifyTrain")
 		{
 			if (isset($_POST["verifyrecords"]) && isset($_POST["superuser"]) && $_POST["superuser"] == 1)
