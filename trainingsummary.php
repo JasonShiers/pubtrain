@@ -12,7 +12,7 @@
 		else
 		{
 			$traintypes = query("SELECT l.trainingid, l.type FROM traininglibrary l, trainingsuperusers s 
-				WHERE s.userid = ? AND l.trainingid = s.trainingid ORDER BY type ASC");
+				WHERE s.userid = ? AND l.trainingid = s.trainingid ORDER BY type ASC", $_SESSION["userid"]);
 		}
 		
 		$depts = query("SELECT department, depmask from departments");
@@ -30,8 +30,9 @@
 		else if($_SESSION["admin"] == 0 || !isset($_POST["admin"]) || $_POST["admin"] == 0)
 		{
 			$traintypes = query("SELECT l.trainingid, l.type FROM traininglibrary l, trainingsuperusers s 
-				WHERE s.userid = ? AND l.trainingid = s.trainingid ORDER BY type ASC");
-			if (array_search($_POST["trainingid"], array_column($traintypes, "id")) === FALSE)
+				WHERE s.userid = ? AND l.trainingid = s.trainingid ORDER BY type ASC", $_SESSION["userid"]);
+
+			if (array_search($_POST["trainingid"], array_column($traintypes, "trainingid")) === FALSE)
 			{
 				apologize("Error: You are not a super user for this type of training");
 			}
