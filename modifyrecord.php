@@ -81,9 +81,13 @@
 					{
 						apologize("You do not have permission to verify records for this training.");
 					}
-					$url="trainingsummary.php";
-					if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) $url .= "?admin=1";
-					redirect($url);
+					$url="trainingsummary.php?";
+					if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) $url .= "admin=1&";
+					if (isset($_POST["trainingid"])) $url .= "trainingid=" . $_POST["trainingid"] . "&";
+					if (isset($_POST["startdate"])) $url .= "startdate=" . $_POST["startdate"] . "&";
+					if (isset($_POST["enddate"])) $url .= "enddate=" . $_POST["enddate"] . "&";
+					if (isset($_POST["depmask"])) $url .= "depmask=" . $_POST["depmask"] . "&";
+					redirect(substr($url, 0, -1));
 				}
 				else
 				{

@@ -120,6 +120,9 @@
 		<div class="col-md-3">
 			<form id="addTrain" action="modifyrecord.php?type=newTrain" method="post">
 				<input type="hidden" name="superuser" value="1" />
+				<input type="hidden" name="startdate" value="<?= $startdate ?>" />
+				<input type="hidden" name="enddate" value="<?= $enddate ?>" />
+				<input type="hidden" name="depmask" value="<?= $depmask ?>" />
 				<table class="conflist paginated" style="width: 100%;">
 					<thead>
 						<th class="left right">
