@@ -81,7 +81,7 @@
 		// get verified users
 		$verified = query("SELECT t.recordid, u.firstname, u.lastname, u.userid, COUNT(u.userid) AS count FROM users u, trainingrecords t, departments d 
 			WHERE u.userid = t.userid AND t.verified = 1 AND t.trainingid = ? AND t.description LIKE ? 
-			AND t.date > ? AND t.date < ? AND u.department = d.department AND d.depmask | ?
+			AND t.date > ? AND t.date < ? AND u.department = d.department AND d.depmask & ?
 			GROUP BY u.userid ORDER BY u.lastname, u.firstname", $trainingid, 
 			"%" . $description . "%", $startdate, $enddate, $depmask);
 		
