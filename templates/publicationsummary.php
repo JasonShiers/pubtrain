@@ -13,8 +13,8 @@
 		<div class="col-md-4 col-md-offset-1 text-left">
 			<label>
 				<b>Filter (Optional)</b>
-				<input class="form-control autocomplete" name="title" id="newPubFilt2" type="text" maxlength="60" 
-				placeholder="e.g. J. Med. Chem." onfocus="setAutocompleteType('newPubFilt', 'title')" 
+				<input class="form-control autocomplete" name="title" id="newPubFilt" type="text" maxlength="60" 
+				placeholder="e.g. J. Med. Chem." onfocus="setAutocompleteType('newPubDesc', 0, 1)" 
 				<?= (isset($pubtitle) && strlen($pubtitle)>0)?"value=\"" . $pubtitle . "\" ":"" ?> />
 			</label>
 		</div>
@@ -125,12 +125,14 @@
 						<td><?= htmlspecialchars($h["source"]) ?></td>
 						<td><?= htmlspecialchars($h["userlist"]) ?></td>
 						<td>
+							<?php if ((isset($_SESSION["publicationadmin"]) && $_SESSION["publicationadmin"] == 1) || (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1)): ?>
 							<button type='button' class='btn btn-warning btn-xs' 
 								onclick='setupModalDetails("modalEditPub", <?= json_encode($h) ?>)'>
 									&nbsp;
 									<span class="glyphicon glyphicon-pencil" title="Edit" aria-hidden="true"></span>
 									&nbsp;
 							</button>
+							<?php endif ?>
 						</td>
 					</tr>
 				<?php endforeach ?>
@@ -138,9 +140,11 @@
 			<tfoot>
 				<tr>
 					<th colspan=5>
-						<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewPub', 0)">
-							<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
-						</button>
+						<?php if ((isset($_SESSION["publicationadmin"]) && $_SESSION["publicationadmin"] == 1) || (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1)): ?>
+							<button type="button" class="btn btn-primary btn-xs" onclick="show_modal('modalNewPub', 0)">
+								<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+							</button>
+						<?php endif ?>
 						 <button type="button" class="btn btn-default btn-xs" onclick="show_modal('modalExportPub')">
 							<span class="glyphicon glyphicon-save-file" aria-hidden="true"></span> Export
 						</button>
@@ -370,6 +374,26 @@
 		$("#"+id).trigger("reset");
 	}
 
+	/* keep track of which input box has focus and return appropriate autocomplete results
+	 * type is submitted in the query string and determines which query is used to obtain results
+	 * filter specifies the id of the form element passed in the query string used to filter the
+	 * results (0 for no filtering)
+	 * minLength is the number of characters below which results will not be returned */
+	function setAutocompleteType(type, filter, minLength){
+		var autocompleteType = type;
+		
+		var source = "getautocomplete.php?type=" + autocompleteType;
+		if (filter != 0) source += "&filter=" + $("#" + filter).children(":selected").val();
+
+		console.log(source);
+		
+		// set up autocomplete using appropriate type
+		$( "input.autocomplete" ).autocomplete({
+			source: source,
+			minLength: minLength
+		});
+	}
+	
 	/* Populate the details in the edit publication modal
 	 * modal_id is the id of the modal to be targeted and popped up 
 	 * publication is the JSON encoded publication record */
