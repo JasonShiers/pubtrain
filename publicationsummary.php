@@ -102,9 +102,7 @@
 		// get users list for multi select
 		$users = query("SELECT userid, firstname, lastname FROM users "
 			. "ORDER BY lastname ASC, firstname ASC");
-				
-		// dump($query);
-		
+					
 		$publications = call_user_func_array("query", $query);
 		
 		// render table

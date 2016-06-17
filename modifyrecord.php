@@ -132,6 +132,7 @@
 		}
 		else if ($_GET["type"] == "newPub")
 		{
+			$successcode = 0;
 			if (isset($_POST["year"]) && isset($_POST["title"]) && isset($_POST["journal"]))
 			{
 				// Set blank fields to NULL where appropriate
@@ -150,7 +151,7 @@
 
 					if ($success === false)
 					{
-						apologize("Can't update database.");
+						$successcode |= 1; // Failed to insert record into database for self
 					}
 				}
 				
@@ -167,21 +168,30 @@
 
 						if ($success === false)
 						{
-							apologize("Can't add record for one or more author(s)/inventor(s).");
+							$successcode |= 2; // Failed to insert record into database for one or more other users
 						}
 					}
 				}
-
-				$url = "index.php";
-				if (isset($_GET["page"]) && $_GET["page"] > 1)
+				
+				if (isset($_GET["3rdParty"]))
 				{
-					$url .= "?page=" . $_GET["page"];
+					$url = "publicationsummary.php?success=" . $successcode;
 				}
-				redirect($url . "#collapsePublicationHistory");
+				else
+				{
+					$url = "index.php?success=" . $successcode;
+					if (isset($_GET["page"]) && $_GET["page"] > 1)
+					{
+						$url .= "&page=" . $_GET["page"];
+					}
+					$url .= "#collapsePublicationHistory";
+				}
+				redirect($url);
 			}
 		}
 		else if ($_GET["type"] == "editPub")
 		{
+			$successcode = 0;
 			if (isset($_POST["year"]) && isset($_POST["title"]) && isset($_POST["journal"]))
 			{
 				// Set blank fields to NULL where appropriate
@@ -203,7 +213,7 @@
 
 						if ($success === false)
 						{
-							apologize("Can't add record for one or more author(s)/inventor(s).");
+							$successcode |= 2;
 						}
 					}
 				}
@@ -217,12 +227,12 @@
 
 						if ($success === false)
 						{
-							apologize("Can't delete record for one or more author(s)/inventor(s).");
+							$successcode |= 4;
 						}
 					}
 				}
 				
-				redirect("publicationsummary.php");
+				redirect("publicationsummary.php?success=" . $successcode);
 			}
 		} 
 		else if ($_GET["type"] == "verifyTrain")

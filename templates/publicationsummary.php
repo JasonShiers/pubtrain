@@ -352,10 +352,26 @@
 		</div>
 	</div>
 
-<?php elseif (isset($success)): ?>
+<?php elseif (isset($_GET["success"]) && $_GET["success"] == 0): ?>
 	<div>
-		<div class="alert alert-success" role="alert">Publication record added successfully</div>
+		<div class="alert alert-success" role="alert">Publication record added/amended successfully</div>
 	</div>
+<?php elseif (isset($_GET["success"])): ?>
+	<?php if ($_GET["success"] & 1): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not insert record into database for self</div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success"] & 2): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not insert record into database for one or more authors</div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success"] & 4): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not delete entry for one or more authors</div>
+		</div>
+	<?php endif ?>
 <?php endif ?>
 
 <!--Load the AJAX API-->
