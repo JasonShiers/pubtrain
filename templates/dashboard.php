@@ -24,7 +24,7 @@
 	<?php endif ?>
 	<?php if ($_GET["success"] & 8): ?>
 		<div>
-			<div class="alert alert-danger" role="alert">You do not have permission to make this change</div>
+			<div class="alert alert-danger" role="alert">You do not have permission to do this</div>
 		</div>
 	<?php endif ?>
 	<?php if ($_GET["success"] & 16): ?>
