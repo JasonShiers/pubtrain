@@ -372,6 +372,27 @@
 			<div class="alert alert-danger" role="alert">Could not delete entry for one or more authors</div>
 		</div>
 	<?php endif ?>
+	<?php if ($_GET["success"] & 8): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">You do not have permission to do this</div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success"] & 16): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not verify one or more records</div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success"] & 32): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not confirm this record</div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success" & 64): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Required form field was missing</div>
+		</div>
+	<?php endif ?>
+
 <?php endif ?>
 
 <!--Load the AJAX API-->

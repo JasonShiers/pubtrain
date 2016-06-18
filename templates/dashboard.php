@@ -2,6 +2,48 @@
 	$ROWSPERPAGE = 5;
 ?>
 
+<?php if (isset($_GET["success"]) && $_GET["success"] == 0): ?>
+	<div>
+		<div class="alert alert-success" role="alert">Record added/amended successfully</div>
+	</div>
+<?php elseif (isset($_GET["success"])): ?>
+	<?php if ($_GET["success"] & 1): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not insert record into database</div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success"] & 2): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not insert record into database for one or more authors</div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success"] & 4): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not delete entry<!-- for one or more authors--></div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success"] & 8): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">You do not have permission to make this change</div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success"] & 16): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not verify one or more records</div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success"] & 32): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not confirm this record</div>
+		</div>
+	<?php endif ?>
+	<?php if ($_GET["success"] & 64): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Required form field was missing</div>
+		</div>
+	<?php endif ?>
+<?php endif ?>
+
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 	<div class="panel panel-default">
 		<div class="panel-heading" role="tab" id="ConferenceHistory">

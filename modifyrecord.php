@@ -6,6 +6,7 @@
 
 	if (isset($_GET["type"]))
 	{
+		$successcode = 0;
 		if ($_GET["type"] == "newConf")
 		{
 			if (isset($_POST["month"]) && isset($_POST["year"]) && isset($_POST["title"]))
@@ -18,7 +19,7 @@
 
 				if ($success === false)
 				{
-					apologize("Can't update database.");
+					$successcode |= 1; // Failed to insert record into database for self
 				}
 				else
 				{
@@ -33,14 +34,14 @@
 
 							if ($success === false)
 							{
-								apologize("Added your record. Can't add for one or more of the other attendees.");
+								$successcode |= 2; // Failed to insert record into database for one or more other users
 							}
 						}
 					}
-					$url = "index.php";
+					$url = "index.php?success=" . $successcode;
 					if (isset($_GET["page"]) && $_GET["page"] > 1)
 					{
-						$url .= "?page=" . $_GET["page"];
+						$url .= "&page=" . $_GET["page"];
 					}
 					redirect($url);
 				} 
@@ -48,6 +49,7 @@
 		}
 		else if ($_GET["type"] == "newTrain")
 		{
+			$successcode = 0;
 			if (isset($_POST["month"]) && isset($_POST["year"]) && isset($_POST["trainingid"]))
 			{
 				$date = $_POST["year"] . "-" . $_POST["month"] . "-" . "01";
@@ -73,21 +75,21 @@
 								$_POST["internal_location"], $_POST["internal_trainer"]);
 							if ($success === false)
 							{
-								apologize("Can't add for one or more of the other attendees.");
+								$successcode |= 2; // Failed to insert record into database for one or more other users
 							}
 						}
 					}
 					else
 					{
-						apologize("You do not have permission to verify records for this training.");
+						$successcode |= 8; // You do not have permission to do this
 					}
-					$url="trainingsummary.php?";
-					if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) $url .= "admin=1&";
-					if (isset($_POST["trainingid"])) $url .= "trainingid=" . $_POST["trainingid"] . "&";
-					if (isset($_POST["startdate"])) $url .= "startdate=" . $_POST["startdate"] . "&";
-					if (isset($_POST["enddate"])) $url .= "enddate=" . $_POST["enddate"] . "&";
-					if (isset($_POST["depmask"])) $url .= "depmask=" . $_POST["depmask"] . "&";
-					redirect(substr($url, 0, -1));
+					$url="trainingsummary.php?success=" . $successcode;
+					if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) $url .= "&admin=1";
+					if (isset($_POST["trainingid"])) $url .= "&trainingid=" . $_POST["trainingid"];
+					if (isset($_POST["startdate"])) $url .= "&startdate=" . $_POST["startdate"];
+					if (isset($_POST["enddate"])) $url .= "&enddate=" . $_POST["enddate"];
+					if (isset($_POST["depmask"])) $url .= "&depmask=" . $_POST["depmask"];
+					redirect($url);
 				}
 				else
 				{
@@ -99,7 +101,7 @@
 
 					if ($success === false)
 					{
-						apologize("Can't update database.");
+						$successcode |= 1; // Failed to insert record into database for self
 					}
 					else
 					{
@@ -116,16 +118,16 @@
 
 								if ($success === false)
 								{
-									apologize("Added your record. Can't add for one or more of the other attendees.");
+									$successcode |= 2; // Failed to insert record into database for one or more other users
 								}
 							}
 						}
 					}
 				}
-				$url = "index.php";
+				$url = "index.php?success=" . $successcode;
 				if (isset($_GET["page"]) && $_GET["page"] > 1)
 				{
-					$url .= "?page=" . $_GET["page"];
+					$url .= "&page=" . $_GET["page"];
 				}
 				redirect($url . "#collapseTrainingHistory");
 			}
@@ -213,7 +215,7 @@
 
 						if ($success === false)
 						{
-							$successcode |= 2;
+							$successcode |= 2; // Failed to insert record into database for one or more other users
 						}
 					}
 				}
@@ -227,7 +229,7 @@
 
 						if ($success === false)
 						{
-							$successcode |= 4;
+							$successcode |= 4; // Failed to delete record
 						}
 					}
 				}
@@ -237,6 +239,7 @@
 		} 
 		else if ($_GET["type"] == "verifyTrain")
 		{
+			$successcode = 0;
 			if (isset($_POST["verifyrecords"]) && isset($_POST["superuser"]) && $_POST["superuser"] == 1)
 			{
 				// Insert verified records from a superuser or admin
@@ -262,117 +265,123 @@
 					
 					if ($success === false)
 					{
-						apologize("Can't verify records.");
+						$successcode |= 16; // Failed to verify one or more records
 					}
 				}
 				else
 				{
-					apologize("You do not have permission to verify records for this training.");
+					$successcode |= 8; // You do not have permission to do this
 				}
 			}
-			$url="trainingsummary.php";
-			if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) $url .= "?admin=1";
+			$url="trainingsummary.php?success=" . $successcode;
+			if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) $url .= "&admin=1";
 			redirect($url);
 		}
 		else if ($_GET["type"] == "delConf")
 		{
+			$successcode = 0;
 			if (isset($_GET["id"]))
 			{
 				$success = query("DELETE FROM suppconfrecords WHERE id=? AND userid=?", $_GET["id"], $_SESSION["userid"]);
 			}
 			if ($success === false)
 			{
-				apologize("Unable to delete this record.");
+				$successcode |= 4; // Failed to delete record
 			}
-			$url = "index.php";
+			$url = "index.php?success=" . $successcode;
 			if (isset($_GET["page"]) && $_GET["page"] > 1)
 			{
-				$url .= "?page=" . $_GET["page"];
+				$url .= "&page=" . $_GET["page"];
 			}
 			redirect($url);
 		}
 		else if ($_GET["type"] == "delTrain")
 		{
+			$successcode = 0;
 			if (isset($_GET["id"]))
 			{
 				$success = query("DELETE FROM trainingrecords WHERE recordid=? AND userid=?", $_GET["id"], $_SESSION["userid"]);
 			}
 			if ($success === false)
 			{
-				apologize("Unable to delete this record.");
+				$successcode |= 4; // Failed to delete record
 			}
-			$url = "index.php";
+			$url = "index.php?success=" . $successcode;
 			if (isset($_GET["page"]) && $_GET["page"] > 1)
 			{
-				$url .= "?page=" . $_GET["page"];
+				$url .= "&page=" . $_GET["page"];
 			}
 			redirect($url . "#collapseTrainingHistory");
 		}
 		else if ($_GET["type"] == "delPub")
 		{
+			$successcode = 0;
 			if (isset($_GET["id"]))
 			{
 				$success = query("DELETE FROM publicationrecords WHERE id=? AND userid=?", $_GET["id"], $_SESSION["userid"]);
 			}
 			if ($success === false)
 			{
-				apologize("Unable to delete this record.");
+				$successcode |= 4; // Failed to delete record
 			}
-			$url = "index.php";
+			$url = "index.php?success=" . $successcode;
 			if (isset($_GET["page"]) && $_GET["page"] > 1)
 			{
-				$url .= "?page=" . $_GET["page"];
+				$url .= "&page=" . $_GET["page"];
 			}
 			redirect($url . "#collapsePublicationHistory");
 		}
 		else if ($_GET["type"] == "confirmConf")
 		{
+			$successcode = 0;
 			if (isset($_GET["id"]))
 			{
 				$success = query("UPDATE suppconfrecords SET confirmed=1 WHERE id=? AND userid=?", $_GET["id"], $_SESSION["userid"]);
 			}
 			if ($success === false)
 			{
-				apologize("Unable to confirm this record.");
+				$successcode |= 32; // Failed to confirm this record
 			}
-			$url = "index.php";
+			$url = "index.php?success=" . $successcode;
 			if (isset($_GET["page"]) && $_GET["page"] > 1)
 			{
-				$url .= "?page=" . $_GET["page"];
+				$url .= "&page=" . $_GET["page"];
 			}
 			redirect($url);
 		}
 		else if ($_GET["type"] == "confirmTrain")
 		{
+			$successcode = 0;
 			if (isset($_GET["id"]))
 			{
 				$success = query("UPDATE trainingrecords SET confirmed=1 WHERE recordid=? AND userid=?", $_GET["id"], $_SESSION["userid"]);
 			}
 			if ($success === false)
 			{
-				apologize("Unable to confirm this record.");
+				$successcode |= 32; // Failed to confirm this record
 			}
-			$url = "index.php";
+			$url = "index.php?success=" . $successcode;
 			if (isset($_GET["page"]) && $_GET["page"] > 1)
 			{
-				$url .= "?page=" . $_GET["page"];
+				$url .= "&page=" . $_GET["page"];
 			}
 			redirect($url . "#collapseTrainingHistory");
 		}
 		else if ($_GET["type"] == "confirmPub")
 		{
+			$successcode = 0;
 			if (isset($_GET["id"]))
 			{
 				$success = query("UPDATE publicationrecords SET confirmed=1 WHERE id=? AND userid=?", $_GET["id"], $_SESSION["userid"]);
 			}
 			if ($success === false)
 			{
-				apologize("Unable to confirm this record.");
+				$successcode |= 32; // Failed to confirm this record
 			}
-			$url = "index.php";
+			$url = "index.php?success=" . $successcode;
 			if (isset($_GET["page"]) && $_GET["page"] > 1)
 			{
-				$url .= "?page=" . $_GET["page"];
+				$url .= "&page=" . $_GET["page"];
 			}
 			redirect($url . "#collapsePublicationHistory");
 		}

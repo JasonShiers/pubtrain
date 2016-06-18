@@ -33,17 +33,17 @@
 		}
 		else
 		{
-			apologize("Error: No training type submitted");
+			redirect("trainingsummary.php?success=64&admin=" . (isset($_POST["admin"])?$_POST["admin"]:0)); // Required form field missing
 		}
 		
-		if ($_SESSION["admin"] == 0 || !isset($_POST["admin"]) || $_POST["admin"] == 0)
+		if ($_SESSION["admin"] == 0 || !isset($_POST["admin"]) && $_POST["admin"] == 0)
 		{
 			$traintypes = query("SELECT l.trainingid, l.type FROM traininglibrary l, trainingsuperusers s 
 				WHERE s.userid = ? AND l.trainingid = s.trainingid ORDER BY type ASC", $_SESSION["userid"]);
 
 			if (array_search($trainingid, array_column($traintypes, "trainingid")) === FALSE)
 			{
-				apologize("Error: You are not a super user for this type of training");
+				redirect("trainingsummary.php?success=8&admin=" . (isset($_POST["admin"])?$_POST["admin"]:0)); // You do not have permission to do this
 			}
 		}
 		else
@@ -118,8 +118,9 @@
 		}
 
 		// render table
-		render("templates/trainingsummary.php", ["traintypes" => $traintypes, "verified" => $verified, "unverified" => $unverified,
-			"unconfirmed" => $unconfirmed, "trainingid" => $trainingid, "startdate" => $startdate, "enddate" => $enddate, 
+		render("templates/trainingsummary.php", ["traintypes" => $traintypes, 
+			"verified" => $verified, "unverified" => $unverified, "unconfirmed" => $unconfirmed, 
+			"trainingid" => $trainingid, "startdate" => $startdate, "enddate" => $enddate, 
 			"description" => $description, "depts" => $depts, "departments" => $departments, "depmask" => $depmask, 
 			"admin" => (isset($_POST["admin"])?$_POST["admin"]:0), "title" => "Training Summary"]);
 	}

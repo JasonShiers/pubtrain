@@ -2,7 +2,54 @@
 	if (!isset($startdate)) $startdate = "2005-01-01";
 	if (!isset($enddate)) $enddate = date("Y-m-d");
 	$ROWSPERPAGE = 10;
+	
+	if (isset($_GET["success"]))
+	{
+		$success = $_GET["success"];
+	}
 ?>
+
+<?php if (isset($success) && $success == 0): ?>
+	<div>
+		<div class="alert alert-success" role="alert">Record added/amended successfully</div>
+	</div>
+<?php elseif (isset($success)): ?>
+	<?php if ($success & 1): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not insert record into database</div>
+		</div>
+	<?php endif ?>
+	<?php if ($success & 2): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not insert record into database for one or more authors</div>
+		</div>
+	<?php endif ?>
+	<?php if ($success & 4): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not delete entry<!-- for one or more authors--></div>
+		</div>
+	<?php endif ?>
+	<?php if ($success & 8): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">You do not have permission to do this</div>
+		</div>
+	<?php endif ?>
+	<?php if ($success & 16): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not verify one or more records</div>
+		</div>
+	<?php endif ?>
+	<?php if ($success & 32): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Could not confirm this record</div>
+		</div>
+	<?php endif ?>
+	<?php if ($success & 64): ?>
+		<div>
+			<div class="alert alert-danger" role="alert">Required form field was missing</div>
+		</div>
+	<?php endif ?>
+<?php endif ?>
 
 <form action="trainingsummary.php" method="post" class="form-horizontal">
 	<div class="form-group">
