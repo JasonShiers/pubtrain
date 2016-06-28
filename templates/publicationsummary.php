@@ -178,7 +178,7 @@
 									<label>
 										<b class="required">Reference Title</b>
 										<input class="form-control autocomplete" name="title" id="newPubDesc" type="text" maxlength="60" 
-											minlength="8" required="required" onfocus="setAutocompleteType('newPubDesc', 0, 1)" />
+											minlength="4" required="required" onfocus="setAutocompleteType('newPubDesc', 0, 1)" />
 									</label>
 									<p class="text-muted">Patent Reference (e.g. WO/2005/123456) or 
 										<a href="https://images.webofknowledge.com/WOK46/help/WOS/J_abrvjt.html" target="_blank">
@@ -230,7 +230,7 @@
 								<div class="col-md-2 text-left">
 									<label>
 										<b>(End Page)</b>
-										<input class="form-control" name="endpage" type="number" min="0" max="10000" />
+										<input class="form-control" name="endpage" type="number" min="0" max="99999" />
 									</label>
 								</div>
 							</div>
