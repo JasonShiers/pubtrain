@@ -29,13 +29,13 @@
         if (empty($_SESSION["timestamp"]))
         {
 			// user is not logged in to a session
-            redirect("login.php");
+            redirect("login.php?next=" . $_SERVER["PHP_SELF"]);
         }
         else if (time() - $_SESSION['timestamp'] > 660)
         {
 			// session has had no activity for > 11 minutes
 			logout();
-			redirect("login.php");        	
+			redirect("login.php?next=" . $_SERVER["PHP_SELF"]);        	
         }
         else if (!in_array($_SERVER["PHP_SELF"], ["/pubtrain/userinfo.php"]) && (empty($_SESSION["department"]) || empty($_SESSION["linemgr"])))
         {
