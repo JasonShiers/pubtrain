@@ -305,16 +305,16 @@
 								<td><?= htmlspecialchars($h["year"]) ?></td>
 								<td>
 									<?php if ($h["journal"] == 1): ?>
-										<i><?= htmlspecialchars($h["title"]) ?></i>
-										<?php if($h["volume"] !== 0): ?>
-											, <b><?= htmlspecialchars($h["volume"]) ?></b>
+										<i><?= htmlspecialchars($h["title"] . ',') ?></i>
+										<?php if($h["volume"] !== NULL): ?>
+											<b><?= htmlspecialchars($h["volume"] . ',') ?></b>
 										<?php endif ?>
-										<?php if($h["issue"] !== 0): ?>
-											(<?= htmlspecialchars($h["issue"]) ?>)
+										<?php if($h["issue"] !== NULL): ?>
+											<?= htmlspecialchars('(' . $h["issue"] . '),') ?>
 										<?php endif ?>
-										, <?= htmlspecialchars($h["startpage"])?>
-										<?php if($h["endpage"] !== 0): ?>
-											-<?= htmlspecialchars($h["endpage"])?>
+										<?= htmlspecialchars($h["startpage"])?>
+										<?php if($h["endpage"] !== NULL): ?>
+											- <?= htmlspecialchars($h["endpage"])?>
 										<?php endif ?>
 									<?php else: ?>
 										<?= htmlspecialchars($h["title"]) ?>
@@ -581,7 +581,7 @@
 									<input class="form-control autocomplete" name="title" id="newPubDesc" type="text" maxlength="60" 
 										minlength="4" required="required" onfocus="setAutocompleteType('newPubDesc', 0, 1)" />
 								</label>
-								<p class="text-muted">Patent Reference (e.g. WO/2005/123456) or 
+								<p class="text-muted">Patent Reference (e.g. WO 2005123456) or 
 									<a href="https://images.webofknowledge.com/WOK46/help/WOS/J_abrvjt.html" target="_blank">
 									ISI abbreviated</a> Journal Title (e.g. J. Am. Chem. Soc.)
 								</p>
