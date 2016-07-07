@@ -19,9 +19,6 @@
 	
 	// set timezone
 	date_default_timezone_set ("Europe/London");
-    
-    // set the timezone
-    date_default_timezone_set ("Europe/London");
 
     // require authentication for all pages except /login.php, /logout.php, and /register.php
     if (!in_array($_SERVER["PHP_SELF"], ["/pubtrain/login.php", "/pubtrain/logout.php"]))
