@@ -387,7 +387,7 @@
 			<div class="alert alert-danger" role="alert">Could not confirm this record</div>
 		</div>
 	<?php endif ?>
-	<?php if ($_GET["success" & 64): ?>
+	<?php if ($_GET["success"] & 64): ?>
 		<div>
 			<div class="alert alert-danger" role="alert">Required form field was missing</div>
 		</div>

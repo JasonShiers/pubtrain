@@ -34,7 +34,7 @@
 			apologize("Error: Must choose at least one publication source");
 		}
 		
-		$query = array("SELECT p.title, p.year, p.volume, p.issue, p.startpage, p.endpage, p.source, p.journal, "
+		$query = array("SELECT p.title, p.year, p.volume, p.issue, p.startpage, p.endpage, GROUP_CONCAT(DISTINCT p.source) AS source, p.journal, "
 			. "GROUP_CONCAT(u.firstname, ' ', u.lastname ORDER BY p.id SEPARATOR ', ') AS userlist, "
 			. "GROUP_CONCAT(p.id ORDER BY p.id SEPARATOR ', ') AS idlist FROM publicationrecords p, "
 			. "users u WHERE p.userid = u.userid AND p.year BETWEEN ? AND ? ");
@@ -97,7 +97,7 @@
 			}
 		}
 		
-		$query[0] = $query[0] . "GROUP BY p.title, p.year, p.volume, p.startpage, p.endpage ORDER BY p.year DESC";
+		$query[0] = $query[0] . "GROUP BY p.title, p.year, p.volume, p.issue, p.startpage, p.endpage, p.journal ORDER BY p.year DESC";
 		
 		// get users list for multi select
 		$users = query("SELECT userid, firstname, lastname FROM users "

@@ -79,15 +79,15 @@
 		}
 
 		// get verified users
-		$verified = query("SELECT t.recordid, u.firstname, u.lastname, u.userid, COUNT(u.userid) AS count FROM users u, trainingrecords t, departments d 
-			WHERE u.userid = t.userid AND t.verified = 1 AND t.trainingid = ? AND t.description LIKE ? 
+		$verified = query("SELECT GROUP_CONCAT(t.recordid), u.firstname, u.lastname, u.userid, COUNT(u.userid) AS count FROM users u, 
+			trainingrecords t, departments d WHERE u.userid = t.userid AND t.verified = 1 AND t.trainingid = ? AND t.description LIKE ? 
 			AND t.date > ? AND t.date < ? AND u.department = d.department AND d.depmask & ?
-			GROUP BY u.userid ORDER BY u.lastname, u.firstname", $trainingid, 
+			GROUP BY t.recordid, u.userid ORDER BY u.lastname, u.firstname", $trainingid, 
 			"%" . $description . "%", $startdate, $enddate, $depmask);
 		
 		// get users with record
-		$unverified = query("SELECT t.recordid, u.firstname, u.lastname, u.userid, COUNT(u.userid) AS count,
-			IF(confirmed IS NULL || confirmed=1, 1, 0) AS confirmed 
+		$unverified = query("SELECT GROUP_CONCAT(t.recordid), u.firstname, u.lastname, u.userid, COUNT(u.userid) AS count,
+			GROUP_CONCAT(IF(confirmed IS NULL || confirmed=1, 1, 0)) AS confirmed 
 			FROM users u, trainingrecords t, departments d 
 			WHERE u.userid = t.userid AND t.verified = 0 AND t.trainingid = ? AND t.description LIKE ? 
 			AND t.date > ? AND t.date < ? AND u.department = d.department AND d.depmask & ? 
