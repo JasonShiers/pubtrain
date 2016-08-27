@@ -7,6 +7,9 @@
 		<?php endif?>
 		<div class="form-group">
 			<div class="text-center">
+				<?php if (isset($_GET["next"])): ?>
+					<input name="next" type="hidden" value="<?= $_GET["next"] ?>" />
+				<?php endif ?>
 				<input autofocus class="form-control" name="username" placeholder="Username" type="text" style="display: inline; width: 10em;" />
 				<span class="emailsign">@sygnaturediscovery.com</span>
 			</div>
