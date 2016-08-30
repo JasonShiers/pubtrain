@@ -97,7 +97,7 @@
 			}
 		}
 		
-		$query[0] = $query[0] . "GROUP BY p.title, p.year, p.volume, p.issue, p.startpage, p.endpage, p.journal ORDER BY p.year DESC";
+		$query[0] = $query[0] . "GROUP BY p.title, p.year, p.volume, p.issue, p.startpage, p.endpage, p.journal ORDER BY p.year DESC, title ASC";
 		
 		// get users list for multi select
 		$users = query("SELECT userid, firstname, lastname FROM users "
