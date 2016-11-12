@@ -396,7 +396,7 @@
                                 <div class="col-md-10 col-md-offset-2 text-left">
                                     <label>
                                         <b>Sygnature authors/inventors to add:</b>
-                                        <select name="addusers[]" id="adduserspub" 
+                                        <select name="otherusers[]" id="adduserspub" 
                                                 data-placeholder="Add attendees... type here to filter list" 
                                                 class="chosen-select" multiple 
                                                 style="width: 75%;">

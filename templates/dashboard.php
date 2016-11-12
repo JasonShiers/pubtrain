@@ -108,18 +108,21 @@ $successcode = Input::get("success", NULL);
                                                   aria-hidden="true"></span>
                                         </div>
                                         &nbsp;
-                                        <a class="btn btn-info btn-xs" href="
-                                        <?= escapeHTML("//intranet/confdb/feedbackreview.php?"
+                                        <a class="btn btn-info btn-xs" 
+                                           <?= "href=\"" . 
+                                                escapeHTML("//intranet/confdb/feedbackreview.php?"
                                                 . "id={$h['req_id']}&"
                                                 . "userid=" 
-                                                . Session::get('userid')) ?>
-                                           " target="_blank">
+                                                . Session::get('userid'))
+                                                . "\"" ?>
+                                           target="_blank">
                                             &nbsp;
                                             <span class="glyphicon glyphicon-list-alt" 
                                                   title="Review Feedback" 
                                                   aria-hidden="true"></span>
+                                            &nbsp;
                                         </a>
-                                        &nbsp;
+
                                     </td>
                                 <?php elseif ($h["editable"] == 0): ?>
                                     <td>
@@ -137,11 +140,11 @@ $successcode = Input::get("success", NULL);
                                         <td>
                                             <div class="imgdiv">
                                                 <span class="glyphicon glyphicon-thumbs-up" 
-                                                      title="
-                                                <?= ($h["confirmed"] === 1) 
-                                                    ? "Confirmed by you" 
-                                                    : "Entered by you"; ?>
-                                                      " style="color: forestgreen;" 
+                                                    <?= "title=\"" 
+                                                    . (($h["confirmed"] === 1) 
+                                                    ? "Confirmed by you\"" 
+                                                    : "Entered by you\"") ?> 
+                                                      style="color: forestgreen;" 
                                                       aria-hidden="true">
                                                 </span>
                                             </div>
@@ -269,18 +272,18 @@ $successcode = Input::get("success", NULL);
                                     <?php if ($h["confirmed"] !== 0): ?>
                                         <div class="imgdiv">
                                             <span class="glyphicon glyphicon-thumbs-up" 
-                                                  title="
-                                                  <?= ($h["confirmed"] === 1) 
-                                                    ? "Confirmed by you" 
-                                                    : "Entered by you" ?>"
+                                                  <?= "title=\"" . 
+                                                    (($h["confirmed"] === 1) 
+                                                    ? "Confirmed by you\"" 
+                                                    : "Entered by you\"") ?> 
                                                   style="color: forestgreen;" 
                                                   aria-hidden="true"></span>
                                         </div>
                                     <?php else: ?>
                                         <a class="btn btn-info btn-xs" 
-                                           href="modifyrecord.php?type=confirmTrain&id=
-                                            <?= "{$h['id']}&page=" 
-                                            . intval($rownumber / $ROWSPERPAGE + 1) ?>">
+                                           <?= "href=\"modifyrecord.php?type=confirmTrain"
+                                            . "&id={$h['id']}&page=" 
+                                            . intval($rownumber / $ROWSPERPAGE + 1) . "\"" ?>>
                                             &nbsp;
                                             <span class="glyphicon glyphicon-question-sign" 
                                                   title="Confirm I Attended" 
@@ -502,7 +505,8 @@ $successcode = Input::get("success", NULL);
                                     <b class="required">Location</b>
                                     <input class="form-control autocomplete" 
                                            name="location" id="newConfLocation" 
-                                           type="text" pattern=".{,60}" 
+                                           type="text" pattern=".{4,60}" 
+                                           title="Between 4 and 60 characters" 
                                            required="required" 
                                            placeholder="e.g. Cambridge, UK" 
                                            onfocus="setAutocompleteType('newConfLocation', 0, 2)" />
@@ -587,7 +591,7 @@ $successcode = Input::get("success", NULL);
                             <div class="col-md-5 text-left">
                                 <label>
                                     <b class="required">Training Type</b>
-                                    <select id="trainingid" name="trainingid" 
+                                    <select id="trainingid" name="id" 
                                             data-placeholder="Select training type..." 
                                             class="chosen-select" 
                                             required="required">
