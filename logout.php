@@ -1,12 +1,10 @@
 <?php
+// configuration
+require("includes/config.php"); 
 
-	// configuration
-	require("includes/config.php"); 
+// log out current user, if any
+Session::logout();
 
-	// log out current user, if any
-	logout();
+// redirect user
+Redirect::to("/pubtrain");
 
-	// redirect user
-	redirect("/pubtrain");
-
-?>
