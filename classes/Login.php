@@ -84,11 +84,12 @@ class Login
                 $username)->results();
         if ($DB->error())
         {
-            Redirect::error("Cannot access user in database");
+            Redirect::error("Cannot access user in database", "logout.php");
         }
         else if ($DB->count() != 1)
         {
-            Redirect::error("Cannot find user information in database");
+            Redirect::error("Cannot find user information in database", 
+                    "logout.php");
         }
         
         Session::put("name", $rows[0]["firstname"] . " " . $rows[0]["lastname"]);
@@ -119,7 +120,7 @@ class Login
                 Session::get("userid"))->results();
         if ($DB->error())
         {
-            Redirect::error("Cannot access user in database");
+            Redirect::error("Cannot access user in database", "logout.php");
         }
         
         if ($DB->count() == 0)
@@ -132,7 +133,8 @@ class Login
             
             if ($DB->error())
             {
-                Redirect::error("Cannot insert new user into database");
+                Redirect::error("Cannot insert new user into database", 
+                        "logout.php");
             }
             Redirect::to("userinfo.php");
         }
@@ -148,7 +150,7 @@ class Login
                     . "WHERE department = ?", $rows[0]["department"])->results();
             if ($DB->error())
             {
-                Redirect::error("Cannot verify user's department");
+                Redirect::error("Cannot verify user's department", "logout.php");
             }
             else if ($DB->count() == 0)
             {

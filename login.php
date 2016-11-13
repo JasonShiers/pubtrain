@@ -33,7 +33,7 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
     ));
 
     if(!$validate->passed()){
-        Redirect::error($validate->errors());
+        Redirect::error($validate->errors(), "logout.php");
     }
 
     $login = new Login();
@@ -54,7 +54,8 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
 		
         if($login->error())
         {
-            Redirect::error("Unable to load user information from logon server");
+            Redirect::error("Unable to load user information from logon server", 
+                    "logout.php");
         }
     }
     else

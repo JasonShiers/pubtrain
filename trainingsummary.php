@@ -20,14 +20,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && $id == "") {
     }
     
     if ($DB->error()){
-        Redirect::error("Cannot load training types");
+        Redirect::error("Cannot load training types", "index.php");
     }
 
     $depts = $DB->assocQuery("SELECT department, depmask from departments")
             ->results();
 
     if ($DB->error()){
-        Redirect::error("Cannot load department list");
+        Redirect::error("Cannot load department list", "index.php");
     }
     
     // render table
@@ -80,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && $id == "") {
             ->results();
     
     if ($DB->error()){
-        Redirect::error("Cannot get verified user list");
+        Redirect::error("Cannot get verified user list", "trainingsummary.php");
     }
 
     // get users with record
@@ -96,7 +96,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && $id == "") {
             ->results();
 
     if ($DB->error()){
-        Redirect::error("Cannot get users with training record");
+        Redirect::error("Cannot get users with training record", 
+                "trainingsummary.php");
     }
     
     // get unverified, unconfirmed users
@@ -112,14 +113,15 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && $id == "") {
             ->results();
     
     if ($DB->error()){
-        Redirect::error("Cannot get users with training record");
+        Redirect::error("Cannot get users with training record", 
+                "trainingsummary.php");
     }
 
     $depts = $DB->assocQuery("SELECT department, depmask from departments")
             ->results();
 
     if ($DB->error()){
-        Redirect::error("Cannot get department list");
+        Redirect::error("Cannot get department list", "trainingsummary.php");
     }
     
     if (!is_array($departments)) {

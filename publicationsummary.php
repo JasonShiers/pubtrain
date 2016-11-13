@@ -18,7 +18,7 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     if (!Token::check(Input::get('token')))
     {
-        Redirect::error("Unable to validate form token");
+        Redirect::error("Unable to validate form token", "publicationsummary.php");
     }
     $validate = new Validation();
     $validation = $validate->check($_POST, array(
@@ -35,7 +35,7 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
         ));
     
     if(!$validate->passed()){
-        Redirect::error($validate->errors());
+        Redirect::error($validate->errors(), "publicationsummary.php");
     }
  
     // validate checkboxes
@@ -49,12 +49,14 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
     
     if (!($checkbox["patents"] || $checkbox["journals"]))
     {
-        Redirect::error("Error: Must choose at least one publication type");
+        Redirect::error("Error: Must choose at least one publication type", 
+                "publicationsummary.php");
     }
     
     if (!($checkbox["clients"] || $checkbox["internal"] || $checkbox["external"]))
     {
-        Redirect::error("Error: Must choose at least one publication source");
+        Redirect::error("Error: Must choose at least one publication source", 
+                "publicationsummary.php");
     }
 
     $query = ["SELECT p.title, p.year, p.volume, p.issue, p.startpage, "
@@ -139,14 +141,15 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
     
     if ($DB->error())
     {
-        Redirect::error("Cannot retrieve user list");
+        Redirect::error("Cannot retrieve user list", "publicationsummary.php");
     }
 
     $publications = $DB->runQuery(PDO::FETCH_ASSOC, null, $query)->results();
     
     if ($DB->error())
     {
-        Redirect::error("Cannot retrieve publication list");
+        Redirect::error("Cannot retrieve publication list", 
+                "publicationsummary.php");
     }
 
     // render table

@@ -23,7 +23,7 @@ $confhistory = $DB->assocQuery($query, $_SESSION["userid"],
 
 if ($DB->error())
 {
-    Redirect::error("Cannot retreive conference history");
+    Redirect::error("Cannot retreive conference history", "logout.php");
 }
 
 // get users list for multi select
@@ -32,7 +32,7 @@ $users = $DB->assocQuery("SELECT userid, firstname, lastname FROM users "
 
 if ($DB->error())
 {
-    Redirect::error("Cannot retreive user list");
+    Redirect::error("Cannot retreive user list", "logout.php");
 }
 
 
@@ -49,7 +49,7 @@ $trainhistory = $DB->assocQuery($query, Session::get("userid"))
 
 if ($DB->error())
 {
-    Redirect::error("Cannot retreive training history");
+    Redirect::error("Cannot retreive training history", "logout.php");
 }
 
 // get training types for multi select
@@ -59,7 +59,7 @@ $traintypes = $DB
 
 if ($DB->error())
 {
-    Redirect::error("Cannot retreive training types");
+    Redirect::error("Cannot retreive training types", "logout.php");
 }
 
 // get user's publication history
@@ -69,7 +69,7 @@ $pubhistory = $DB->assocQuery($query, Session::get("userid"))->results();
 
 if ($DB->error())
 {
-    Redirect::error("Cannot retreive publication history");
+    Redirect::error("Cannot retreive publication history", "logout.php");
 }
 
 // render table

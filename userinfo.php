@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET")
 
     if ($DB->error())
     {
-        Redirect::error("Error getting your user information");
+        Redirect::error("Error getting your user information", "logout.php");
     }
 
     $linemgrs = $DB->assocQuery("SELECT userid, firstname, lastname FROM users "
@@ -20,14 +20,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET")
 
     if ($DB->error())
     {
-        Redirect::error("Error getting list of line managers");
+        Redirect::error("Error getting list of line managers", "logout.php");
     }
 
     $departments = $DB->assocQuery("SELECT department FROM departments")->results();
 
     if ($DB->error())
     {
-        Redirect::error("Error getting list of departments");
+        Redirect::error("Error getting list of departments", "logout.php");
     }
     
     render("templates/modify_curr_user.php", ["departments" => $departments, "linemgrs" => $linemgrs, 
@@ -48,12 +48,12 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
         ));
 
         if(!$validate->passed()){
-            Redirect::error($validate->errors());
+            Redirect::error($validate->errors(), "userinfo.php");
         }
     }
     else
     {
-        Redirect::error("Unable to validate form token");
+        Redirect::error("Unable to validate form token", "userinfo.php");
     }
 
     // Get linemgr and department info     
@@ -63,7 +63,7 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     if ($DB->error())
     {
-        Redirect::error("Error getting line manager details");
+        Redirect::error("Error getting line manager details", "userinfo.php");
     }
 
     $dep = $DB->
@@ -72,7 +72,7 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     if ($DB->error())
     {
-        Redirect::error("Error getting department details");
+        Redirect::error("Error getting department details", "userinfo.php");
     }
 
     // update existing entry
@@ -82,7 +82,7 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     if ($success === false)
     {
-        Redirect::error("Can't update database.");
+        Redirect::error("Can't update database.", "userinfo.php");
     }
     else 
     {

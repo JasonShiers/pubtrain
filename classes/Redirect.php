@@ -31,9 +31,9 @@ class Redirect
         exit;
     }
     
-    public static function error($message)
+    public static function error($message, $destination = "javascript:history.go(-1);")
     {
-        render("templates/apology.php", ["message" => $message]);
+        render("templates/apology.php", ["message" => $message, "url" => $destination]);
         exit;
     }
 }
