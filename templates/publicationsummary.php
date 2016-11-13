@@ -121,16 +121,16 @@
                         <td>
                             <?php if ($h["journal"] == 1): ?>
                                 <i><?= escapeHTML($h["title"] . ',') ?></i>
-                                <?php if($h["volume"] !== NULL): ?>
+                                <?php if($h["volume"] !== ""): ?>
                                     <b><?= escapeHTML($h["volume"] . ',') ?></b>
                                 <?php else: ?>
                                     <b><?= escapeHTML($h["year"] . ',') ?></b>
                                 <?php endif ?>
-                                <?php if($h["issue"] !== NULL): ?>
+                                <?php if($h["issue"] !== ""): ?>
                                     <?= escapeHTML('(' . $h["issue"] . '),') ?>
                                 <?php endif ?>
                                 <?= escapeHTML($h["startpage"])?>
-                                <?php if($h["endpage"] !== NULL): ?>
+                                <?php if($h["endpage"] !== ""): ?>
                                     - <?= escapeHTML($h["endpage"])?>
                                 <?php endif ?>
                             <?php else: ?>

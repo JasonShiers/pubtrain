@@ -67,20 +67,18 @@ function getLineGroupArray(array $users, $depth)
      */
     $MAXDEPTH = 5;
 
-    $query = ["SELECT firstname, lastname, userid FROM users WHERE linemgr IN ("];
-
-    foreach($users as $user)
-    {
-        // Add parameter to query and append variable
-        $query[0] = $query[0] . "?, ";
-        $query[] = $user["userid"];
+    $DB = DB::getInstance();
+    
+    $reports = $DB->assocListQuery("SELECT firstname, lastname, userid "
+            . "FROM users WHERE linemgr IN (", 
+            array_column($users, "userid"), 
+            ")")->results();
+    
+    if ($DB->error()){
+        Redirect::error("Cannot retrieve line reports");
     }
-    // Remove trailing comma and terminate query
-    $query[0] = rtrim($query[0], ", ") . ")";
-
-    $reports = call_user_func_array("query", $query);
-
-    if (count($reports) == 0 || $depth > 5)
+    
+    if ($DB->count() == 0 || $depth > $MAXDEPTH)
     {
         // base case
         return $reports;

@@ -68,60 +68,7 @@ $ROWSPERPAGE = 5;
                             </tr>
                         </thead>
                         <tbody>
-    <?php
-    $rownumber = -1;
-    if (isset($confhistory)) {
-        foreach ($confhistory as $h) {
-            print("<tr ");
-            $rownumber++;
-            if ($h["confirmed"] === 0) {
-                print("style=\"color: darkgray\";");
-            }
-            print(">");
-            print("<td>" . htmlspecialchars($h["confdate"]) . "</td>");
-            print("<td>" . htmlspecialchars($h["title"]) . "</td>");
-            print("<td>" . htmlspecialchars($h["location"]) . "</td>");
-            print("<td>" . htmlspecialchars($h["days"]) . "</td>");
-            if ($h["attended"] == 1) {
-                print("	<td >
-                            <div class=\"imgdiv\"><span class=\"glyphicon glyphicon-thumbs-up\" title=\"Confirmed by ConferenceTracker\" 
-                                    style=\"color: darkblue;\" aria-hidden=\"true\"></span></div>
-                            &nbsp;
-                            <a class=\"btn btn-info btn-xs\" 
-                            href=\"//intranet/confdb/feedbackreview.php?id=" . htmlspecialchars($h["req_id"])
-                                . "&userid=" . htmlspecialchars($_SESSION["userid"]) . "\" target=\"_blank\">
-                            &nbsp;<span class=\"glyphicon glyphicon-list-alt\" title=\"Review Feedback\" 
-                            aria-hidden=\"true\"></span>&nbsp;</a>
-                        </td>");
-            } else if ($h["editable"] == 0) {
-                print("	<td >
-                            <div class=\"imgdiv\"><span class=\"glyphicon glyphicon-question-sign\" title=\"Not Confirmed\" 
-                                    aria-hidden=\"true\"></span></div>
-                            &nbsp;
-                        </td>");
-            }
-            if ($h["editable"] == 1) {
-                if ($h["confirmed"] !== 0) {
-                    print("	<td>
-                                    <div class=\"imgdiv\">
-                                    <span class=\"glyphicon glyphicon-thumbs-up\" ");
-                    if ($h["confirmed"] == 1) {
-                        print("			title=\"Confirmed by user\" ");
-                    } else {
-                        print("			title=\"Entered by user\" ");
-                    }
-                    print("				style=\"color: forestgreen;\" aria-hidden=\"true\"></span>
-															</div>");
-                } else {
-                    print("	<td>&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Not Confirmed\" 
-															aria-hidden=\"true\"></span>&nbsp;");
-                }
-                print("</td>");
-            }
-            print("</tr>");
-        }
-    }
-    ?>
+                            <?php require 'tablebody/confhistory.php'; ?>
                         </tbody>
                     </table>
                 </div>
@@ -163,61 +110,7 @@ $ROWSPERPAGE = 5;
                             </tr>
                         </thead>
                         <tbody>
-    <?php
-    $rownumber = -1;
-    if (isset($trainhistory)) {
-        foreach ($trainhistory as $h) {
-            print("<tr ");
-            $rownumber++;
-            if ($h["confirmed"] === 0) {
-                print("style=\"color: darkgray\";");
-            }
-            print(">");
-            print("<td>" . htmlspecialchars($h["date"]) . "</td>");
-            print("<td>" . htmlspecialchars($h["type"]));
-            if ($h["description"] !== "") {
-                print("<br />" . htmlspecialchars($h["description"]));
-            }
-            print("</td>");
-            if ($h["internal_location"] == 0) {
-                print("<td>External</td>");
-            } else {
-                print("<td>Internal</td>");
-            }
-            if ($h["internal_trainer"] === 0) {
-                print("<td>External</td>");
-            } else if ($h["internal_trainer"] == 1) {
-                print("<td>Internal</td>");
-            } else {
-                print("<td>N/A</td>");
-            }
-            print("<td>" . htmlspecialchars($h["total_days"]) . "</td>");
-            if ($h["confirmed"] !== 0) {
-                print("	<td>
-														<div class=\"imgdiv\">
-															<span class=\"glyphicon glyphicon-thumbs-up\" ");
-                if ($h["confirmed"] === 1) {
-                    print("			title=\"Confirmed by user\" ");
-                } else {
-                    print("			title=\"Entered by user\" ");
-                }
-                print("				style=\"color: forestgreen;\" aria-hidden=\"true\"></span>
-														</div>");
-            } else {
-                print("	<td>&nbsp;
-												<div class=\"imgdiv\">
-													<span class=\"glyphicon glyphicon-question-sign\" title=\"Not Confirmed\" 
-														aria-hidden=\"true\"></span>
-												</div>");
-            }
-            print("	&nbsp;
-											<div class=\"imgdiv\"" . (($h["verified"] === 1) ? "" : " style=\"visibility: hidden;\"") . ">
-												<span class=\"glyphicon glyphicon-ok-circle\" title=\"Verified\" 
-													style=\"color: green;\" aria-hidden=\"true\">");
-            print("</td></tr>");
-        }
-    }
-    ?>
+                            <?php require 'tablebody/trainhistory.php'; ?>
                         </tbody>
                     </table>
                 </div>
@@ -253,53 +146,7 @@ $ROWSPERPAGE = 5;
                             </tr>
                         </thead>
                         <tbody>
-    <?php
-    $rownumber = -1;
-    if (isset($pubhistory)) {
-        foreach ($pubhistory as $h) {
-            print("<tr ");
-            $rownumber++;
-            if ($h["confirmed"] === 0) {
-                print("style=\"color: darkgray\";");
-            }
-            print(">");
-            print("<td>" . htmlspecialchars($h["year"]) . "</td>");
-            if ($h["journal"] == 1) {
-                print("<td><i>" . htmlspecialchars($h["title"]) . "</i>");
-                if ($h["volume"] !== "0") {
-                    print(", <b>" . htmlspecialchars($h["volume"]) . "</b>");
-                }
-                if ($h["issue"] !== "0") {
-                    print("(" . htmlspecialchars($h["issue"]) . ")");
-                }
-                print(", " . htmlspecialchars($h["startpage"]));
-                if ($h["endpage"] !== "0") {
-                    print("-" . htmlspecialchars($h["endpage"]));
-                }
-            } else {
-                print("<td>" . htmlspecialchars($h["title"]));
-            }
-            print("</td>");
-            print("<td>" . htmlspecialchars($h["source"]) . "</td>");
-            if ($h["confirmed"] !== 0) {
-                print("	<td>
-														<div class=\"imgdiv\">
-															<span class=\"glyphicon glyphicon-thumbs-up\" ");
-                if ($h["confirmed"] === "1") {
-                    print("			title=\"Confirmed by user\" ");
-                } else {
-                    print("			title=\"Entered by user\" ");
-                }
-                print("				style=\"color: forestgreen;\" aria-hidden=\"true\"></span>
-														</div>");
-            } else {
-                print("	<td>&nbsp;<span class=\"glyphicon glyphicon-question-sign\" title=\"Not Confirmed\" 
-														aria-hidden=\"true\"></span>&nbsp;");
-            }
-            print("</td></tr>");
-        }
-    }
-    ?>
+                            <?php require 'tablebody/pubhistory.php'; ?>
                         </tbody>
                     </table>
                 </div>

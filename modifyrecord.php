@@ -32,10 +32,10 @@ $superuser = Input::get("superuser");
 $verifyrecords = Input::get("verifyrecords");
 
 $journal = Input::get("journal");
-$volume = Input::get("volume", NULL);
-$issue = Input::get("issue", NULL);
-$startpage = Input::get("startpage", NULL);
-$endpage = Input::get("endpage", NULL);
+$volume = Input::get("volume");
+$issue = Input::get("issue");
+$startpage = Input::get("startpage");
+$endpage = Input::get("endpage");
 $source = Input::get("source", NULL);
 $thirdParty = Input::get("3rdParty");
 $deleteusers = Input::get("deleteusers");
