@@ -1,9 +1,10 @@
 <?php
-if (!isset($startdate))
-    $startdate = "2005-01-01";
-if (!isset($enddate))
-    $enddate = date("Y-m-d");
+if (!isset($startdate)) $startdate = "2005-01-01";
+if (!isset($enddate)) $enddate = date("Y-m-d");
+
 $ROWSPERPAGE = 10;
+
+$token = Token::generate();
 
 $success = Input::get("success", NULL);
 ?>
@@ -51,6 +52,7 @@ $success = Input::get("success", NULL);
 <?php endif ?>
 
 <form action="trainingsummary.php" method="post" class="form-horizontal">
+    <input type="hidden" name="token" value="<?= $token ?>" />
     <div class="form-group">
         <?php if (Input::get("admin") == 1 || (isset($admin) && $admin == 1)): ?>
             <input type="hidden" name="admin" value="1" />
@@ -148,6 +150,7 @@ $success = Input::get("success", NULL);
         </div>
         <div class="col-md-3">
             <form action="modifyrecord.php?type=verifyTrain" method="post">
+                <input type="hidden" name="token" value="<?= $token ?>" />
                 <input type="hidden" name="superuser" value="1" />
                 <input type="hidden" name="trainingid" 
                     <?= "value=\"" . $trainingid . "\"" ?> />
@@ -194,6 +197,7 @@ $success = Input::get("success", NULL);
         </div>
         <div class="col-md-3">
             <form id="addTrain" action="modifyrecord.php?type=newTrain" method="post">
+                <input type="hidden" name="token" value="<?= $token ?>" />
                 <input type="hidden" name="superuser" value="1" />
                 <input type="hidden" name="startdate" value="<?= $startdate ?>" />
                 <input type="hidden" name="enddate" value="<?= $enddate ?>" />
@@ -205,7 +209,7 @@ $success = Input::get("success", NULL);
                     </th>
                     </thead>
                     <tbody>
-    <?php foreach ($unconfirmed as $user): ?>
+                        <?php foreach ($unconfirmed as $user): ?>
                             <tr>
                                 <td>
                                     <div class="button_check">

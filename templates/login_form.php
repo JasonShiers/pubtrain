@@ -1,5 +1,6 @@
 <form role="form" action="login.php" method="post" class="form-horizontal">
     <fieldset>
+        <input type="hidden" name="token" value="<?= Token::generate() ?>" />
         <h3>To continue, please log in</h3>
         <img alt="Login" src="img/login.png" />
         <?php if (isset($failed) && $failed == 1): ?>

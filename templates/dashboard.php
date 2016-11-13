@@ -1,6 +1,8 @@
 <?php
 $ROWSPERPAGE = 5;
 
+$token = Token::generate();
+
 $successcode = Input::get("success", NULL);
 ?>
 
@@ -466,6 +468,7 @@ $successcode = Input::get("success", NULL);
                 <p>To add an entry to your conference history please enter the following details:</p>
             </div>
             <form id="addConf" action="modifyrecord.php?type=newConf" method="post">
+                <input type="hidden" name="token" value="<?= $token ?>" />
                 <div class="modal-body">
                     <fieldset class="formfieldgroup">
                         <legend>Conference Information</legend>
@@ -558,6 +561,7 @@ $successcode = Input::get("success", NULL);
                 <p>To add an entry to your training history please enter the following details:</p>
             </div>
             <form id="addTrain" action="modifyrecord.php?type=newTrain" method="post">
+                <input type="hidden" name="token" value="<?= $token ?>" />
                 <div class="modal-body">
                     <fieldset class="formfieldgroup">
                         <legend>Training Record Information</legend>
@@ -720,6 +724,7 @@ $successcode = Input::get("success", NULL);
                 <p>To add an entry to your publication history please enter the following details:</p>
             </div>
             <form id="addPub" action="modifyrecord.php?type=newPub" method="post">
+                <input type="hidden" name="token" value="<?= $token ?>" />
                 <div class="modal-body">
                     <fieldset class="formfieldgroup">
                         <legend>Publication Record Information</legend>
@@ -865,6 +870,7 @@ $successcode = Input::get("success", NULL);
                     </h4>
                 </div>
                 <form <?="id=\"" . lcfirst($section) . "\"" ?> method="post">
+                    <input type="hidden" name="token" value="<?= $token ?>" />
                     <div class="modal-body">
                         <p>Are you sure you want to delete this 
                            <?= $description ?> record?</p>
@@ -903,6 +909,7 @@ $successcode = Input::get("success", NULL);
                 </div>
                 <form <?= "id=\"" . $section . "\"" ?> method="post" 
                       action="exportdocument.php?type=<?= $section ?>">
+                    <input type="hidden" name="token" value="<?= $token ?>" />
                     <div class="modal-body">
                         <p>Please choose from the date range and sections to include:</p>
                         <div class="form-group clearfix">
