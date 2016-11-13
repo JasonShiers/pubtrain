@@ -1,7 +1,9 @@
 <?php
-    session_start();
-	if (!empty($_SESSION["timestamp"]))
-	{
-		$_SESSION['timestamp']=time();
-	}
-?>
+
+// Autoload classes when used
+spl_autoload_register(function($class) {
+    require_once("classes/" . $class . ".php");
+});
+
+session_start();
+Session::put('timestamp', time());
