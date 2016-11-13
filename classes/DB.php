@@ -83,7 +83,7 @@ class DB
         return $this->runQuery(PDO::FETCH_ASSOC, null, func_get_args());
     }
     
-    public function assocListQuery($statement_pre, $list, $statement_post, $params)
+    public function assocListQuery($statement_pre, $list, $statement_post, $params = [])
     {
         $statement = $statement_pre 
                 . implode(", ", 
