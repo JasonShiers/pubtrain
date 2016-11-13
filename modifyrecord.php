@@ -251,14 +251,14 @@ if ($type !== "") {
         if (is_array($verifyrecords) && count($verifyrecords) > 0 && $superuser == 1) {
             // Insert verified records from a superuser or admin
             $DB->assocQuery("SELECT 1 FROM trainingsuperusers "
-                    . "WHERE trainingid=? AND userid=?", $trainingid, $userid);
+                    . "WHERE trainingid=? AND userid=?", $id, $userid);
             if ($DB->count() > 0 || ($admin == 1)) {
                 
                 $DB->assocListQuery("UPDATE trainingrecords SET verified = 1 "
                         . "WHERE recordid IN(", $verifyrecords, ")");
                 
                 // Failed to verify one or more records
-                if ($DB-error()) {
+                if ($DB->error()) {
                     $successcode |= 16;
                 }
             // You do not have permission to do this
