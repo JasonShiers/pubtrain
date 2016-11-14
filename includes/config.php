@@ -37,8 +37,7 @@ if (!in_array($_SERVER["PHP_SELF"],
     else if (time() - Session::get('timestamp') > 660)
     {
         // session has had no activity for > 11 minutes
-        Session::logout();
-        Redirect::to("login.php");        	
+        Redirect::to("logout.php");        	
     }
     else if (!in_array($_SERVER["PHP_SELF"], ["/confdb/userinfo.php"]) 
             && (empty(Session::get("department")) 
