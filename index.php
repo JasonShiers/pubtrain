@@ -4,6 +4,7 @@
 require("includes/config.php"); 
 
 $DB = DB::getInstance();
+$userid = Session::get("userid");
 
 // get user's conference history
 $query = "(SELECT c.id, c.confdate AS date, "
@@ -44,7 +45,7 @@ $query = "SELECT tr.recordid AS id, "
         . "FROM trainingrecords tr, traininglibrary tl "
         . "WHERE tr.userid = ? AND tr.trainingid = tl.trainingid "
         . "ORDER BY tr.date DESC";
-$trainhistory = $DB->assocQuery($query, Session::get("userid"))
+$trainhistory = $DB->assocQuery($query, $userid)
         ->results();
 
 if ($DB->error())
@@ -65,7 +66,7 @@ if ($DB->error())
 // get user's publication history
 $query = "SELECT * FROM publicationrecords WHERE userid = ? "
         . "ORDER BY year DESC, journal, title";
-$pubhistory = $DB->assocQuery($query, Session::get("userid"))->results();
+$pubhistory = $DB->assocQuery($query, $userid)->results();
 
 if ($DB->error())
 {
@@ -74,6 +75,6 @@ if ($DB->error())
 
 // render table
 render("templates/dashboard.php", ["pubhistory" => $pubhistory, 
-    "users" => $users, "trainhistory" => $trainhistory, 
+    "users" => $users, "trainhistory" => $trainhistory, "userid" => $userid,
     "traintypes" => $traintypes, "confhistory" => $confhistory, 
     "title" => "Dashboard"]);
