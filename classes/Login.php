@@ -70,6 +70,7 @@ class Login
         Session::put("userid", strtolower($info[0]["samaccountname"][0]));
         Session::put("timestamp", time());
         Session::put("admin", 0);
+        Session::put("publicationadmin", 0);
         Session::put("superadmin", 0);
         
         return $this;
@@ -101,6 +102,7 @@ class Login
         Session::put("userid", $rows[0]["userid"]);
         Session::put("timestamp", time());
         Session::put("admin", 0);
+        Session::put("publicationadmin", 0);
         Session::put("superadmin", 0);
         
         return $this;
@@ -144,6 +146,7 @@ class Login
             Session::put("department", $rows[0]["department"]);
             Session::put("linemgr", $rows[0]["linemgr"]);
             Session::put("admin", $rows[0]["admin"]);
+            Session::put("publicationadmin", $rows[0]["publicationadmin"]);
             Session::put("superadmin", $rows[0]["superadmin"]);
 
             $dep = $DB->assocQuery("SELECT department, depmask FROM departments "
