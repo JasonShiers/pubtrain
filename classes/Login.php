@@ -104,6 +104,7 @@ class Login
         Session::put("admin", 0);
         Session::put("publicationadmin", 0);
         Session::put("superadmin", 0);
+        Session::put("confbookadmin", 0);
         
         return $this;
     }
@@ -148,6 +149,7 @@ class Login
             Session::put("admin", $rows[0]["admin"]);
             Session::put("publicationadmin", $rows[0]["publicationadmin"]);
             Session::put("superadmin", $rows[0]["superadmin"]);
+            Session::put("confbookadmin", 0);
 
             $dep = $DB->assocQuery("SELECT department, depmask FROM departments "
                     . "WHERE department = ?", $rows[0]["department"])->results();
