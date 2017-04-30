@@ -84,11 +84,30 @@
                 </div>
         </div>
         <div class="col-md-1 text-center">
-            <br />
-            <button class="btn btn-info" type="submit">Submit</button>
+            <p>
+            <button class="btn btn-info" type="submit" name="action" 
+                    value="submit">Submit</button>
+            </p><p>
+            <button class="btn btn-default" type="submit" name="action"
+                    value="export">
+                <span class="glyphicon glyphicon-save-file" 
+                      aria-hidden="true"></span> Export
+            </button>
+            </p>
         </div>
     </div>
 </form>
+
+<?php if ((Session::exists("publicationadmin") 
+            && Session::get("publicationadmin") == 1) 
+            || (Session::exists("admin") 
+                    && Session::get("admin") == 1)): ?>
+    <button type="button" class="btn btn-primary btn-xs" 
+            onclick="show_modal('modalNewPub', 0)">
+        <span class="glyphicon glyphicon-plus-sign" 
+              aria-hidden="true"></span> Add new publication
+    </button>
+<?php endif ?>
 
 <?php if (isset($publications) && isset($publications[0]["title"])): ?>
     <div>
@@ -157,288 +176,8 @@
                     </tr>
                 <?php endforeach ?>
             </tbody>
-            <tfoot>
-                <tr>
-                    <th colspan=5>
-                        <?php if ((Session::exists("publicationadmin") 
-                                    && Session::get("publicationadmin") == 1) 
-                                    || (Session::exists("admin") 
-                                            && Session::get("admin") == 1)): ?>
-                            <button type="button" class="btn btn-primary btn-xs" 
-                                    onclick="show_modal('modalNewPub', 0)">
-                                <span class="glyphicon glyphicon-plus-sign" 
-                                      aria-hidden="true"></span> Add
-                            </button>
-                        <?php endif ?>
-                        <button type="button" class="btn btn-default btn-xs" 
-                                onclick="show_modal('modalExportPub')">
-                            <span class="glyphicon glyphicon-save-file" 
-                                  aria-hidden="true"></span> Export
-                        </button>
-                    </th>
-                </tr>
-            </tfoot>
         </table>
-    </div>
-	
-    <!-- Modal for adding new publication -->
-    <div class="modal fade" id="modalNewPub" tabindex="-1" role="dialog" 
-         aria-labelledby="modalNewPub">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" 
-                        id="modalAddPubLabel">
-                        Add New Publication
-                    </h4>
-                    <p>To add a new publication please enter the following details:</p>
-                </div>
-                <form id="addPub" action="modifyrecord.php?type=newPub&3rdParty=1" 
-                      method="post">
-                    <div class="modal-body">
-                        <fieldset class="formfieldgroup">
-                            <legend>Publication Record Information</legend>
-                            <div class="form-group clearfix">
-                                <div class="col-md-3 text-left">
-                                    <label>
-                                        <b class="required">Year</b>
-                                        <input class="form-control" name="year" 
-                                                type="number" min="1980" max="2500" 
-                                                <?= "value=\"" . date('Y') . "\"" ?> 
-                                                required="required" />
-                                    </label>
-                                </div>
-                                <div class="col-md-5 text-left">
-                                    <label>
-                                        <b class="required">Reference Title</b>
-                                        <input class="form-control autocomplete" 
-                                                name="title" id="newPubDesc" 
-                                                type="text" pattern=".{4,50}" 
-                                                title="Between 4 and 20 characters" 
-                                                required="required" 
-                                                onfocus="setAutocompleteType('newPubDesc', 0, 1)" />
-                                    </label>
-                                    <p class="text-muted">Patent Reference (e.g. WO 2005123456) or 
-                                        <a href="https://images.webofknowledge.com/WOK46/help/WOS/J_abrvjt.html" 
-                                            target="_blank">
-                                        ISI abbreviated</a> Journal Title (e.g. J. Am. Chem. Soc.)
-                                    </p>
-                                </div>
-                                <div class="col-md-4 text-left">
-                                    <label>
-                                        <b class="required">Source of work</b>
-                                        <input class="form-control autocomplete" 
-                                                name="source" id="newPubSource" 
-                                                type="text" pattern=".{3,32}" 
-                                                title="Between 3 and 32 characters" 
-                                                required="required" 
-                                                onfocus="setAutocompleteType('newPubSource', 0, 1)" />
-                                    </label>
-                                    <p class="text-muted">
-                                        Enter name of client for project work, 
-                                        "Internal" for Sygnature internal 
-                                        research and "External" for 
-                                        non-Sygnature work.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="form-group clearfix text-center">
-                                <p><b>Additional information for Journals</b></p>
-                                <div class="col-md-3 col-md-offset-1 text-left">
-                                    <label>
-                                        <b class="required">Publication Type</b>
-                                        <select name="journal" required="required">
-                                            <option disabled selected value>
-                                                Select option
-                                            </option>
-                                            <option value="1">Journal</option>
-                                            <option value="0">Patent</option>
-                                        </select>
-                                    </label>
-                                </div>
-                                <div class="col-md-2 text-left">
-                                    <label>
-                                        <b>Volume</b>
-                                        <input class="form-control" name="volume" 
-                                               type="text" maxlength="6" />
-                                    </label>
-                                </div>
-                                <div class="col-md-2 text-left">
-                                    <label>
-                                        <b>(Issue)</b>
-                                        <input class="form-control" name="issue" 
-                                               type="number" min="0" max="100" />
-                                    </label>
-                                </div>
-                                <div class="col-md-2 text-left">
-                                    <label>
-                                        <b>Start Page</b>
-                                        <input class="form-control" name="startpage" 
-                                               type="text" maxlength="16" />
-                                    </label>
-                                </div>
-                                <div class="col-md-2 text-left">
-                                    <label>
-                                        <b>(End Page)</b>
-                                        <input class="form-control" name="endpage" 
-                                               type="number" min="0" max="99999" />
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <br />
-                        <fieldset class="formfieldgroup">
-                            <div class="form-group clearfix">
-                                <div class="col-md-10 col-md-offset-2 text-left">
-                                    <label>
-                                        <b>Sygnature authors/inventors:</b>
-                                        <select name="otherusers[]" 
-                                                id="otheruserspub" 
-                                                data-placeholder="Other attendees... type here to filter list" 
-                                                class="chosen-select" 
-                                                multiple style="width: 75%;">
-                                            <?php enumerateselectusers($users, "", true); ?>
-                                        </select>
-                                        <span class="glyphicon glyphicon-search" 
-                                              aria-hidden="true"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="modal-footer">
-                        <fieldset>
-                            <button class="btn btn-success" type="submit">
-                                Submit
-                            </button>
-                            <button type="button" class="btn btn-danger" 
-                                    data-dismiss="modal" 
-                                    onclick="resetForm('addPub')">
-                                Cancel
-                            </button>
-                        </fieldset>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Modal for editing publication -->
-    <div class="modal fade" id="modalEditPub" tabindex="-1" role="dialog" 
-         aria-labelledby="modalEditPub">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modalEditPubLabel">
-                        Edit Publication Authors
-                    </h4>
-                    <p>To change the authors or delete the publication record 
-                        for all authors, please use the following form:</p>
-                </div>
-                <form id="editPub" action="modifyrecord.php?type=editPub" method="post">
-                    <div class="modal-body">
-                        <fieldset class="formfieldgroup">
-                            <legend>Publication Record Information</legend>
-                            <div class="form-group clearfix">
-                                <div class="col-md-3 text-left">
-                                    <b class="label-static">Year</b>
-                                    <input class="form-control" id="editPubYear" 
-                                           name="year" type="number" readonly />
-                                </div>
-                                <div class="col-md-5 text-left">
-                                    <b class="label-static">Reference Title</b>
-                                    <input class="form-control" id="editPubTitle" 
-                                           name="title" type="text" readonly />
-                                </div>
-                                <div class="col-md-4 text-left">
-                                    <b class="label-static">Source of work</b>
-                                    <input class="form-control" id="editPubSource" 
-                                           name="source" type="text" readonly />
-                                </div>
-                            </div>
-                            <div class="form-group clearfix text-center">
-                                <p><b>Additional information for Journals</b></p>
-                                <div class="col-md-3 text-left">
-                                    <b class="label-static">Publication Type</b>
-                                    <select name="journal" readonly>
-                                        <option id="editPubTypeJ" value="1">
-                                            Journal
-                                        </option>
-                                        <option id="editPubTypeP" value="0">
-                                            Patent
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 text-left">
-                                    <b class="label-static">Volume</b>
-                                    <input class="form-control" id="editPubVolume" 
-                                           name="volume" type="text" readonly />
-                                </div>
-                                <div class="col-md-2 text-left">
-                                    <b class="label-static">(Issue)</b>
-                                    <input class="form-control" id="editPubIssue" 
-                                           name="issue" type="number" readonly />
-                                </div>
-                                <div class="col-md-2 text-left">
-                                    <b class="label-static">Start Page</b>
-                                    <input class="form-control" id="editPubStartPage" 
-                                           name="startpage" type="text" readonly />
-                                </div>
-                                <div class="col-md-2 text-left">
-                                    <b class="label-static">(End Page)</b>
-                                    <input class="form-control" id="editPubEndPage" 
-                                           name="endpage" type="number" readonly />
-                                </div>
-                            </div>
-                        </fieldset>
-                        <br />
-                        <fieldset class="formfieldgroup">
-                            <div class="form-group clearfix">
-                                <div class="col-md-10 col-md-offset-2 text-left">
-                                    <label>
-                                        <b>Sygnature authors/inventors to add:</b>
-                                        <select name="otherusers[]" id="adduserspub" 
-                                                data-placeholder="Add attendees... type here to filter list" 
-                                                class="chosen-select" multiple 
-                                                style="width: 75%;">
-                                                <?php enumerateselectusers($users, "", true); ?>
-                                        </select>
-                                        <span class="glyphicon glyphicon-search" 
-                                              aria-hidden="true"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group clearfix">
-                                <div class="col-md-10 col-md-offset-2 text-left">
-                                    <label>
-                                        <b>Sygnature authors/inventors to delete:</b>
-                                        <select name="deleteusers[]" id="deleteuserspub" 
-                                                data-placeholder="Delete attendees... type here to filter list" 
-                                                class="chosen-select" multiple 
-                                                style="width: 75%;">
-                                        </select>
-                                        <span class="glyphicon glyphicon-search" 
-                                              aria-hidden="true"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="modal-footer">
-                        <fieldset>
-                            <button class="btn btn-success" type="submit">
-                                Submit
-                            </button>
-                            <button type="button" class="btn btn-danger" 
-                                    data-dismiss="modal" 
-                                    onclick="resetForm('editPub')">
-                                Cancel
-                            </button>
-                        </fieldset>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    </div>	
 <?php elseif ($successcode !== NULL): ?>
     <?php if ($successcode == 0): ?>
         <div>
@@ -497,6 +236,264 @@
         </div>
     <?php endif ?>
 <?php endif ?>
+<!-- Modal for adding new publication -->
+<div class="modal fade" id="modalNewPub" tabindex="-1" role="dialog" 
+     aria-labelledby="modalNewPub">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" 
+                    id="modalAddPubLabel">
+                    Add New Publication
+                </h4>
+                <p>To add a new publication please enter the following details:</p>
+            </div>
+            <form id="addPub" action="modifyrecord.php?type=newPub&3rdParty=1" 
+                  method="post">
+                <div class="modal-body">
+                    <fieldset class="formfieldgroup">
+                        <legend>Publication Record Information</legend>
+                        <div class="form-group clearfix">
+                            <div class="col-md-3 text-left">
+                                <label>
+                                    <b class="required">Year</b>
+                                    <input class="form-control" name="year" 
+                                            type="number" min="1980" max="2500" 
+                                            <?= "value=\"" . date('Y') . "\"" ?> 
+                                            required="required" />
+                                </label>
+                            </div>
+                            <div class="col-md-5 text-left">
+                                <label>
+                                    <b class="required">Reference Title</b>
+                                    <input class="form-control autocomplete" 
+                                            name="title" id="newPubDesc" 
+                                            type="text" pattern=".{4,50}" 
+                                            title="Between 4 and 20 characters" 
+                                            required="required" 
+                                            onfocus="setAutocompleteType('newPubDesc', 0, 1)" />
+                                </label>
+                                <p class="text-muted">Patent Reference (e.g. WO 2005123456) or 
+                                    <a href="https://images.webofknowledge.com/WOK46/help/WOS/J_abrvjt.html" 
+                                        target="_blank">
+                                    ISI abbreviated</a> Journal Title (e.g. J. Am. Chem. Soc.)
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-left">
+                                <label>
+                                    <b class="required">Source of work</b>
+                                    <input class="form-control autocomplete" 
+                                            name="source" id="newPubSource" 
+                                            type="text" pattern=".{3,32}" 
+                                            title="Between 3 and 32 characters" 
+                                            required="required" 
+                                            onfocus="setAutocompleteType('newPubSource', 0, 1)" />
+                                </label>
+                                <p class="text-muted">
+                                    Enter name of client for project work, 
+                                    "Internal" for Sygnature internal 
+                                    research and "External" for 
+                                    non-Sygnature work.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix text-center">
+                            <p><b>Additional information for Journals</b></p>
+                            <div class="col-md-3 col-md-offset-1 text-left">
+                                <label>
+                                    <b class="required">Publication Type</b>
+                                    <select name="journal" required="required">
+                                        <option disabled selected value>
+                                            Select option
+                                        </option>
+                                        <option value="1">Journal</option>
+                                        <option value="0">Patent</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="col-md-2 text-left">
+                                <label>
+                                    <b>Volume</b>
+                                    <input class="form-control" name="volume" 
+                                           type="text" maxlength="6" />
+                                </label>
+                            </div>
+                            <div class="col-md-2 text-left">
+                                <label>
+                                    <b>(Issue)</b>
+                                    <input class="form-control" name="issue" 
+                                           type="number" min="0" max="100" />
+                                </label>
+                            </div>
+                            <div class="col-md-2 text-left">
+                                <label>
+                                    <b>Start Page</b>
+                                    <input class="form-control" name="startpage" 
+                                           type="text" maxlength="16" />
+                                </label>
+                            </div>
+                            <div class="col-md-2 text-left">
+                                <label>
+                                    <b>(End Page)</b>
+                                    <input class="form-control" name="endpage" 
+                                           type="number" min="0" max="99999" />
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <br />
+                    <fieldset class="formfieldgroup">
+                        <div class="form-group clearfix">
+                            <div class="col-md-10 col-md-offset-2 text-left">
+                                <label>
+                                    <b>Sygnature authors/inventors:</b>
+                                    <select name="otherusers[]" 
+                                            id="otheruserspub" 
+                                            data-placeholder="Other attendees... type here to filter list" 
+                                            class="chosen-select" 
+                                            multiple style="width: 75%;">
+                                        <?php enumerateselectusers($users, "", true); ?>
+                                    </select>
+                                    <span class="glyphicon glyphicon-search" 
+                                          aria-hidden="true"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <fieldset>
+                        <button class="btn btn-success" type="submit">
+                            Submit
+                        </button>
+                        <button type="button" class="btn btn-danger" 
+                                data-dismiss="modal" 
+                                onclick="resetForm('addPub')">
+                            Cancel
+                        </button>
+                    </fieldset>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal for editing publication -->
+<div class="modal fade" id="modalEditPub" tabindex="-1" role="dialog" 
+     aria-labelledby="modalEditPub">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalEditPubLabel">
+                    Edit Publication Authors
+                </h4>
+                <p>To change the authors or delete the publication record 
+                    for all authors, please use the following form:</p>
+            </div>
+            <form id="editPub" action="modifyrecord.php?type=editPub" method="post">
+                <div class="modal-body">
+                    <fieldset class="formfieldgroup">
+                        <legend>Publication Record Information</legend>
+                        <div class="form-group clearfix">
+                            <div class="col-md-3 text-left">
+                                <b class="label-static">Year</b>
+                                <input class="form-control" id="editPubYear" 
+                                       name="year" type="number" readonly />
+                            </div>
+                            <div class="col-md-5 text-left">
+                                <b class="label-static">Reference Title</b>
+                                <input class="form-control" id="editPubTitle" 
+                                       name="title" type="text" readonly />
+                            </div>
+                            <div class="col-md-4 text-left">
+                                <b class="label-static">Source of work</b>
+                                <input class="form-control" id="editPubSource" 
+                                       name="source" type="text" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix text-center">
+                            <p><b>Additional information for Journals</b></p>
+                            <div class="col-md-3 text-left">
+                                <b class="label-static">Publication Type</b>
+                                <select name="journal" readonly>
+                                    <option id="editPubTypeJ" value="1">
+                                        Journal
+                                    </option>
+                                    <option id="editPubTypeP" value="0">
+                                        Patent
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 text-left">
+                                <b class="label-static">Volume</b>
+                                <input class="form-control" id="editPubVolume" 
+                                       name="volume" type="text" readonly />
+                            </div>
+                            <div class="col-md-2 text-left">
+                                <b class="label-static">(Issue)</b>
+                                <input class="form-control" id="editPubIssue" 
+                                       name="issue" type="number" readonly />
+                            </div>
+                            <div class="col-md-2 text-left">
+                                <b class="label-static">Start Page</b>
+                                <input class="form-control" id="editPubStartPage" 
+                                       name="startpage" type="text" readonly />
+                            </div>
+                            <div class="col-md-2 text-left">
+                                <b class="label-static">(End Page)</b>
+                                <input class="form-control" id="editPubEndPage" 
+                                       name="endpage" type="number" readonly />
+                            </div>
+                        </div>
+                    </fieldset>
+                    <br />
+                    <fieldset class="formfieldgroup">
+                        <div class="form-group clearfix">
+                            <div class="col-md-10 col-md-offset-2 text-left">
+                                <label>
+                                    <b>Sygnature authors/inventors to add:</b>
+                                    <select name="otherusers[]" id="adduserspub" 
+                                            data-placeholder="Add attendees... type here to filter list" 
+                                            class="chosen-select" multiple 
+                                            style="width: 75%;">
+                                            <?php enumerateselectusers($users, "", true); ?>
+                                    </select>
+                                    <span class="glyphicon glyphicon-search" 
+                                          aria-hidden="true"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="col-md-10 col-md-offset-2 text-left">
+                                <label>
+                                    <b>Sygnature authors/inventors to delete:</b>
+                                    <select name="deleteusers[]" id="deleteuserspub" 
+                                            data-placeholder="Delete attendees... type here to filter list" 
+                                            class="chosen-select" multiple 
+                                            style="width: 75%;">
+                                    </select>
+                                    <span class="glyphicon glyphicon-search" 
+                                          aria-hidden="true"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <fieldset>
+                        <button class="btn btn-success" type="submit">
+                            Submit
+                        </button>
+                        <button type="button" class="btn btn-danger" 
+                                data-dismiss="modal" 
+                                onclick="resetForm('editPub')">
+                            Cancel
+                        </button>
+                    </fieldset>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript" src="js/chosen.jquery.min.js"></script>
     

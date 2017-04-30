@@ -31,7 +31,10 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
             'required' => true,
             'minval' => 1900,
             'maxval' => date("Y")
-            )
+            ),
+        'action' => array(
+            'required' => true
+        )
         ));
     
     if(!$validate->passed()){
@@ -152,9 +155,80 @@ else if ($_SERVER["REQUEST_METHOD"] == "POST")
                 "publicationsummary.php");
     }
 
-    // render table
-    render("templates/publicationsummary.php", ["publications" => $publications, 
-        "pubtitle" => $title, "startyear" => $startyear, "endyear" => $endyear, 
-        "checkbox" => $checkbox, "users" => $users, 
-        "title" => "Publication Summary"]);
+    $action = Input::get("action");
+    
+    if ($action == "submit")
+    {
+        // render table
+        render("templates/publicationsummary.php", ["publications" => $publications, 
+            "pubtitle" => $title, "startyear" => $startyear, "endyear" => $endyear, 
+            "checkbox" => $checkbox, "users" => $users, 
+            "title" => "Publication Summary"]);
+    }
+    else if ($action == "export")
+    {
+        header("Content-type: application/vnd.ms-word");
+        header("Content-Disposition: attachment;Filename=document_name.doc");
+
+        echo "<html>";
+        echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\">";
+        echo "<body>";
+        echo "<style>";
+        echo "table, th, td { border: 1px solid black; border-collapse: collapse; }";
+        echo "th, td { padding: 0.25em; }";
+        echo "h2, p, td { text-align: center; }";
+        echo "</style>";
+        
+        echo "<h2>Publication History</h2>";
+        echo "<p>The following publications were made between: " .
+                escapeHTML($startyear) . " and " . escapeHTML($endyear) 
+                . ":</p>";
+        echo "<p>";
+        echo "<table style=\"width: 100%;\">
+                <thead>
+                        <tr>
+                            <th style=\"width: 6em;\">
+                                Year
+                            </th>
+                            <th>
+                                Reference
+                            </th>
+                            <th>
+                                Source
+                            </th>
+                            <th>
+                                Authors
+                            </th>
+                        </tr>
+                </thead>
+            <tbody>";
+        foreach ($publications AS $h) {
+            echo "<tr>";
+            echo "<td>" . escapeHTML($h["year"]) . "</td>";
+            if ($h["journal"] == 1) {
+                echo "<td><i>" . escapeHTML($h["title"]) . "</i>";
+                if ($h["volume"] !== "") {
+                    echo ", <b>" . escapeHTML($h["volume"]) . "</b>";
+                }
+                if ($h["issue"] !== "") {
+                    echo "(" . escapeHTML($h["issue"]) . ")";
+                }
+                echo ", " . escapeHTML($h["startpage"]);
+                if ($h["endpage"] !== "") {
+                    echo "-" . escapeHTML($h["endpage"]);
+                }
+            } else {
+                echo "<td>" . escapeHTML($h["title"]);
+            }
+            echo "</td>
+                    <td>" . escapeHTML($h["source"]) . "</td>
+                    <td>" . escapeHTML($h["userlist"]) . "</td>
+                </tr>";
+        }
+    echo "</tbody>";
+    echo "</table>";
+    echo "</p>";
+    }
+    echo "</body>";
+    echo "</html>";
 }

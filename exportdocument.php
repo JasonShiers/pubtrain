@@ -191,14 +191,14 @@ if ($type == "ExportPub" || $sections == "all") {
         echo "<td>" . escapeHTML($h["year"]) . "</td>";
         if ($h["journal"] == 1) {
             echo "<td><i>" . escapeHTML($h["title"]) . "</i>";
-            if ($h["volume"] !== 0) {
+            if ($h["volume"] !== "") {
                 echo ", <b>" . escapeHTML($h["volume"]) . "</b>";
             }
-            if ($h["issue"] !== 0) {
+            if ($h["issue"] !== "") {
                 echo "(" . escapeHTML($h["issue"]) . ")";
             }
             echo ", " . escapeHTML($h["startpage"]);
-            if ($h["endpage"] !== 0) {
+            if ($h["endpage"] !== "") {
                 echo "-" . escapeHTML($h["endpage"]);
             }
         } else {
