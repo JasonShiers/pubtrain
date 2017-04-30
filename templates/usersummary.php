@@ -157,6 +157,8 @@ $ROWSPERPAGE = 5;
     <div class="alert alert-warning" role="alert">To continue, please select a user from the above dropdown.</div>
                         <?php endif ?>
 
+<script type="text/javascript" src="js/chosen.jquery.min.js"></script>
+
 <script>
     $(document).ready(function () {
 
@@ -171,7 +173,7 @@ $ROWSPERPAGE = 5;
         // Initiate Multi-select box
         $('.chosen-select').chosen();
 
-        // Initialise each paginated table
+        /* Initialise each paginated table
         $('table.paginated').each(function () {
             var currentPage = 0;
             var numPerPage = <?= $ROWSPERPAGE ?>;
@@ -220,6 +222,14 @@ $ROWSPERPAGE = 5;
             // Run initial pagination
             $table.trigger('repaginate');
 
+        });*/
+    
+        // DataTable
+        var table = $('table.paginated').DataTable({
+            ordering: false,
+            stateSave: true,
+            aLengthMenu: [ [5, 10, 25, 50], [5, 10, 25, 50] ],
+            iDisplayLength: 5
         });
     });
 </script>

@@ -16,6 +16,9 @@
         </script>
         <?php if (Session::exists("timestamp") && 
             !in_array($_SERVER["PHP_SELF"], ["/pubtrain/login.php", "/pubtrain/logout.php"])): ?>
+        
+            <script src="js/bootstrap-session-timeout.min.js"></script>
+            
             <script type="text/javascript">
                 $.sessionTimeout({
                     message: 'Your session will be locked in one minute.',

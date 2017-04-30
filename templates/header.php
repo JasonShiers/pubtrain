@@ -4,12 +4,18 @@
 
     <head>
 
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-        <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css"/>
+        <link rel="stylesheet" type="text/css" href="Bootstrap-3.3.7/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="DataTables-1.10.15/css/jquery.dataTables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="jquery-ui-1.12.1/jquery-ui.min.css"/>
         <link rel="stylesheet" type="text/css" href="css/chosen.min.css"/>
         <link rel="stylesheet" type="text/css" href="css/styles.css"/>
-        <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
-        <link rel="stylesheet" type="text/css" href="css/datatables.min.css"/>
+
+        <script type="text/javascript" src="jQuery-3.2.1/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="Bootstrap-3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="DataTables-1.10.15/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="DataTables-1.10.15/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="jquery-ui-1.12.1/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/modernizr-custom.js"></script>
 
         <title>
             <?php if (isset($title)): ?>
@@ -20,13 +26,6 @@
         </title>
 
         <meta charset="utf-8">
-
-        <script src="js/jquery-1.11.1.min.js"></script>
-        <script src="js/jquery-ui-1.11.4.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/scripts.js"></script>
-        <script src="js/chosen.jquery.min.js"></script>
-        <script src="js/bootstrap-session-timeout.min.js"></script>
 
     </head>
 

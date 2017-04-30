@@ -748,6 +748,8 @@ $successcode = Input::get("success", NULL);
     </div>
 <?php endforeach ?>
 
+<script type="text/javascript" src="js/chosen.jquery.min.js"></script>
+
 <script>
     // function to show modal with specified id, triggered by button in HTML
     function show_modal(id) {
@@ -813,7 +815,7 @@ $successcode = Input::get("success", NULL);
             $(this).data("bs.popover").tip().css("max-width", "100%");
         });
 
-        // Initialise each paginated table
+        /* Initialise each paginated table
         $('table.paginated').each(function () {
             var currentPage = 0;
             var numPerPage = <?= $ROWSPERPAGE ?>;
@@ -860,23 +862,30 @@ $successcode = Input::get("success", NULL);
             $pager.insertAfter($table);
 
             // Run initial pagination
-            $table.trigger('repaginate');
-
-
-            // Go to specified page
-<?php if (Input::get("page", NULL)): ?>
-                // Check this is the correct table by finding it in the expanded accordion
-                if ($(".in").find($table).attr("class") !== undefined)
-                {
-                    // Set page according to URL and repaginate table
-                    currentPage = <?= Input::get("page") - 1 ?>;
-                    $table.trigger('repaginate');
-
-                    // Set appropriate page as active in pager
-                    $activepage = $(this).parent().find(".page-number:contains(" + (currentPage + 1) + ")")[0];
-                    $($activepage).addClass('active').siblings().removeClass('active');
-                }
-<?php endif ?>
+            $table.trigger('repaginate');*/
+        
+        // DataTable
+        var table = $('table.paginated').DataTable({
+            ordering: false,
+            stateSave: true,
+            aLengthMenu: [ [5, 10, 25, 50], [5, 10, 25, 50] ],
+            iDisplayLength: 5
         });
+
+        /* Go to specified page
+<?php if (Input::get("page", NULL)): ?>
+            // Check this is the correct table by finding it in the expanded accordion
+            if ($(".in").find($table).attr("class") !== undefined)
+            {
+                // Set page according to URL and repaginate table
+                currentPage = <?= Input::get("page") - 1 ?>;
+                $table.trigger('repaginate');
+
+                // Set appropriate page as active in pager
+                $activepage = $(this).parent().find(".page-number:contains(" + (currentPage + 1) + ")")[0];
+                $($activepage).addClass('active').siblings().removeClass('active');
+            }
+<?php endif ?>
+        });*/
     });
 </script>

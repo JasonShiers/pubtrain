@@ -128,7 +128,7 @@ $success = Input::get("success", NULL);
 <?php if (isset($verified)): ?>
     <div class="form-group">
         <div class="col-md-3">
-            <table class="conflist paginated" style="width: 100%;">
+            <table class="conflist paginated compact" style="width: 100%;">
                 <thead>
                 <th class="left right" style="width: 6em;">
                     Verified Users
@@ -154,7 +154,7 @@ $success = Input::get("success", NULL);
                 <input type="hidden" name="superuser" value="1" />
                 <input type="hidden" name="trainingid" 
                     <?= "value=\"" . $trainingid . "\"" ?> />
-                <table class="conflist paginated" style="width: 100%;">
+                <table class="conflist paginated compact" style="width: 100%;">
                     <thead>
                     <th class="left right">
                         Unverified Users
@@ -202,7 +202,7 @@ $success = Input::get("success", NULL);
                 <input type="hidden" name="startdate" value="<?= $startdate ?>" />
                 <input type="hidden" name="enddate" value="<?= $enddate ?>" />
                 <input type="hidden" name="depmask" value="<?= $depmask ?>" />
-                <table class="conflist paginated" style="width: 100%;">
+                <table class="conflist paginated compact" style="width: 100%;">
                     <thead>
                     <th class="left right">
                         Unconfirmed Users
@@ -384,6 +384,8 @@ $success = Input::get("success", NULL);
     </div>
 <?php endif ?>
 
+<script type="text/javascript" src="js/chosen.jquery.min.js"></script>
+
 <!--Load the AJAX API-->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
@@ -470,7 +472,7 @@ $(document).ready(function () {
     // Initiate chosen select box
     $('.chosen-select').chosen();
 
-    // Initialise each paginated table
+    /* Initialise each paginated table
     $('table.paginated').each(function () {
         var currentPage = 0;
         var numPerPage = <?= $ROWSPERPAGE ?>;
@@ -518,6 +520,14 @@ $(document).ready(function () {
 
         // Run initial pagination
         $table.trigger('repaginate');
+    });*/
+    
+    // DataTable
+    var table = $('table.paginated').DataTable({
+        ordering: false,
+        stateSave: true,
+        pagingType: 'simple',
+        lengthChange: false
     });
 
 });

@@ -498,6 +498,8 @@
     <?php endif ?>
 <?php endif ?>
 
+<script type="text/javascript" src="js/chosen.jquery.min.js"></script>
+    
 <!--Load the AJAX API-->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
@@ -570,7 +572,7 @@
         // Initiate chosen select box
         $('.chosen-select').chosen();
 
-        // Initialise each paginated table
+        /* Initialise each paginated table
         $('table.paginated').each(function() {
             var currentPage = 0;
             var numPerPage = <?= $ROWSPERPAGE ?>;
@@ -618,6 +620,12 @@
 
             // Run initial pagination
             $table.trigger('repaginate');
+        });*/
+    
+        // DataTable
+        var table = $('table.paginated').DataTable({
+            ordering: false,
+            stateSave: true
         });
     });
 </script>
