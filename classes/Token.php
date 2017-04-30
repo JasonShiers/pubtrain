@@ -3,16 +3,15 @@ class Token
 {
     public static function generate()
     {
-        return Session::put(Config::get('session/token_name'), hash('sha256', uniqid()));
+        if (Session::exists('token')) return Session::get('token');
+        return Session::put('token', hash('sha256', uniqid()));
     }
     
     public static function check($token)
     {
-        $tokenName = Input::get('session/token_name');
-        
-        if(Session::exists($tokenName) && $token === Session::get($tokenName))
+        if(Session::exists('token') && $token === Session::get('token'))
         {
-            Session::delete($tokenName);
+            // Session::delete('token');
             return true;
         }
         
