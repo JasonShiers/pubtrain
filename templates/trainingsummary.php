@@ -137,7 +137,7 @@ $success = Input::get("success", NULL);
                 <tbody>
                     <?php foreach ($verified as $user): ?>
                         <tr>
-                            <td>
+                            <td data-order="<?= $user["lastname"] . " " . $user["firstname"] ?>">
                                 <?= escapeHTML($user["firstname"] . " " 
                                         . $user["lastname"]) ?>
                                 <?php if ($user["count"] != 1) 
@@ -162,31 +162,29 @@ $success = Input::get("success", NULL);
                     </thead>
                     <tbody>
                         <?php foreach ($unverified as $user): ?>
-                            <tr>
-                                <td>
-                                    <div class="button_check">
-                                        <label <?= "for=\"" . escapeHTML($user["recordid"]) . "\"" ?>>
-                                            <input type="checkbox" 
-                                                   <?= "id=\"" . escapeHTML($user["recordid"]) . "\"" ?> 
-                                                   <?= "value=\"" . escapeHTML($user["recordid"]) . "\"" ?> 
-                                                   name="verifyrecords[]" 
-                                                   <?php if ($user["count"] != 1): ?>
-                                                    disabled 
-                                                   <?php endif ?>
-                                                   />
-                                            <span>
-                                                <?= escapeHTML($user["firstname"] 
-                                                        . " " 
-                                                        . $user["lastname"]) ?>
-                                                <?php if ($user["count"] != 1): ?>
-                                                    <?= " (" . intval($user["count"]) . ")" ?>
-                                                <?php endif ?>
-                                                <?php if ($user["confirmed"] == 0): ?>
-                                                     (Unconfirmed)
-                                                <?php endif ?>
-                                            </span>
-                                        </label>
-                                    </div>
+                            <tr class="button_check">
+                                <td data-order="<?= $user["lastname"] . " " . $user["firstname"] ?>">
+                                    <label <?= "for=\"" . escapeHTML($user["recordid"]) . "\"" ?>>
+                                        <input type="checkbox" 
+                                               <?= "id=\"" . escapeHTML($user["recordid"]) . "\"" ?> 
+                                               <?= "value=\"" . escapeHTML($user["recordid"]) . "\"" ?> 
+                                               name="verifyrecords[]" 
+                                               <?php if ($user["count"] != 1): ?>
+                                                disabled 
+                                               <?php endif ?>
+                                               />
+                                        <span>
+                                            <?= escapeHTML($user["firstname"] 
+                                                    . " " 
+                                                    . $user["lastname"]) ?>
+                                            <?php if ($user["count"] != 1): ?>
+                                                <?= " (" . intval($user["count"]) . ")" ?>
+                                            <?php endif ?>
+                                            <?php if ($user["confirmed"] == 0): ?>
+                                                 (Unconfirmed)
+                                            <?php endif ?>
+                                        </span>
+                                    </label>
                                 </td>
                             </tr>
                         <?php endforeach ?>
@@ -211,7 +209,7 @@ $success = Input::get("success", NULL);
                     <tbody>
                         <?php foreach ($unconfirmed as $user): ?>
                             <tr>
-                                <td>
+                                <td data-order="<?= $user["lastname"] . " " . $user["firstname"] ?>">
                                     <div class="button_check">
                                         <label <?= "for=\"" 
                                         . escapeHTML($user["userid"]) . "\"" ?>>
@@ -471,64 +469,13 @@ $(document).ready(function () {
 
     // Initiate chosen select box
     $('.chosen-select').chosen();
-
-    /* Initialise each paginated table
-    $('table.paginated').each(function () {
-        var currentPage = 0;
-        var numPerPage = <?= $ROWSPERPAGE ?>;
-        // Current table
-        var $table = $(this);
-
-        // Add table member function to repaginate table
-        $table.bind('repaginate', function () {
-            // Show all rows
-            $table.find('tbody tr').show();
-            // Hide rows on pages before current page
-            $table.find('tbody tr:lt(' + currentPage * numPerPage + ')').hide();
-            // Hide rows on pages after current page
-            $table.find('tbody tr:gt(' + ((currentPage + 1) * numPerPage - 1) + ')').hide();
-        });
-
-        // Prepare page navigation HTML to inject under table
-        var numRows = $table.find('tbody tr').length;
-        var numPages = Math.ceil(numRows / numPerPage);
-        // Create div
-        var $pager = $('<div class="pager"></div>');
-
-        // Append pager title
-        $('<span class="pager-title"> Page: </span>').appendTo($pager);
-
-        // Append page numbers
-        for (var page = 0; page < numPages; page++) {
-            $('<span class="page-number"> ' + (page + 1) + '</span>')
-                    // On click
-                    .bind('click', {'newPage': page}, function (event) {
-                        // Update currentPage
-                        currentPage = event.data['newPage'];
-                        // Repaginate
-                        $table.trigger('repaginate');
-                        // Reset active page number
-                        $(this).addClass('active').siblings().removeClass('active');
-                    }).appendTo($pager).addClass('clickable');
-        }
-
-        // Initially set first page to active
-        $pager.find('span.page-number:first').addClass('active');
-
-        // Insert pager div underneath table
-        $pager.insertAfter($table);
-
-        // Run initial pagination
-        $table.trigger('repaginate');
-    });*/
-    
+   
     // DataTable
     var table = $('table.paginated').DataTable({
-        ordering: false,
-        stateSave: true,
-        pagingType: 'simple',
-        lengthChange: false
+        scrollY:        "30em",
+        scrollCollapse: true,
+        paging:         false
     });
-
+    
 });
 </script>

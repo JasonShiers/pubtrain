@@ -370,8 +370,7 @@ body .container
 }
 
 .button_check label input {
-    position:absolute;
-    top:-2000px;
+    display: none;
 }
 
 .button_check input:checked + span {
