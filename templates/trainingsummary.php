@@ -80,7 +80,16 @@ $success = Input::get("success", NULL);
                 </select>
             </label>
             <label>
-                <b>Description (Optional)</b>
+                <b class="required">Training Description</b>
+                <select name="desc" id="trainingdesc" required 
+                        data-placeholder="Choose a training type..." 
+                        style="width: 75%;">
+                    <option disabled selected value>Select an option</option>
+                    <option value>Other:</option>
+                </select>
+            </label>
+            <label id="otherdesc">
+                <b>Description</b>
                 <input class="form-control autocomplete" name="description" 
                        id="newTrainDesc2" type="text" maxlength="60" 
                        placeholder="e.g. Scientific Update Med Chem Course" 
@@ -302,7 +311,7 @@ $success = Input::get("success", NULL);
                                     <div class="form-group clearfix">
                                         <div class="col-md-7 text-left">
                                             <label>
-                                                <b>Description (Optional)</b>
+                                                <b>Description</b>
                                                 <input class="form-control autocomplete" 
                                                        name="description" 
                                                        id="newTrainDesc" 
@@ -457,6 +466,34 @@ function setAutocompleteType(type, filter) {
     });
 }
 
+function getDescriptions(trainingid) {
+    $.ajax({
+        url: 'getautocomplete.php?type=newTrainDesc&filter='+trainingid,
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        data: "{}",
+        dataType: "json",
+        success: function( json ) {
+            $('#trainingdesc').html('');
+            $('#trainingdesc').append($('<option>').text('Please choose an option...').prop('disabled', '').prop('selected', '').prop('value', ''));
+            if (json.length>1) {
+                $.each(json, function(i, value) {
+                    $('#trainingdesc').append($('<option>').text(value).prop('value', value));
+                });
+            }
+            $('#trainingdesc').append($('<option>').text('Other:').prop('value', ''));
+            
+            var selVal = '<?= (isset($description) && strlen($description) > 0) ? $description : "" ?>';
+            if(selVal.length > 0){
+                $('#trainingdesc option[value="' + selVal + '"]').prop('selected', true);
+            }       
+        },
+        error: function (result) {
+            console.log("Error parsing ajax response");
+        }
+    });
+}
+
 $(document).ready(function () {
 
     <?php if ((isset($_GET["admin"]) && $_GET["admin"] == 1) || (isset($admin) && $admin == 1)): ?>
@@ -477,5 +514,24 @@ $(document).ready(function () {
         paging:         false
     });
     
+    $('#trainingid').change(function() {
+        getDescriptions($('#trainingid').children(":selected").val());
+        $('#otherdesc').hide();
+    });
+    
+    // Initialise training descriptions on page load
+    getDescriptions($('#trainingid').children(":selected").val());
+    
+    $('#otherdesc').hide();
+    $('#trainingdesc').change(function (){
+        if($(this).children(":selected").text()=='Other:')
+        {
+            $('#otherdesc').show();
+            $('#newTrainDesc2').val('');
+        } else {
+            $('#otherdesc').hide();
+            $('#newTrainDesc2').val($('#trainingdesc').children(":selected").text());
+        }
+    });
 });
 </script>

@@ -8,7 +8,7 @@ $DB = DB::getInstance();
 $type = Input::get('type');
 $term = Input::get('term');
 
-if (!empty($type) && !empty($term)) {
+if (!empty($type) /*&& !empty($term)*/) {
 
     if ($type == "newConfName") {
         $results = $DB->assocQuery("SELECT title FROM conferences "
