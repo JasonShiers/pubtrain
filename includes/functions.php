@@ -54,6 +54,43 @@ function render($template, $values = [])
     }
 }
 
+function enumerateselectusers($users, $selected = "", $includeself = 0)
+{
+    /* Function to enumerate the <option> tags for a <select> container that is used to select users. 
+     * $users is an array of associative arrays including keys: firstname, lastname, userid 
+     * $selected is the userid that should be selected by default
+     * $includeself can be set to 1 so that logged in user is included in list */	
+    
+    $self = Session::get("userid");
+    
+    foreach ($users as $user)
+    {
+        if($user["userid"] == $self && $includeself == 0)
+        {
+            continue;
+        }
+        // else
+        print("<option style=\"text-align: left;\" value=\"" . escapeHTML($user["userid"]) . "\" ");
+        if(strlen($selected)>0 && $user["userid"] == $selected)
+        {
+            print("selected=\"selected\" ");
+        }
+        print (">" . escapeHTML($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
+    }
+}
+
+function enumeratemonthoptions()
+{
+    /* Function to enumerate the <option> tags for a <select> container that is used to
+     * select a month. */
+    print("<option value selected disabled>Month</option>\n");
+    foreach (['01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'May', '06' => 'Jun', 
+        '07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'] AS $val => $label)
+    {
+        print("<option value=\"{$val}\">{$label}</option>");
+    }
+}
+
 function getLineGroupArray(array $users, $depth)
 {
     /** 
@@ -102,33 +139,56 @@ function getLineGroupUser($userid)
     return getLineGroupArray([["userid" => $userid]], 0);
 }
 
-function enumerateselectusers($users, $selected, $includeself = false)
+function parseDepartment($department)
 {
-    /* Function to enumerate the <option> tags for a <select> container that is used to select users. 
-     * $users is an array of associative arrays including keys: firstname, lastname, userid 
-     * $selected is the userid that should be selected by default */	
-    foreach ($users as $user)
+    /**
+     * Function to convert department to database format
+     * $department: Department string returned from either LDAP query or DB
+     * Returns: Department string in DB format or NULL
+     */
+    switch($department)
     {
-        if($includeself === true || $user["userid"] !== $_SESSION["userid"])
-        {
-            print("<option style=\"text-align: left;\" value=\"" . htmlspecialchars($user["userid"]) . "\" ");
-            if(strlen($selected)>0 && $user["userid"] == $selected)
-            {
-                print("selected=\"selected\" ");
-            }
-            print (">" . htmlspecialchars($user["firstname"] . " " . $user["lastname"]) . "</option>\n");
-        }
+        case "Chemistry":
+        case "Compchem":
+        case "Bioscience":
+        case "DMPK":
+        case "Non-scientific":
+            return $department;
+        case "Computational Chemistry":
+            return "Compchem";
+        case "Analytical Chemistry":
+            return "DMPK";
+        default:
+            return NULL;
     }
 }
 
-function enumeratemonthoptions()
+function cleanLDAPUser($user)
 {
-    /* Function to enumerate the <option> tags for a <select> container that is used to
-     * select a month. */
-    print("<option value selected disabled>Month</option>\n");
-    foreach (['01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'May', '06' => 'Jun', 
-              '07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'] AS $val => $label)
-    {
-        print("<option value=\"{$val}\">{$label}</option>");
+    /*
+     * Function to change structure of LDAP user to cleaner format for input
+     * $user: LDAP user object in following format:
+     * array(
+     *   'first-name' => array(
+     *     'count' => 1,
+     *     0 => 'Alex'
+     *    ),
+     *   ...
+     * )
+     * Returns: Associative array of ["property" => "value"] pairs
+     */
+    
+    // Filter out keys that are not used
+    $filteredUser = array_intersect_key($user, array_flip(
+            ["givenname", "sn", "department", "samaccountname", "mail"]
+            ));
+    
+    $cleanedUser = [];
+    
+    // For each key, assign value as value of subkey [0]
+    foreach ($filteredUser as $key => $value) {
+        $cleanedUser[$key] = $value[0];
     }
+    
+    return $cleanedUser;
 }

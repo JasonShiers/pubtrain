@@ -19,7 +19,7 @@
 
         <title>
             <?php if (isset($title)): ?>
-                PubTrain: <?= htmlspecialchars($title) ?>
+            PubTrain: <?= escapeHTML($title) ?>
             <?php else: ?>
                 PubTrain
             <?php endif ?>
@@ -54,7 +54,7 @@
                         </div>
 
                         <!-- Collect the nav links, forms, and other content for toggling -->
-                        <?php if (Session::exists("forename")): ?>
+                        <?php if (Session::exists("name")): ?>
                             <div class="collapse navbar-collapse" 
                                  id="bs-example-navbar-collapse-1">
                                 <ul class="nav navbar-nav">
@@ -125,7 +125,7 @@
                                 <ul class="nav navbar-nav navbar-right">
                                     <li>
                                         <div class="nav-username">
-                                            <?php if (Session::get("forename")): ?>
+                                            <?php if (Session::exists("name")): ?>
                                                 <?= escapeHTML(Session::get("name") . " ") ?>
                                                 <?php if($_SESSION["admin"] != 0){ ?>
                                                     <span class="glyphicon glyphicon-cog"></span>
@@ -133,7 +133,7 @@
                                             <?php endif ?>
                                         </div>
                                     </li>
-                                    <?php if (Session::get("forename")): ?>
+                                    <?php if (Session::exists("name")): ?>
                                         <li>
                                             <a href="userinfo.php" class="imglink" 
                                                style="padding: 5px 15px 0" 

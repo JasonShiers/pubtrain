@@ -26,20 +26,21 @@ spl_autoload_register(function($class) {
 });
 
 // require authentication for all pages except /login.php, /logout.php, and /register.php
-if (!in_array($_SERVER["PHP_SELF"], 
-        ["/pubtrain/login.php", "/pubtrain/logout.php"]))
+$php_self = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_SPECIAL_CHARS);
+
+if (!in_array($php_self, ["/pubtrain/login.php", "/pubtrain/logout.php"]))
 {
     if (empty(Session::get("timestamp")))
     {
                     // user is not logged in to a session
-        Redirect::to("login.php?next=" . $_SERVER["PHP_SELF"]);
+        Redirect::to("login.php?next=" . $php_self);
     }
     else if (time() - Session::get('timestamp') > 660)
     {
         // session has had no activity for > 11 minutes
         Redirect::to("logout.php");        	
     }
-    else if (!in_array($_SERVER["PHP_SELF"], ["/confdb/userinfo.php"]) 
+    else if (!in_array($php_self, ["/confdb/userinfo.php"]) 
             && (empty(Session::get("department")) 
             || empty(Session::get("linemgr"))))
     {

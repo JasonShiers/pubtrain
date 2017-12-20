@@ -1,6 +1,4 @@
             </div>
-            <div id="bottom">
-            </div>
         </div>
         <script type="text/javascript">
             var config = {
@@ -25,7 +23,7 @@
                     keepAliveUrl: 'keep-alive.php',
                     keepAliveInterval: 60000,
                     logoutUrl: 'logout.php',
-                    redirUrl: 'login.php',
+                    redirUrl: 'logout.php',
                     warnAfter: 540000,
                     redirAfter: 600000
                 });

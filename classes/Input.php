@@ -3,20 +3,34 @@ class Input
 {
     public static function get($item, $blank = "")
     {
-        if (isset($_POST[$item]) 
-                && (is_array($_POST[$item]) 
-                        ||  (is_string($_POST[$item])
-                                && strlen($_POST[$item]) > 0
-                            )
-                    )
-            )
+        /*
+         * Get $item, first looking in $_POST, then $_GET
+         * Post will return either an array or a string
+         * Get will return only a string
+         * Returns: value of item or $blank if not set in either location
+         */
+        
+        // See if item can be returned as array (no filtering in this case)
+        $postArray = filter_input(INPUT_POST, $item, FILTER_DEFAULT , FILTER_REQUIRE_ARRAY);
+        if (isset($postArray) && (is_array($postArray)))
         {
-            return $_POST[$item];
+            return $postArray;
         }
-        else if (isset($_GET[$item]) && strlen($_GET[$item]) > 0)
+        
+        // See if item can be returned as string (no filtering)
+        $postString = filter_input(INPUT_POST, $item);
+        if (isset($postString) && is_string($postString) && strlen($postString) > 0)
         {
-            return $_GET[$item];
+            return $postString;
         }
+        
+        $getString = filter_input(INPUT_GET, $item);
+        if (isset($getString) && strlen($getString) > 0)
+        {
+            return $getString;
+        }
+        
+        // If both inputs are NULL treat value as $blank
         return $blank;
     }
 }
