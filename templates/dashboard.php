@@ -392,7 +392,7 @@ $successcode = Input::get("success", NULL);
                         </div>
                         <div class="form-group clearfix">
                             <div class="col-md-7 text-left">
-                                <label for="newTrainDesc" style="display: inline;">
+                                <label for="trainingdesc" style="display: inline;">
                                     <b>Description (Optional) </b>
                                 </label>
                                 &nbsp;&nbsp;
@@ -416,12 +416,12 @@ $successcode = Input::get("success", NULL);
                                         SOPs)">
                                     (What is this?)
                                 </button>
-                                <input class="form-control autocomplete" 
-                                       name="description" id="newTrainDesc" 
-                                       type="text" pattern=".{,60}" 
-                                       title="No more than 60 characters" 
-                                       placeholder="e.g. Scientific Update Med Chem Course" 
-                                       onfocus="setAutocompleteType('newTrainDesc', 'trainingid', 2)" />
+                                <b class="required">Training Description</b>
+                                <select name="desc" id="trainingdesc" required 
+                                        data-placeholder="Choose a training type..." 
+                                        style="width: 75%;">
+                                    <option disabled selected value>Select an option</option>
+                                </select>
                             </div>
                             <div class="col-md-3 text-left">
                                 <label for="newTrainDays" style="display: inline;">
@@ -794,6 +794,33 @@ $successcode = Input::get("success", NULL);
         show_modal(modal_id);
     }
 
+    function getDescriptions(trainingid) {
+        $.ajax({
+            url: 'getautocomplete.php?type=newTrainDesc&filter='+trainingid,
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            data: "{}",
+            dataType: "json",
+            success: function( json ) {
+                $('#trainingdesc').html('');
+                $('#trainingdesc').append($('<option>').text('Please choose an option...').prop('disabled', '').prop('selected', '').prop('value', ''));
+                if (json.length>1) {
+                    $.each(json, function(i, value) {
+                        $('#trainingdesc').append($('<option>').text(value).prop('value', value));
+                    });
+                }
+
+                var selVal = '<?= (isset($description) && strlen($description) > 0) ? $description : "" ?>';
+                if(selVal.length > 0){
+                    $('#trainingdesc option[value="' + selVal + '"]').prop('selected', true);
+                }       
+            },
+            error: function (result) {
+                console.log("Error parsing ajax response");
+            }
+        });
+    }
+
     $(document).ready(function () {
 
         // Make navMyHistory navbar item selected
@@ -815,54 +842,13 @@ $successcode = Input::get("success", NULL);
             $(this).data("bs.popover").tip().css("max-width", "100%");
         });
 
-        /* Initialise each paginated table
-        $('table.paginated').each(function () {
-            var currentPage = 0;
-            var numPerPage = <?= $ROWSPERPAGE ?>;
-            // Current table
-            var $table = $(this);
+        $('#trainingid').change(function() {
+            getDescriptions($('#trainingid').children(":selected").val());
+            $('#otherdesc').hide();
+        });
 
-            // Add table member function to repaginate table
-            $table.bind('repaginate', function () {
-                // Show all rows
-                $table.find('tbody tr').show();
-                // Hide rows on pages before current page
-                $table.find('tbody tr:lt(' + currentPage * numPerPage + ')').hide();
-                // Hide rows on pages after current page
-                $table.find('tbody tr:gt(' + ((currentPage + 1) * numPerPage - 1) + ')').hide();
-            });
-
-            // Prepare page navigation HTML to inject under table
-            var numRows = $table.find('tbody tr').length;
-            var numPages = Math.ceil(numRows / numPerPage);
-            // Create div
-            var $pager = $('<div class="pager"></div>');
-
-            // Append pager title
-            $('<span class="pager-title"> Page: </span>').appendTo($pager);
-
-            // Append page numbers
-            for (var page = 0; page < numPages; page++) {
-                $('<span class="page-number"> ' + (page + 1) + '</span>')
-                        // On click
-                        .bind('click', {'newPage': page}, function (event) {
-                            // Update currentPage
-                            currentPage = event.data['newPage'];
-                            // Repaginate
-                            $table.trigger('repaginate');
-                            // Reset active page number
-                            $(this).addClass('active').siblings().removeClass('active');
-                        }).appendTo($pager).addClass('clickable');
-            }
-
-            // Initially set first page to active
-            $pager.find('span.page-number:first').addClass('active');
-
-            // Insert pager div underneath table
-            $pager.insertAfter($table);
-
-            // Run initial pagination
-            $table.trigger('repaginate');*/
+        // Initialise training descriptions on page load
+        getDescriptions($('#trainingid').children(":selected").val());
         
         // DataTable
         var table = $('table.paginated').DataTable({
