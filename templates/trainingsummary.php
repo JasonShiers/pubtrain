@@ -476,7 +476,7 @@ function getDescriptions(trainingid) {
         success: function( json ) {
             $('#trainingdesc').html('');
             $('#trainingdesc').append($('<option>').text('Please choose an option...').prop('disabled', '').prop('selected', '').prop('value', ''));
-            if (json.length>1) {
+            if (json.length>0) {
                 $.each(json, function(i, value) {
                     $('#trainingdesc').append($('<option>').text(value).prop('value', value));
                 });
